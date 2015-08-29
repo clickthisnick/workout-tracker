@@ -7,32 +7,98 @@
   <link rel="stylesheet" type="text/css" href="lib/css/ceruleanBootswatch.min.css">
 </head>
 
-<body class="container">
+<body class="container" ng-controller="TodoListController as workout">
   <div class="row">
-    <div class="col-xs-8">
+
+    <div class="col-xs-4">
+      <button class="btn btn-success btn-lg" ng-click="changePerson = !changePerson">{{workout.selectedPerson.name}}</button>
+      <div ng-if="changePerson == true">
+          <button ng-repeat="person in workout.people | filter: {active:true}" ng-click="workout.findPerson(person.personId)">{{person.name}}</button>
+        </select>
+      </div>
+    </div>
+
+    <div class="col-xs-4">
       <h2>Body Builders:</h2>
     </div>
     <div class="col-xs-4">
-      <button class="btn btn-success btn-lg" ng-click="addPeople = !addPeople">Add (+)</button>
+      <button class="btn btn-success btn-lg" ng-click="addPeople = !addPeople">Edit</button>
     </div>
   </div>
 
-<div ng-if="addPeople == true">
-  <div ng-controller="TodoListController as workout">
-<!--    <span>{{workout.remaining()}} of {{workout.people.length}} remaining</span> -->
-<!--    [ <a href="" ng-click="workout.archive()">archive</a> ] -->
-<div ng-repeat="person in workout.people">
-  <input type="checkbox" ng-model="person.selected">
-  <span class="done-{{person.selected}}">{{person.name}}</span>
-</div>
+  <!-- Add a person to the workout -->
+  <div ng-if="addPeople == true">
 
-    <form ng-submit="workout.addTodo()">
-      <input type="text" ng-model="workout.todoText"  size="30"
-      placeholder="add new todo here">
-      <input class="btn-primary" type="submit" value="add">
+    <div ng-repeat="person in workout.people">
+      <input type="checkbox" ng-model="person.active">
+      <span class="done-{{person.selected}}">{{person.name}}</span>
+    </div>
+
+    <form ng-submit="workout.addPerson()">
+      <div class="row">
+        <div class="col-xs-8">
+          <input type="text" class="form-control input-lg" ng-model="workout.personName"  size="30"
+          placeholder="Add another person">
+        </div>
+        <div class="col-xs-4">
+          <input class="btn btn-primary btn-lg" type="submit" value="add">
+        </div>
+      </div>
     </form>
   </div>
- </div>
+
+
+
+
+  <hr>
+
+  <div class="row">
+    <div class="col-xs-4">
+      <button class="btn btn-success btn-lg" >Prev</button>
+    </div>
+    <div class="col-xs-4">
+      <h2>{{workout.selectedExercise.name}}</h2>
+    </div>
+    <div class="col-xs-4">
+      <button class="btn btn-success btn-lg" >
+        Next
+      </button>
+    </div>
+  </div>
+
+  <hr>
+
+
+  <!-- Exercises -->
+  <div class="row">
+    <div class="col-xs-2">
+      Reps
+    </div>
+    <div class="col-xs-10">
+      Weight
+    </div>
+  </div>
+
+<div ng-repeat="exercise in workout.previousWorkouts | filter: {personId:workout.selectedPerson.personId, exerciseId:workout.selectedExercise.exerciseId}">
+  <div ng-repeat="rep in exercise.reps track by $index" class="row">
+
+<div class="col-xs-2">
+  {{exercise.reps[$index]}}
+</div>
+
+<div class="col-xs-2">
+  {{exercise.weight[$index]}}
+</div>
+
+<div class="col-xs-3">
+</div>
+  <button>Edit</button>
+<div class="col-xs-3">
+  <button>Edit</button>
+</div>
+
+</div>
+</div>
 
 </body>
 </html>
