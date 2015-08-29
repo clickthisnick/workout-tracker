@@ -1,0 +1,38 @@
+<!doctype html>
+<html ng-app="todoApp">
+<head>
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.4/angular.min.js"></script>
+  <script src="todo.js"></script>
+  <link rel="stylesheet" href="todo.css">
+  <link rel="stylesheet" type="text/css" href="lib/css/ceruleanBootswatch.min.css">
+</head>
+
+<body class="container">
+  <div class="row">
+    <div class="col-xs-8">
+      <h2>Body Builders:</h2>
+    </div>
+    <div class="col-xs-4">
+      <button class="btn btn-success btn-lg" ng-click="addPeople = !addPeople">Add (+)</button>
+    </div>
+  </div>
+
+<div ng-if="addPeople == true">
+  <div ng-controller="TodoListController as workout">
+<!--    <span>{{workout.remaining()}} of {{workout.people.length}} remaining</span> -->
+<!--    [ <a href="" ng-click="workout.archive()">archive</a> ] -->
+<div ng-repeat="person in workout.people">
+  <input type="checkbox" ng-model="person.selected">
+  <span class="done-{{person.selected}}">{{person.name}}</span>
+</div>
+
+    <form ng-submit="workout.addTodo()">
+      <input type="text" ng-model="workout.todoText"  size="30"
+      placeholder="add new todo here">
+      <input class="btn-primary" type="submit" value="add">
+    </form>
+  </div>
+ </div>
+
+</body>
+</html>
