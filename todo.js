@@ -8,22 +8,45 @@ angular.module('todoApp', [])
       {personId:'2',name:'Doug', selected:false, active:false}];
 
     workout.addPeople = false;
-    workout.changePerson = false;
-    workout.oldWorkout = '';
 
     workout.exercises = [
       {exerciseId:'1',name:'Bench Press',sets:5,reps:5},
       {exerciseId:'2',name:'Squat',sets:3,reps:8}
     ];
 
-    workout.selectedPerson = {name:'Person'};
-    //workout.selectedPerson = workout.people[0];
+    workout.emptyPersonId = -1
+    workout.selectedPerson = {name:'Person',personId:workout.emptyPersonId};
     workout.selectedExercise = workout.exercises[0];
+
+    workout.cyclePerson = function(){
+      var activePeople = removeObjectsInJSONArray(workout.people, 'active', false);
+      if (workout.selectedPerson.personId == workout.emptyPersonId){
+        workout.selectedPerson = activePeople[0];
+      }
+      else{
+        var person = nextObjectInJSONArrayCycle(workout.selectedPerson.personId,'personId',activePeople)
+        workout.selectedPerson = person;
+      }
+    }
 
     workout.findPerson = function(personId) {
       angular.forEach(workout.people, function(person) {
         if (person.personId == personId) workout.selectedPerson = person;
       });
+    }
+
+    workout.previousExercise = function(){
+      var previousExercise = previousObjectInJSONArray(workout.selectedExercise.exerciseId,'exerciseId',workout.exercises);
+      if (previousExercise != -1){
+        workout.selectedExercise = previousExercise;
+      }
+    }
+
+    workout.nextExercise = function(){
+      var nextExercise = nextObjectInJSONArray(workout.selectedExercise.exerciseId,'exerciseId',workout.exercises);
+      if (nextExercise != -1){
+        workout.selectedExercise = nextExercise;
+      }
     }
 
     workout.previousWorkouts = [
@@ -54,3 +77,55 @@ angular.module('todoApp', [])
       });
     };
   });
+
+
+  function nextObjectInJSONArrayCycle(value,property,jsonArray){
+    // We assume we are getting the jsonArray already sorted
+    // We allow recycling through the array
+      var arrayIndex = jsonArray.length-1;
+      for (i = 0; i <= arrayIndex; i++) {
+          if (i == arrayIndex){
+            return jsonArray[0];
+          }
+          else if (value == jsonArray[i][property]){
+            return jsonArray[i+1];
+        }
+      }
+      return -1
+    };
+
+function nextObjectInJSONArray(value,property,jsonArray){
+  // We assume we are getting the jsonArray already sorted
+  // We dont't allow recycling through the array
+    var arrayIndex = jsonArray.length-1;
+    for (i = 0; i <= arrayIndex; i++) {
+        if (value == jsonArray[i][property] && i != arrayIndex){
+          return jsonArray[i+1];
+      }
+    }
+    return -1
+  };
+
+  function removeObjectsInJSONArray(array, property, value) {
+    var arrayCopy = array.slice();
+
+    var arrayIndex = arrayCopy.length-1;
+    for (i = 0; i <= arrayIndex; i++) {
+      if(arrayCopy[i][property] == value){
+        arrayCopy.splice(i, 1);
+      }
+    }
+     return arrayCopy;
+  }
+
+  function previousObjectInJSONArray(value,property,jsonArray){
+    // We assume we are getting the jsonArray already sorted
+    // We dont't allow recycling through the array
+      var arrayIndex = jsonArray.length-1;
+      for (i = 0; i <= arrayIndex; i++) {
+        if (value == jsonArray[i][property] && i != 0){
+          return jsonArray[i-1];
+        }
+      }
+      return -1
+    };

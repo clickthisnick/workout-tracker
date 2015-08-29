@@ -11,11 +11,7 @@
   <div class="row">
 
     <div class="col-xs-4">
-      <button class="btn btn-success btn-lg" ng-click="changePerson = !changePerson">{{workout.selectedPerson.name}}</button>
-      <div ng-if="changePerson == true">
-          <button ng-repeat="person in workout.people | filter: {active:true}" ng-click="workout.findPerson(person.personId)">{{person.name}}</button>
-        </select>
-      </div>
+      <button class="btn btn-success btn-lg" ng-click="workout.cyclePerson()">{{workout.selectedPerson.name}}</button>
     </div>
 
     <div class="col-xs-4">
@@ -54,13 +50,13 @@
 
   <div class="row">
     <div class="col-xs-4">
-      <button class="btn btn-success btn-lg" >Prev</button>
+      <button class="btn btn-success btn-lg"  ng-click="workout.previousExercise()">Prev</button>
     </div>
     <div class="col-xs-4">
-      <h2>{{workout.selectedExercise.name}}</h2>
+      <h2>{{workout.selectedExercise.name}} <br>( {{workout.selectedExercise.sets}} x {{workout.selectedExercise.reps}} )</h2>
     </div>
     <div class="col-xs-4">
-      <button class="btn btn-success btn-lg" >
+      <button class="btn btn-success btn-lg" ng-click="workout.nextExercise()">
         Next
       </button>
     </div>
@@ -74,7 +70,13 @@
     <div class="col-xs-2">
       Reps
     </div>
-    <div class="col-xs-10">
+    <div class="col-xs-2">
+      Weight
+    </div>
+    <div class="col-xs-4">
+      Reps
+    </div>
+    <div class="col-xs-4">
       Weight
     </div>
   </div>
@@ -90,10 +92,12 @@
   {{exercise.weight[$index]}}
 </div>
 
-<div class="col-xs-3">
+<div class="col-xs-4">
+<button>Edit</button>
 </div>
-  <button>Edit</button>
-<div class="col-xs-3">
+
+
+<div class="col-xs-4">
   <button>Edit</button>
 </div>
 
