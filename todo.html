@@ -2,12 +2,17 @@
 <html ng-app="todoApp">
 <head>
   <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.4/angular.min.js"></script>
+  <script src="lib/js/jquery-1.11.3.min.js"></script>
   <script src="todo.js"></script>
   <link rel="stylesheet" href="todo.css">
   <link rel="stylesheet" type="text/css" href="lib/css/ceruleanBootswatch.min.css">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
 </head>
 
+
+
 <body class="container" ng-controller="TodoListController as workout">
+<button class="btn btn-success btn-lg" id="launchConfirm">Edit</button>
   <div class="row">
 
     <div class="col-xs-4">
@@ -81,15 +86,15 @@
     </div>
   </div>
 
-<div ng-repeat="exercise in workout.previousWorkouts | filter: {personId:workout.selectedPerson.personId, exerciseId:workout.selectedExercise.exerciseId}">
-  <div ng-repeat="rep in exercise.reps track by $index" class="row">
+<!--<div ng-repeat="exercise in workout.previousWorkouts | filter: {personId:workout.selectedPerson.personId, exerciseId:workout.selectedExercise.exerciseId}">-->
+<div ng-repeat="set in workout.createEmptyArray(workout.selectedExercise.sets) track by $index" class="row">
 
 <div class="col-xs-2">
-  {{exercise.reps[$index]}}
+  hi
 </div>
 
 <div class="col-xs-2">
-  {{exercise.weight[$index]}}
+  there
 </div>
 
 <div class="col-xs-4">
@@ -102,6 +107,17 @@
 </div>
 
 </div>
+
+
+
+<div id="confirm" class="modal hide fade">
+  <div class="modal-body">
+    Do you want to continue?
+  </div>
+  <div class="modal-footer">
+    <button type="button" data-dismiss="modal" class="btn btn-primary" data-value="1">Continue</button>
+    <button type="button" data-dismiss="modal" class="btn" data-value="0">Cancel</button>
+  </div>
 </div>
 
 </body>

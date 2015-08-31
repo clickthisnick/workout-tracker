@@ -18,6 +18,10 @@ angular.module('todoApp', [])
     workout.selectedPerson = {name:'Person',personId:workout.emptyPersonId};
     workout.selectedExercise = workout.exercises[0];
 
+    workout.createEmptyArray = function(num) {
+      return new Array(num);
+    }
+
     workout.cyclePerson = function(){
       var activePeople = removeObjectsInJSONArray(workout.people, 'active', false);
       if (workout.selectedPerson.personId == workout.emptyPersonId){
@@ -78,6 +82,18 @@ angular.module('todoApp', [])
     };
   });
 
+
+  $('.launchConfirm').on('click', function (e) {
+      $('#confirm')
+          .modal({ backdrop: 'static', keyboard: false })
+          .one('click', '[data-value]', function (e) {
+              if($(this).data('value')) {
+                  alert('confirmed');
+              } else {
+                  alert('canceled');
+              }
+          });
+  });
 
   function nextObjectInJSONArrayCycle(value,property,jsonArray){
     // We assume we are getting the jsonArray already sorted
