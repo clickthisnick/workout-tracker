@@ -12,7 +12,35 @@
 
 
 <body class="container" ng-controller="TodoListController as workout">
-<button class="btn btn-success btn-lg" id="launchConfirm">Edit</button>
+
+<div ng-if="workout.workoutStarted == false">
+
+  <button class='btn btn-success btn-lg' ng-click='workout.loadData()'> Load Data </button>
+  <h2>Choose Lifters</h2>
+
+    <div ng-repeat="person in workout.people">
+      <input type="checkbox" ng-model="person.active">
+      <span class="done-{{person.selected}}">{{person.name}}</span>
+    </div>
+
+
+<h2> Choose Workout </h2>
+
+<select class="form-control" ng-model="workout.selectedWorkoutId" ng-change="workout.blankOutDays; workout.getDays(workout.selectedWorkoutId)">
+  <option value="{{theWorkout.id}}" ng-repeat="theWorkout in workout.workouts">{{theWorkout.name}}</option>
+</select>
+
+<h2> Choose Day </h2>
+
+<select class="form-control" ng-model="workout.selectedDayId">
+  <option ng-repeat="day in workout.days" value="{{day.id}}">{{day.name}}</option>
+</select>
+
+<button class='btn btn-success btn-lg' ng-click='workout.workoutStarted = true'> Start Workout </button>
+
+</div>
+
+<div ng-if="workout.workoutStarted == true">
   <div class="row">
 
     <div class="col-xs-4">
@@ -23,32 +51,9 @@
       <h2>Body Builders:</h2>
     </div>
     <div class="col-xs-4">
-      <button class="btn btn-success btn-lg" ng-click="addPeople = !addPeople">Edit</button>
+      <button class="btn btn-success btn-lg">Edit</button>
     </div>
   </div>
-
-  <!-- Add a person to the workout -->
-  <div ng-if="addPeople == true">
-
-    <div ng-repeat="person in workout.people">
-      <input type="checkbox" ng-model="person.active">
-      <span class="done-{{person.selected}}">{{person.name}}</span>
-    </div>
-
-    <form ng-submit="workout.addPerson()">
-      <div class="row">
-        <div class="col-xs-8">
-          <input type="text" class="form-control input-lg" ng-model="workout.personName"  size="30"
-          placeholder="Add another person">
-        </div>
-        <div class="col-xs-4">
-          <input class="btn btn-primary btn-lg" type="submit" value="add">
-        </div>
-      </div>
-    </form>
-  </div>
-
-
 
 
   <hr>
@@ -108,8 +113,6 @@
 
 </div>
 
-
-
 <div id="confirm" class="modal hide fade">
   <div class="modal-body">
     Do you want to continue?
@@ -118,6 +121,7 @@
     <button type="button" data-dismiss="modal" class="btn btn-primary" data-value="1">Continue</button>
     <button type="button" data-dismiss="modal" class="btn" data-value="0">Cancel</button>
   </div>
+</div>
 </div>
 
 </body>

@@ -3,11 +3,66 @@ angular.module('todoApp', [])
 
     var workout = this;
 
-    workout.people = [
-      {personId:'1',name:'Nick', selected:false, active:false},
-      {personId:'2',name:'Doug', selected:false, active:false}];
+    workout.people = null;
+    workout.workouts = null;
+    workout.days = null;
 
-    workout.addPeople = false;
+    workout.selectedWorkoutId = null;
+    workout.selectedDayId = null;
+
+    workout.loadData = function(){
+      workout.getPeople();
+      workout.getWorkouts();
+    }
+
+    workout.getPeople = function(){
+        $.ajax({
+          type: "POST",
+          url: "ajax/getPeople.php",
+          datatype: "html",
+          success: function(data) {
+            var json = eval('(' + data + ')');
+            workout.people = json;
+        }
+    });
+    }
+
+    workout.getWorkouts = function(){
+        $.ajax({
+          type: "POST",
+          url: "ajax/getWorkouts.php",
+          datatype: "html",
+          success: function(data) {
+            var json = eval('(' + data + ')');
+            workout.workouts = json;
+        }
+    });
+    }
+
+    workout.blankOutDays = function(){
+      workout.days = null;
+    }
+
+    workout.getDays = function(workoutId){
+      alert(workoutId);
+      $.ajax({
+        type: "POST",
+        url: "ajax/getDays.php",
+        data: {'id':workoutId},
+        datatype: "json",
+        success: function(data) {
+          var json = eval('(' + data + ')');
+          workout.days = json;
+      }
+  });
+
+}
+
+    //[
+  //    {personId:'1',name:'Nick', selected:false, active:false},
+  //    {personId:'2',name:'Doug', selected:false, active:false}];
+
+    workout.workoutStarted = false;
 
     workout.exercises = [
       {exerciseId:'1',name:'Bench Press',sets:5,reps:5},
@@ -17,6 +72,10 @@ angular.module('todoApp', [])
     workout.emptyPersonId = -1
     workout.selectedPerson = {name:'Person',personId:workout.emptyPersonId};
     workout.selectedExercise = workout.exercises[0];
+
+    workout.currentPersonExerciseInformation = function(){
+
+    };
 
     workout.createEmptyArray = function(num) {
       return new Array(num);
