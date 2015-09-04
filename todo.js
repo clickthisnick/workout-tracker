@@ -6,13 +6,33 @@ angular.module('todoApp', [])
     workout.people = null;
     workout.workouts = null;
     workout.days = null;
-
+    workout.exercises = null;
     workout.selectedWorkoutId = null;
     workout.selectedDayId = null;
+    workout.selectedExercise = {'sets':0,'reps':0,'weight':0,'name':''};
 
     workout.loadData = function(){
       workout.getPeople();
       workout.getWorkouts();
+    }
+
+    workout.getExercises = function(workoutdayexerciseid){
+      $.ajax({
+        type: "POST",
+        url: "ajax/getExercises.php",
+        data: {'id':workoutdayexerciseid},
+        datatype: "json",
+        success: function(data) {
+          var json = eval('(' + data + ')');
+          alert(JSON.stringify(json));
+          workout.exercises = json;
+          workout.selectedExercise = workout.exercises[0];
+          workout.nextExercise();
+          workout.nextExercise();
+          workout.nextExercise();
+          workout.previousExercise();
+      }
+  });
     }
 
     workout.getPeople = function(){
@@ -22,7 +42,8 @@ angular.module('todoApp', [])
           datatype: "html",
           success: function(data) {
             var json = eval('(' + data + ')');
-            workout.people = json;
+            workout.people = addPropertyToEveyJSONObject(json,'active',false);
+
         }
     });
     }
@@ -44,7 +65,6 @@ angular.module('todoApp', [])
     }
 
     workout.getDays = function(workoutId){
-      alert(workoutId);
       $.ajax({
         type: "POST",
         url: "ajax/getDays.php",
@@ -64,25 +84,28 @@ angular.module('todoApp', [])
 
     workout.workoutStarted = false;
 
-    workout.exercises = [
-      {exerciseId:'1',name:'Bench Press',sets:5,reps:5},
-      {exerciseId:'2',name:'Squat',sets:3,reps:8}
-    ];
-
     workout.emptyPersonId = -1
     workout.selectedPerson = {name:'Person',personId:workout.emptyPersonId};
-    workout.selectedExercise = workout.exercises[0];
-
-    workout.currentPersonExerciseInformation = function(){
-
-    };
 
     workout.createEmptyArray = function(num) {
-      return new Array(num);
+      var data = [];
+      var length = parseInt(num); // user defined length
+
+      for(var i = 0; i < length; i++) {
+          data.push(i);
+      }
+      return data;
     }
 
     workout.cyclePerson = function(){
+      var arrayIndex = workout.people.length-1;
+      for (i = 0; i <= arrayIndex; i++) {
+          alert(JSON.stringify(workout.people[i]));
+      }
+
       var activePeople = removeObjectsInJSONArray(workout.people, 'active', false);
+      alert(activePeople);
+      alert(JSON.stringify(activePeople));
       if (workout.selectedPerson.personId == workout.emptyPersonId){
         workout.selectedPerson = activePeople[0];
       }
@@ -191,6 +214,15 @@ function nextObjectInJSONArray(value,property,jsonArray){
       }
     }
      return arrayCopy;
+  }
+
+  function addPropertyToEveyJSONObject(jsonArray,property,value){
+    var arrayIndex = jsonArray.length-1;
+    for (i = 0; i <= arrayIndex; i++) {
+        jsonArray[i][property] = value;
+        alert(JSON.stringify(jsonArray[i]));
+    }
+    return jsonArray;
   }
 
   function previousObjectInJSONArray(value,property,jsonArray){

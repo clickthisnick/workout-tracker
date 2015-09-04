@@ -1,0 +1,55 @@
+<link rel="stylesheet" type="text/css" href="lib/css/jasmine.css">
+
+<script src="lib/js/jquery-1.11.3.min.js"></script>
+<script type="text/javascript" src="lib/js/jasmine.js"></script>
+<script type="text/javascript" src="lib/js/jasmine-html.js"></script>
+<script type="text/javascript" src="lib/js/boot.js"></script>
+<script type="text/javascript" src="lib/js/knockout.js"></script>
+<script type="text/javascript" src="todo.js"></script>
+
+<script>
+
+
+//function nextObjectInJSONArrayCycle(value,property,jsonArray){
+
+//function nextObjectInJSONArray(value,property,jsonArray){
+
+//function removeObjectsInJSONArray(array, property, value) {
+
+//function addPropertyToEveyJSONObject(jsonArray,property,value){
+
+//function previousObjectInJSONArray(value,property,jsonArray){
+
+describe("Cycle through JSON Objects", function() {
+
+  var objects = [{id:1},{id:2},{id:3}]
+
+	it("returns the next object", function() {
+    var object = nextObjectInJSONArrayCycle(1,'id',objects);
+    	expect(object.id).toBe(2);
+  	});
+
+    it("cycles to the beginning of the list", function() {
+      var object = nextObjectInJSONArrayCycle(3,'id',objects);
+      	expect(object.id).toBe(1);
+    	});
+});
+
+describe("Removes objects in JSON array", function() {
+
+  var objects = [{id:1},{id:2},{id:3}]
+
+	it("returns the correct number of objects", function() {
+    var objectList = removeObjectsInJSONArray(objects, 'id', 1);
+    	expect(objectList.length).toBe(2);
+  	});
+
+    it("returns the correct objects", function() {
+      var objectList = removeObjectsInJSONArray(objects, 'id', 1);
+      	expect(objectList[0].id).toBe(2);
+        expect(objectList\
+          [\1].id).toBe(3);
+    	});
+});
+
+</script>
