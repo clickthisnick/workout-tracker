@@ -22,7 +22,7 @@
 
 describe("Cycle through JSON Objects", function() {
 
-  var objects = [{id:1},{id:2},{id:3}]
+  var objects = [{id:1},{id:2}];
 
 	it("returns the next object", function() {
     var object = nextObjectInJSONArrayCycle(1,'id',objects);
@@ -30,14 +30,31 @@ describe("Cycle through JSON Objects", function() {
   	});
 
     it("cycles to the beginning of the list", function() {
-      var object = nextObjectInJSONArrayCycle(3,'id',objects);
+      var object = nextObjectInJSONArrayCycle(2,'id',objects);
       	expect(object.id).toBe(1);
+    	});
+});
+
+describe("Copy Array of JSON objects", function() {
+
+  var objects = [{id:1},{id:2},{id:3}];
+
+	it("returns the correct number of objects", function() {
+    var objectList = copyJSONArray(objects)
+    	expect(objectList.length).toBe(3);
+  	});
+
+    it("returns the correct values", function() {
+      var objectList = copyJSONArray(objects);
+      	expect(objectList[0].id).toBe(1);
+        expect(objectList[1].id).toBe(2);
+        expect(objectList[2].id).toBe(3);
     	});
 });
 
 describe("Removes objects in JSON array", function() {
 
-  var objects = [{id:1},{id:2},{id:3}]
+  var objects = [{id:1},{id:2},{id:1},{id:4}];
 
 	it("returns the correct number of objects", function() {
     var objectList = removeObjectsInJSONArray(objects, 'id', 1);
@@ -47,8 +64,7 @@ describe("Removes objects in JSON array", function() {
     it("returns the correct objects", function() {
       var objectList = removeObjectsInJSONArray(objects, 'id', 1);
       	expect(objectList[0].id).toBe(2);
-        expect(objectList\
-          [\1].id).toBe(3);
+        expect(objectList[1].id).toBe(4);
     	});
 });
 

@@ -24,14 +24,19 @@ angular.module('todoApp', [])
         datatype: "json",
         success: function(data) {
           var json = eval('(' + data + ')');
-          alert(JSON.stringify(json));
           workout.exercises = json;
           workout.selectedExercise = workout.exercises[0];
           workout.nextExercise();
           workout.nextExercise();
           workout.nextExercise();
           workout.previousExercise();
+
+          var activePeople = removeObjectsInJSONArray(workout.people, 'active', false);
+          workout.selectedPerson = activePeople[0];
+          workout.cyclePerson();
+          workout.selectedPerson = activePeople[0];
       }
+
   });
     }
 
@@ -85,7 +90,7 @@ angular.module('todoApp', [])
     workout.workoutStarted = false;
 
     workout.emptyPersonId = -1
-    workout.selectedPerson = {name:'Person',personId:workout.emptyPersonId};
+    workout.selectedPerson = null;
 
     workout.createEmptyArray = function(num) {
       var data = [];
@@ -98,26 +103,13 @@ angular.module('todoApp', [])
     }
 
     workout.cyclePerson = function(){
-      var arrayIndex = workout.people.length-1;
-      for (i = 0; i <= arrayIndex; i++) {
-          alert(JSON.stringify(workout.people[i]));
-      }
-
       var activePeople = removeObjectsInJSONArray(workout.people, 'active', false);
-      alert(activePeople);
-      alert(JSON.stringify(activePeople));
-      if (workout.selectedPerson.personId == workout.emptyPersonId){
-        workout.selectedPerson = activePeople[0];
-      }
-      else{
-        var person = nextObjectInJSONArrayCycle(workout.selectedPerson.personId,'personId',activePeople)
-        workout.selectedPerson = person;
-      }
+      workout.selectedPerson = nextObjectInJSONArrayCycle(workout.selectedPerson.id,'id',activePeople)
     }
 
     workout.findPerson = function(personId) {
       angular.forEach(workout.people, function(person) {
-        if (person.personId == personId) workout.selectedPerson = person;
+        if (person.id == personId) workout.selectedPerson = person;
       });
     }
 
@@ -177,6 +169,7 @@ angular.module('todoApp', [])
           });
   });
 
+// Tested
   function nextObjectInJSONArrayCycle(value,property,jsonArray){
     // We assume we are getting the jsonArray already sorted
     // We allow recycling through the array
@@ -204,23 +197,38 @@ function nextObjectInJSONArray(value,property,jsonArray){
     return -1
   };
 
-  function removeObjectsInJSONArray(array, property, value) {
-    var arrayCopy = array.slice();
 
-    var arrayIndex = arrayCopy.length-1;
+// Tested
+  function removeObjectsInJSONArray(array, property, value) {
+    var arrayCopy = copyJSONArray(array);
+    var itemToRemove = [];
+
+    var arrayIndex = array.length-1;
     for (i = 0; i <= arrayIndex; i++) {
-      if(arrayCopy[i][property] == value){
-        arrayCopy.splice(i, 1);
+      if(array[i][property] == value){
+        itemToRemove.push(i);
       }
     }
+
+    itemToRemove.reverse();
+    var removeIndex = itemToRemove.length-1;
+    for (i = 0; i <= removeIndex; i++) {
+        arrayCopy.splice(itemToRemove[i],1);
+    }
+
      return arrayCopy;
+  }
+
+// Tested
+  function copyJSONArray(array) {
+     var copy = JSON.parse(JSON.stringify(array));
+     return copy;
   }
 
   function addPropertyToEveyJSONObject(jsonArray,property,value){
     var arrayIndex = jsonArray.length-1;
     for (i = 0; i <= arrayIndex; i++) {
         jsonArray[i][property] = value;
-        alert(JSON.stringify(jsonArray[i]));
     }
     return jsonArray;
   }
