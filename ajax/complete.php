@@ -2,7 +2,6 @@
 
 require_once '../lib/rb.php';
 
-
 $id = $_POST["id"];
 $task = R::load( 'tasks', $id ); //reloads our book
 

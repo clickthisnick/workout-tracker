@@ -68,4 +68,64 @@ describe("Removes objects in JSON array", function() {
     	});
 });
 
+
+describe("Create reps json", function() {
+
+	it("returns the correct number of json objects", function() {
+    var objectList = createReps(11);
+    	expect(objectList.length).toBe(11);
+  	});
+
+    it("returns the correct objects", function() {
+      var objectList = createReps(11);
+      	expect(objectList[0].name).toBe('/');
+        expect(objectList[1].name).toBe(1);
+        expect(objectList[5].name).toBe(5);
+        expect(objectList[10].name).toBe(10);
+    	});
+});
+
+
+describe("Create empty array", function() {
+
+	it("returns the correct number of elements", function() {
+    var array = createEmptyArray(2);
+    	expect(array.length).toBe(2);
+  	});
+
+    it("the elements are empty", function() {
+      var array = createEmptyArray(2);
+      	expect(array[0]).toBe("");
+        expect(array[1]).toBe("");
+    	});
+
+      it("accepts a string", function() {
+        var array = createEmptyArray("2");
+        expect(array.length).toBe(2);
+        	expect(array[0]).toBe("");
+          expect(array[1]).toBe("");
+      	});
+
+});
+
+
+describe("Create workoutdata", function() {
+  var peopleJSON = [{"id":"12ff14ae-5054-11e5-b607-04014aabd801","name":"Doug","active":true,"$$hashKey":"object:766"},{"id":"72429227-5042-11e5-b607-04014aabd801","name":"Nick","active":true,"$$hashKey":"object:768"}];
+  var workoutJSON = [{"id":"05c2ca2c-505d-11e5-b607-04014aabd801","workoutdayid":"b9952af4-5046-11e5-b607-04014aabd801","exerciseid":"05c2ca2c-505d-11e5-b607-04014aabd801","sets":"5","reps":"5","sequence":"1","name":"Squats"},{"id":"9adb655d-5045-11e5-b607-04014aabd801","workoutdayid":"b9952af4-5046-11e5-b607-04014aabd801","exerciseid":"9adb655d-5045-11e5-b607-04014aabd801","sets":"5","reps":"5","sequence":"2","name":"Bench Press"}];
+  var workoutdata = createWorkoutData(peopleJSON,workoutJSON);
+
+	it("returns the correct number of elements", function() {
+    	expect(workoutdata.length).toBe(4); // 2 exercises for 2 people
+  	});
+
+    it("returns the right elemnts", function() {
+      	expect(workoutdata[0].personId).toBe("12ff14ae-5054-11e5-b607-04014aabd801");
+        expect(workoutdata[0].exerciseId).toBe("05c2ca2c-505d-11e5-b607-04014aabd801");
+        expect(workoutdata[0].reps.length).toBe(5);
+        expect(workoutdata[0].weight.length).toBe(5);
+    	});
+});
+
+
+
 </script>
