@@ -2,8 +2,7 @@
 // PHPReadBeans
 require_once '../lib/rb.php';
 
-
-$workoutdayid = $_POST["id"];
+$workoutdayid = $_GET["id"];
 $exercises = R::getAll( 'SELECT * FROM workoutdayexercise
   Join exercise on exercise.id = workoutdayexercise.exerciseid
    Where workoutdayid = :workoutdayid

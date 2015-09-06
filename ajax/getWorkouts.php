@@ -2,7 +2,6 @@
 // PHPReadBeans
 require_once '../lib/rb.php';
 
-
 $workout = R::findAll( 'workout');
 R::close();
 

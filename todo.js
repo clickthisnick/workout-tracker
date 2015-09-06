@@ -20,6 +20,28 @@ app.factory('GetPeople', function($http) {
   return (GetPeople);
 });
 
+app.factory('GetExercises', function($http) {
+  var GetExercises = function(workoutdayexerciseid) {
+    this.initialize = function() {
+      // Fetch the player from Dribbble
+      var theUrl = 'http://clickthisnick.com/workout/WorkoutTracker/ajax/getExercises.php';
+      var doneUrl = theUrl + '?id=' + workoutdayexerciseid;
+      alert(doneUrl);
+      var data = $http.get(doneUrl);
+      var self = this;
+
+      data.then(function(response) {
+          angular.extend(self, response.data);
+        }, function(response) {
+          alert("error");
+          alert(response);
+        });
+    };
+    this.initialize();
+  };
+  return (GetExercises);
+});
+
 app.factory('GetWorkouts', function($http) {
   var GetWorkouts = function() {
     this.initialize = function() {
@@ -62,19 +84,17 @@ app.factory('GetDays', function($http) {
 });
 
 
-app.controller('TodoListController', function($scope, GetPeople,GetWorkouts,GetDays) {
+app.controller('TodoListController', function($scope, GetPeople,GetWorkouts,GetDays,GetExercises) {
 
   var workout = this;
 
   workout.people = new GetPeople();
   workout.workouts = new GetWorkouts();
-  workout.exercises = null;
   workout.selectedWorkoutId = null;
   workout.selectedDayId = null;
   workout.workoutData = null;
 
   workout.selectedPerson = null;
-  workout.selectedExercise = {'sets':3,'reps':5,'weight':0,'name':''};
   workout.workoutStarted = false;
   workout.emptyPersonId = -1;
 
@@ -83,14 +103,24 @@ app.controller('TodoListController', function($scope, GetPeople,GetWorkouts,GetD
     workout.days = new GetDays(workoutId);
   }
 
+  workout.getExercises = function(workoutexerciseid){
+    workout.exercises = new GetExercises(workoutexerciseid);
+    alert(JSON.stringify(workout.exercises));
+    workout.selectedExercise = workout.exercises[0];
+  }
+
   workout.createData = function(){
     var activePeople = removeObjectsInJSONArray(workout.people, 'active', false);
     workout.workoutData = createWorkoutData(activePeople,workout.exercises);
   };
 
   workout.startWorkout = function(workoutdayexerciseid){
-    var exercises = workout.getExercises(workoutdayexerciseid);
-    exercises.then(function(result) {  // this is only run after $http completes
+    alert('hi');
+    alert(workoutdayexerciseid);
+    workout.getExercises(workoutdayexerciseid);
+    alert('hide');
+    alert(JSON.stringify(workout.exercises));
+/*    exercises.then(function(result) {  // this is only run after $http completes
        workout.exercises = result;
        alert("promise")
        alert("this");
@@ -103,7 +133,7 @@ app.controller('TodoListController', function($scope, GetPeople,GetWorkouts,GetD
        workout.selectedPerson = activePeople[0];
     });
 
-
+*/
 
     //workout.nextExercise();
   //rkout.nextExercise();
@@ -123,20 +153,6 @@ app.controller('TodoListController', function($scope, GetPeople,GetWorkouts,GetD
     alert(JSON.stringify(workout.selectedExercise));
 
   }
-
-  workout.getExercises = function(workoutdayexerciseid){
-    $.ajax({
-      type: "POST",
-      url: "ajax/getExercises.php",
-      data: {'id':workoutdayexerciseid},
-      datatype: "json",
-      success: function(data) {
-        var json = eval('(' + data + ')');
-        return json;
-      }
-    });
-    return;
-  };
 
   workout.editReps = function(text,index){
     if(text == 'Edit'){

@@ -73,11 +73,11 @@
 
 <h2> Choose Day </h2>
 
-<select class="form-control" ng-model="workout.selectedDayId">
+<select class="form-control" ng-model="workout.selectedDayId" ng-change="workout.getExercises(workout.selectedDayId)">
   <option ng-repeat="day in workout.days" value="{{day.id}}">{{day.name}}</option>
 </select>
 
-<button class='btn btn-success btn-lg' ng-click='workout.workoutStarted = true; workout.startWorkout(workout.selectedDayId)'> Start Workout </button>
+<button class='btn btn-success btn-lg' ng-click='workout.workoutStarted = true;'> Start Workout </button>
 
 </div>
 

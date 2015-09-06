@@ -2,7 +2,6 @@
 // PHPReadBeans
 require_once '../lib/rb.php';
 
-
 $people = R::findAll( 'person');
 
 R::close();
