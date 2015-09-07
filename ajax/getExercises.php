@@ -1,6 +1,7 @@
 <?php
 // PHPReadBeans
 require_once '../lib/rb.php';
+require_once 'connection.php';
 
 $workoutdayid = $_GET["id"];
 $exercises = R::getAll( 'SELECT * FROM workoutdayexercise

@@ -1,6 +1,7 @@
 <?php
 // PHPReadBeans
 require_once '../lib/rb.php';
+require_once 'connection.php';
 
 $dayId = $_GET['id'];
 

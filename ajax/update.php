@@ -1,7 +1,7 @@
 <?php
 
 require_once '../lib/rb.php';
-
+require_once 'connection.php';
 
 $id = $_POST["id"];
 

@@ -1,162 +1,155 @@
 <!doctype html>
 <html ng-app="todoApp">
 <head>
+  <link rel="stylesheet" type="text/css" href="lib/css/nassim.css">
+  <link rel="stylesheet" type="text/css" href="lib/css/sweetalert.css">
+  <link rel="stylesheet" href="todo.css">
+  <link rel="stylesheet" type="text/css" href="lib/css/ceruleanBootswatch.min.css">
+
   <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.4/angular.min.js"></script>
   <script src="lib/js/jquery-1.11.3.min.js"></script>
   <script src="lib/js/bootstrap.min.js"></script>
+  <script src="lib/js/sweetalert.min.js"></script>
   <script src="todo.js"></script>
-  <link rel="stylesheet" href="todo.css">
-  <link rel="stylesheet" type="text/css" href="lib/css/ceruleanBootswatch.min.css">
+
+
+
+
   <meta name="viewport" content="width=device-width, initial-scale=1" />
 </head>
 
-
-
 <body class="container" ng-controller="TodoListController as workout">
 
-<div ng-if="workout.workoutStarted == false">
+  <div ng-if="workout.workoutStarted == false">
 
-
-  <div id="ChooseReps" class="modal fade">
+    <!-- Button trigger modal -->
+    <div id="ChooseLifters" class="modal fade">
       <div class="modal-dialog">
-          <div class="modal-content">
-              <div class="modal-header">
-                  <h4 id="modal-label">Choose Reps</h4>
-              </div>
-              <div class="modal-body">
-                <div class="row" ng-repeat="reps in workout.reps()">
-                  <div class="col-xs-12" "text-center">
-                    <button class="btn btn-lg btn-info">{{reps.name}}</button>
-                  </div>
-                </div>
-              </div>
+        <div class="modal-content">
+          <div class="modal-header">
+            <h4 id="modal-label">Choose Lifters</h4>
+          </div>
+          <div class="modal-body">
+            <div ng-repeat="person in workout.people">
+              <input type="checkbox" ng-model="person.active"></input>
+              <span class="done-{{person.selected}}">{{person.name}}</span>
+            </div>
+          </div>
 
-              <div class="modal-footer">
-   <button type="button" class="btn btn-default" data-dismiss="modal">Done</button>
- </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+          </div>
 
-          </div> <!--modal-content-->
+        </div> <!--modal-content-->
       </div> <!--modal-dialog-->
-  </div> <!--modal-->
+    </div> <!--modal-->
 
+    <a data-toggle="modal" href="#ChooseLifters" class="btn btn-info">Choose Lifters</a>
+<a data-toggle="modal" href="#ChooseReps" class="btn btn-info">Choose Lifters</a>
+    <h2> Choose Workout </h2>
 
+    <select class="form-control" ng-model="workout.selectedWorkoutId" ng-change="workout.getDays(workout.selectedWorkoutId)">
+      <option value="{{theWorkout.id}}" ng-repeat="theWorkout in workout.workouts">{{theWorkout.name}}</option>
+    </select>
 
-  <!-- Button trigger modal -->
-  <div id="ChooseLifters" class="modal fade">
+    <h2> Choose Day </h2>
+
+    <select class="form-control" ng-model="workout.selectedDayId" ng-change="workout.startWorkout(workout.selectedDayId)">
+      <option ng-repeat="day in workout.days" value="{{day.id}}">{{day.name}}</option>
+    </select>
+
+    <button class='btn btn-success btn-lg' ng-click='workout.workoutStarted = true;'> Start Workout </button>
+
+  </div>
+
+  <div ng-if="workout.workoutStarted == true">
+
+    <div id="ChooseReps" class="modal fade">
       <div class="modal-dialog">
-          <div class="modal-content">
-              <div class="modal-header">
-                  <h4 id="modal-label">Choose Lifters</h4>
+        <div class="modal-content">
+          <div class="modal-header">
+            <h4 id="modal-label">Choose Reps</h4>
+          </div>
+          <div class="modal-body">
+            <div class="row" ng-repeat="reps in workout.reps()">
+              <div class="col-xs-12" "text-center">
+                <button ng-click="workout.addRep(9)" class="btn btn-lg btn-info">{{reps.name}}</button>
               </div>
-              <div class="modal-body">
-                <div ng-repeat="person in workout.people">
-                  <input type="checkbox" checked data-toggle="toggle" ng-model="person.active"></input>
-                  <span class="done-{{person.selected}}">{{person.name}}</span>
-                </div>
-              </div>
+            </div>
+          </div>
 
-              <div class="modal-footer">
-   <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
- </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Done</button>
+          </div>
 
-          </div> <!--modal-content-->
+        </div> <!--modal-content-->
       </div> <!--modal-dialog-->
-  </div> <!--modal-->
+    </div> <!--modal-->
 
-<a data-toggle="modal" href="#ChooseLifters" class="btn btn-info">Choose Lifters</a>
+    <div class="row" "text-center">
 
-<h2> Choose Workout </h2>
-
-<select class="form-control" ng-model="workout.selectedWorkoutId" ng-change="workout.getDays(workout.selectedWorkoutId)">
-  <option value="{{theWorkout.id}}" ng-repeat="theWorkout in workout.workouts">{{theWorkout.name}}</option>
-</select>
-
-<h2> Choose Day </h2>
-
-<select class="form-control" ng-model="workout.selectedDayId" ng-change="workout.getExercises(workout.selectedDayId)">
-  <option ng-repeat="day in workout.days" value="{{day.id}}">{{day.name}}</option>
-</select>
-
-<button class='btn btn-success btn-lg' ng-click='workout.workoutStarted = true;'> Start Workout </button>
-
-</div>
-
-<div ng-if="workout.workoutStarted == true">
-  <div class="row" "text-center">
-
-    <div class="col-xs-12" "text-center">
-      <button class="btn btn-success btn-lg" ng-click="workout.cyclePerson()">{{workout.selectedPerson.name}}</button>
+      <div class="col-xs-12" "text-center">
+        <button class="btn btn-success btn-lg" ng-click="workout.cyclePerson()">{{workout.selectedPerson.name}}</button>
+      </div>
     </div>
+
+    <hr>
+
+    <div class="row">
+      <div class="col-xs-4">
+        <button class="btn btn-success btn-lg"  ng-click="workout.previousExercise()">Prev</button>
+      </div>
+      <div class="col-xs-4">
+        <h2>{{workout.selectedExercise.name}} <br>( {{workout.selectedExercise.sets}} x {{workout.selectedExercise.reps}} )</h2>
+      </div>
+      <div class="col-xs-4">
+        <button class="btn btn-success btn-lg" ng-click="workout.nextExercise()">
+          Next
+        </button>
+      </div>
+    </div>
+
+    <hr>
+
+    <!-- Exercises -->
+    <div class="row">
+      <div class="col-xs-2">
+        Reps
+      </div>
+      <div class="col-xs-2">
+        Weight
+      </div>
+      <div class="col-xs-4">
+        Reps
+      </div>
+      <div class="col-xs-4">
+        Weight
+      </div>
+    </div>
+
+    <!--<div ng-repeat="exercise in workout.previousWorkouts | filter: {personId:workout.selectedPerson.personId, exerciseId:workout.selectedExercise.exerciseId}">-->
+    <div ng-repeat="set in workout.createEmptyArray(workout.selectedExercise.sets) track by $index" class="row">
+
+      <div class="col-xs-2">
+        1
+      </div>
+
+      <div class="col-xs-2">
+        0
+      </div>
+
+      <div class="col-xs-4" ng-repeat="exercise in workout.workoutData | filter: {personid:workout.selectedPerson.id, exerciseid:workout.selectedExercise.exerciseid}">
+        <button data-toggle="modal" href="#ChooseReps" ng-click="workout.changePersonExerciseCurrentReps($parent.$index)">{{exercise.reps[$parent.$index]}}</button>
+      </div>
+
+
+      <div class="col-xs-4" ng-repeat="exercise in workout.workoutData | filter: {personid:workout.selectedPerson.id, exerciseid:workout.selectedExercise.exerciseid}">
+        <button ng-click="workout.changePersonExerciseCurrentReps($parent.$index)">{{exercise.weight[$parent.$index]}}</button>
+      </div>
+
+    </div>
+
   </div>
-
-
-  <hr>
-
-  <div class="row">
-    <div class="col-xs-4">
-      <button class="btn btn-success btn-lg"  ng-click="workout.previousExercise()">Prev</button>
-    </div>
-    <div class="col-xs-4">
-      <h2>{{workout.selectedExercise.name}} <br>( {{workout.selectedExercise.sets}} x {{workout.selectedExercise.reps}} )</h2>
-    </div>
-    <div class="col-xs-4">
-      <button class="btn btn-success btn-lg" ng-click="workout.nextExercise()">
-        Next
-      </button>
-    </div>
-  </div>
-
-  <hr>
-
-
-  <!-- Exercises -->
-  <div class="row">
-    <div class="col-xs-2">
-      Reps
-    </div>
-    <div class="col-xs-2">
-      Weight
-    </div>
-    <div class="col-xs-4">
-      Reps
-    </div>
-    <div class="col-xs-4">
-      Weight
-    </div>
-  </div>
-
-<!--<div ng-repeat="exercise in workout.previousWorkouts | filter: {personId:workout.selectedPerson.personId, exerciseId:workout.selectedExercise.exerciseId}">-->
-<div ng-repeat="set in workout.createEmptyArray(workout.selectedExercise.sets)" class="row">
-
-<div class="col-xs-2">
-  1
-</div>
-
-<div class="col-xs-2">
-  0
-</div>
-
-<div class="col-xs-4">
-<button>1</button>
-</div>
-
-
-<div class="col-xs-4">
-  <button>Edit</button>
-</div>
-
-</div>
-
-<div id="confirm" class="modal hide fade">
-  <div class="modal-body">
-    Do you want to continue?
-  </div>
-  <div class="modal-footer">
-    <button type="button" data-dismiss="modal" class="btn btn-primary" data-value="1">Continue</button>
-    <button type="button" data-dismiss="modal" class="btn" data-value="0">Cancel</button>
-  </div>
-</div>
-</div>
 
 </body>
 </html>

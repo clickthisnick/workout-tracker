@@ -52,6 +52,23 @@ describe("Copy Array of JSON objects", function() {
     	});
 });
 
+
+describe("Converting JSON object of objects into JSON Array", function() {
+
+  var objectCopy = {"0":{"id":"055ae363-5054-11e5-b607-04014aabd801","name":"Brett","active":false},"1":{"id":"12ff14ae-5054-11e5-b607-04014aabd801","name":"Doug","active":false},"2":{"id":"1ac51bfa-5054-11e5-b607-04014aabd801","name":"Zaid","active":false},"3":{"id":"72429227-5042-11e5-b607-04014aabd801","name":"Nick","active":false}};
+  var jsonArray = convertJSONObjectOfObjectsToJSONArray(objectCopy);
+
+	it("returns the correct number of objects", function() {
+    	expect(jsonArray.length).toBe(4);
+  	});
+
+    it("returns the correct objects", function() {
+      	expect(jsonArray[0].id).toBe("055ae363-5054-11e5-b607-04014aabd801");
+        expect(jsonArray[3].name).toBe("Nick");
+    	});
+});
+
+
 describe("Removes objects in JSON array", function() {
 
   var objects = [{id:1},{id:2},{id:1},{id:4}];
@@ -66,6 +83,7 @@ describe("Removes objects in JSON array", function() {
       	expect(objectList[0].id).toBe(2);
         expect(objectList[1].id).toBe(4);
     	});
+
 });
 
 
@@ -95,15 +113,15 @@ describe("Create empty array", function() {
 
     it("the elements are empty", function() {
       var array = createEmptyArray(2);
-      	expect(array[0]).toBe("");
-        expect(array[1]).toBe("");
+      	expect(array[0]).toBe(0);
+        expect(array[1]).toBe(0);
     	});
 
       it("accepts a string", function() {
         var array = createEmptyArray("2");
         expect(array.length).toBe(2);
-        	expect(array[0]).toBe("");
-          expect(array[1]).toBe("");
+        	expect(array[0]).toBe(0);
+          expect(array[1]).toBe(0);
       	});
 
 });
@@ -119,10 +137,24 @@ describe("Create workoutdata", function() {
   	});
 
     it("returns the right elemnts", function() {
-      	expect(workoutdata[0].personId).toBe("12ff14ae-5054-11e5-b607-04014aabd801");
-        expect(workoutdata[0].exerciseId).toBe("05c2ca2c-505d-11e5-b607-04014aabd801");
+      	expect(workoutdata[0].personid).toBe("12ff14ae-5054-11e5-b607-04014aabd801");
+        expect(workoutdata[0].exerciseid).toBe("05c2ca2c-505d-11e5-b607-04014aabd801");
         expect(workoutdata[0].reps.length).toBe(5);
         expect(workoutdata[0].weight.length).toBe(5);
+    	});
+});
+
+
+describe("Finding person exercise data", function() {
+  var workoutData = [{"personid":"72429227-5042-11e5-b607-04014aabd801","exerciseid":"05c2ca2c-505d-11e5-b607-04014aabd801","reps":[0,0,0,0,0],"weight":[0,0,0,0,0]},{"personid":"72429227-5042-11e5-b607-04014aabd801","exerciseid":"9adb655d-5045-11e5-b607-04014aabd801","reps":[0,0,0,0,0],"weight":[0,0,0,0,0]}];
+  var selectedPerson = {"id":"72429227-5042-11e5-b607-04014aabd801","name":"Nick","active":true,"$$hashKey":"object:517"};
+  var selectedExercise = {"id":"05c2ca2c-505d-11e5-b607-04014aabd801","workoutdayid":"b9952af4-5046-11e5-b607-04014aabd801","exerciseid":"05c2ca2c-505d-11e5-b607-04014aabd801","sets":"5","reps":"5","sequence":"1","name":"Squats"};
+
+  var theWorkout = findPersonExerciseData(workoutData,selectedPerson,selectedExercise);
+
+    it("returns the right elemnts", function() {
+      	expect(theWorkout.personid).toBe("72429227-5042-11e5-b607-04014aabd801");
+        expect(theWorkout.exerciseid).toBe("05c2ca2c-505d-11e5-b607-04014aabd801");
     	});
 });
 

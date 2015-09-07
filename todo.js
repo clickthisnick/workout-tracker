@@ -1,158 +1,153 @@
 var app = angular.module("todoApp", []);
 
-app.factory('GetPeople', function($http) {
-  var GetPeople = function() {
-    this.initialize = function() {
-      // Fetch the player from Dribbble
+app.factory('Api',function($http){
+  return {
+    getPeople: function(onSuccuess,onFailure){
+      var database = {};
       var url = 'http://clickthisnick.com/workout/WorkoutTracker/ajax/getPeople.php';
-      var getPeopleData = $http.get(url);
-      var self = this;
-
-      getPeopleData.then(function(response) {
-          angular.extend(self, response.data);
-        }, function(response) {
-          alert("error");
-          alert(response);
-        });
-    };
-    this.initialize();
-  };
-  return (GetPeople);
-});
-
-app.factory('GetExercises', function($http) {
-  var GetExercises = function(workoutdayexerciseid) {
-    this.initialize = function() {
-      // Fetch the player from Dribbble
-      var theUrl = 'http://clickthisnick.com/workout/WorkoutTracker/ajax/getExercises.php';
-      var doneUrl = theUrl + '?id=' + workoutdayexerciseid;
-      alert(doneUrl);
-      var data = $http.get(doneUrl);
-      var self = this;
-
-      data.then(function(response) {
-          angular.extend(self, response.data);
-        }, function(response) {
-          alert("error");
-          alert(response);
-        });
-    };
-    this.initialize();
-  };
-  return (GetExercises);
-});
-
-app.factory('GetWorkouts', function($http) {
-  var GetWorkouts = function() {
-    this.initialize = function() {
-      // Fetch the player from Dribbble
+      $http.get(url).
+      success(onSuccuess).
+      error(onFailure);
+    },
+    getWorkouts: function(onSuccuess,onFailure){
+      var database = {};
       var url = 'http://clickthisnick.com/workout/WorkoutTracker/ajax/getWorkouts.php';
-      var getWorkoutData = $http.get(url);
-      var self = this;
-
-      getWorkoutData.then(function(response) {
-          angular.extend(self, response.data);
-        }, function(response) {
-          alert("error");
-          alert(response);
-        });
-    };
-    this.initialize();
+      $http.get(url).
+      success(onSuccuess).
+      error(onFailure);
+    },
+    getDays: function(onSuccuess,onFailure,workoutId){
+      var database = {};
+      var url = 'http://clickthisnick.com/workout/WorkoutTracker/ajax/getDays.php';
+      var doneUrl = url + '?id=' + workoutId;
+      $http.get(doneUrl).
+      success(onSuccuess).
+      error(onFailure);
+    },
+    getExercises: function(onSuccuess,onFailure,workoutdayexerciseid){
+      var url = 'http://clickthisnick.com/workout/WorkoutTracker/ajax/getExercises.php';
+      var doneUrl = url + '?id=' + workoutdayexerciseid;
+      $http.get(doneUrl).
+      success(onSuccuess).
+      error(onFailure);
+    }
   };
-  return (GetWorkouts);
-});
+})
 
-app.factory('GetDays', function($http) {
-  var GetDays = function(workoutId) {
-    this.initialize = function() {
-      // Fetch the player from Dribbble
-      var theUrl = 'http://clickthisnick.com/workout/WorkoutTracker/ajax/getDays.php';
-      var doneUrl = theUrl + '?id=' + workoutId;
-      var data = $http.get(doneUrl);
-      var self = this;
-
-      data.then(function(response) {
-          angular.extend(self, response.data);
-        }, function(response) {
-          alert("error");
-          alert(response);
-        });
-    };
-    this.initialize();
-  };
-  return (GetDays);
-});
-
-
-app.controller('TodoListController', function($scope, GetPeople,GetWorkouts,GetDays,GetExercises) {
+app.controller('TodoListController', function(Api) {
 
   var workout = this;
 
-  workout.people = new GetPeople();
-  workout.workouts = new GetWorkouts();
+  workout.people = null;
+  workout.exercises = null;
+
   workout.selectedWorkoutId = null;
   workout.selectedDayId = null;
   workout.workoutData = null;
-
   workout.selectedPerson = null;
+  workout.selectedExercise = null;
   workout.workoutStarted = false;
   workout.emptyPersonId = -1;
 
+  workout.personReps = null;
+  workout.personWeight = null;
 
-  workout.getDays = function(workoutId){
-    workout.days = new GetDays(workoutId);
-  }
+  workout.personExercise = null;
 
-  workout.getExercises = function(workoutexerciseid){
-    workout.exercises = new GetExercises(workoutexerciseid);
-    alert(JSON.stringify(workout.exercises));
-    workout.selectedExercise = workout.exercises[0];
-  }
-
-  workout.createData = function(){
-    var activePeople = removeObjectsInJSONArray(workout.people, 'active', false);
-    workout.workoutData = createWorkoutData(activePeople,workout.exercises);
+  failureFunction = function(data){
+    console.log('Error' + data);
   };
 
+  var init = function(){
+
+    workoutPeopleFunc = function(data){
+      var dataa = convertJSONObjectOfObjectsToJSONArray(data);
+      var datas = addPropertyToEveyJSONObject(dataa,'active',false)
+      workout.people = datas;
+    };
+
+    workoutFunc = function(data){
+      var dataa = convertJSONObjectOfObjectsToJSONArray(data);
+      workout.workouts = dataa;
+    };
+
+    Api.getPeople(workoutPeopleFunc,failureFunction);
+    Api.getWorkouts(workoutFunc,failureFunction);
+  }
+
+  init();
+
+  workout.getDays = function(workoutId){
+
+    daysFunc = function(data){
+      var dataa = convertJSONObjectOfObjectsToJSONArray(data);
+      workout.days = dataa;
+    };
+
+    Api.getDays(daysFunc,failureFunction,workoutId);
+  }
+
   workout.startWorkout = function(workoutdayexerciseid){
-    alert('hi');
-    alert(workoutdayexerciseid);
-    workout.getExercises(workoutdayexerciseid);
-    alert('hide');
-    alert(JSON.stringify(workout.exercises));
-/*    exercises.then(function(result) {  // this is only run after $http completes
-       workout.exercises = result;
-       alert("promise")
-       alert("this");
-       workout.exercises = exercises;
-       alert(exercises);
-       alert(workout.exercises);
-       workout.selectedExercise = workout.exercises[0];
-       alert("there");
-       var activePeople = removeObjectsInJSONArray(workout.people, 'active', false);
-       workout.selectedPerson = activePeople[0];
-    });
 
-*/
+    exerciseFunc = function(data){
+      var dataa = convertJSONObjectOfObjectsToJSONArray(data);
+      workout.exercises = dataa;
+      workout.selectedExercise = workout.exercises[0];
+      workout.workoutData = createWorkoutData(activePeople,workout.exercises);
+      return;
+      };
 
-    //workout.nextExercise();
-  //rkout.nextExercise();
-//    workout.nextExercise();
-  //  workout.previousExercise();
-
-
-
-//    workout.cyclePerson();
-//    workout.selectedPerson = activePeople[0];
-  //  workout.createData();
+    Api.getExercises(exerciseFunc,failureFunction,workoutdayexerciseid);
+    var activePeople = removeObjectsInJSONArray(workout.people, 'active', false);
+    workout.selectedPerson = activePeople[0];
   }
-  workout.getPersonExerciseData = function(index,property){
-    alert(index);
-    alert(property);
-    alert(JSON.stringify(workout.selectedPerson));
-    alert(JSON.stringify(workout.selectedExercise));
 
+  workout.createEmptyArray = function(num){
+    return createEmptyArray(num);
   }
+
+  workout.findPersonExerciseData = function(){
+    var theWorkout = findPersonExerciseData(workout.workoutData,workout.selectedPerson,workout.selectedExercise);
+    return theWorkout;
+  }
+
+  workout.addRep = function(num){
+    $('#ChooseReps').modal('hide')
+    arrayLength = workout.workoutData.length - 1
+    for (var i = 0; i <= arrayLength; i++) {
+      var theWorkout = workout.workoutData[i];
+      if (theWorkout.personid == workout.selectedPerson.id && theWorkout.exerciseid == workout.selectedExercise.exerciseid){
+        workout.workoutData[i].reps[workout.repIndex] = num;
+        workout.repIndex = null;
+        }
+      }
+  }
+
+  workout.changePersonExerciseCurrentReps = function(index){
+    workout.repIndex = index;
+    document.getElementById("ChooseReps").showModal();
+    }
+
+  workout.changePersonExerciseCurrentWeight = function(index){
+    arrayLength = workout.workoutData.length - 1
+    for (var i = 0; i <= arrayLength; i++) {
+      var theWorkout = workout.workoutData[i];
+      if (theWorkout.personid == workout.selectedPerson.id && theWorkout.exerciseid == workout.selectedExercise.exerciseid){
+        workout.workoutData[i].weight[index] = 100;
+        return;
+      }
+    }
+  }
+
+/*
+  workout.getPersonRepsWeight = function(){
+    var theWorkout = workout.findPersonExerciseData();
+    alert('get person');
+    alert(JSON.stringify(theWorkout));
+    workout.personReps = theWorkout.reps;
+    workout.personWeight = theWorkout.weight;
+  }
+  */
 
   workout.editReps = function(text,index){
     if(text == 'Edit'){
@@ -169,53 +164,23 @@ app.controller('TodoListController', function($scope, GetPeople,GetWorkouts,GetD
     workout.selectedPerson = nextObjectInJSONArrayCycle(workout.selectedPerson.id,'id',activePeople);
   };
 
-  workout.findPerson = function(personId) {
-    angular.forEach(workout.people, function(person) {
-      if (person.id == personId) workout.selectedPerson = person;
-    });
-  };
-
   workout.previousExercise = function(){
-    var previousExercise = previousObjectInJSONArray(workout.selectedExercise.exerciseId,'exerciseId',workout.exercises);
+    var previousExercise = previousObjectInJSONArray(workout.selectedExercise.exerciseid,'exerciseid',workout.exercises);
     if (previousExercise != -1){
       workout.selectedExercise = previousExercise;
+      return;
     }
+    return;
   };
 
   workout.nextExercise = function(){
-    var nextExercise = nextObjectInJSONArray(workout.selectedExercise.exerciseId,'exerciseId',workout.exercises);
+    var nextExercise = nextObjectInJSONArray(workout.selectedExercise.exerciseid,'exerciseid',workout.exercises);
     if (nextExercise != -1){
       workout.selectedExercise = nextExercise;
     }
+    return;
   };
 
-  workout.previousWorkouts = [
-    {personId:'1',exerciseId:'1',reps:[5,4,3,2,1],weight:[136,146,155,165,175]},
-    {personId:'1',exerciseId:'2',reps:[5,5,5,5,5],weight:[135,145,155,165,175]},
-    {personId:'2',exerciseId:'1',reps:[5,5,5,4,3],weight:[155,180,205,215,225]},
-    {personId:'2',exerciseId:'2',reps:[5,5,5,2,1],weight:[189,200,215,235,245]}
-  ];
-
-  workout.addPerson = function() {
-    workout.people.push({name:workout.personName, selected:false, active:false});
-    workout.todoText = '';
-  };
-
-  workout.remaining = function() {
-    var count = 0;
-    angular.forEach(workout.people, function(person) {
-      count += person.selected ? 0 : 1;
-    });
-    return count;
-  };
-
-  workout.archive = function() {
-    var oldPeople = workout.people;
-    workout.people = [];
-    angular.forEach(oldPeople, function(person) {
-      if (!person.selected) workout.people.push(person);
-    });
-  };
 });
 
 // Tested
@@ -322,23 +287,66 @@ function createEmptyArray(num) {
   }
   var data = [];
   for(var i = 0; i < num; i++) {
-    data.push("");
+    data.push(0);
   }
-  alert(data);
   return data;
 }
+
+function convertJSONObjectOfObjectsToJSONArray(JSONObject){
+  var key, count = 0;
+  for(key in JSONObject) {
+    if(JSONObject.hasOwnProperty(key)) {
+      count++;
+    }
+  }
+
+  var jsonArray = []
+  for (var i = 0; i < count; i++) {
+    jsonArray.push(JSONObject[i]);
+  }
+  return jsonArray;
+}
+
+/*
+function findPersonExerciseData(workoutData,selectedPerson,selectedExercise){
+  arrayLength = workoutData.length - 1
+  for (var i = 0; i <= arrayLength; i++) {
+    if (workoutData[i].personid == selectedPerson.id && workoutData[i].exerciseid == selectedExercise.exerciseid){
+      return workoutData[i];
+    }
+  }
+}
+*/
 
 function createWorkoutData(activePeople,exercises){
   var data = [];
   for (var i = 0; i < activePeople.length; i++) {
     for (var x = 0; x < exercises.length; x++) {
       data.push({
-      'personId':activePeople[i].id,
-      'exerciseId':exercises[x].exerciseid,
-      'reps':createEmptyArray(exercises[x].reps),
-      'weight':createEmptyArray(exercises[x].reps)}
-    );
+        'personid':activePeople[i].id,
+        'exerciseid':exercises[x].exerciseid,
+        'reps':createEmptyArray(exercises[x].reps),
+        'weight':createEmptyArray(exercises[x].reps)}
+      );
     }
   }
   return data;
+}
+
+function sweetaalert(){
+  alert('hiherealert');
+  swal({   title: "An input!",
+  text: "Write something interesting:",
+  type: "input",
+  showCancelButton: true,
+  closeOnConfirm: false,
+  animation: "slide-from-top",
+  inputPlaceholder: "Write something" },
+  function(inputValue){
+     if (inputValue === false) return false;
+       if (inputValue === "")
+       {     swal.showInputError("You need to write something!");
+        return false   }
+           swal("Nice!", "You wrote: " + inputValue, "success"); });
+
 }
