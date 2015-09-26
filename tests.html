@@ -91,15 +91,23 @@ describe("Create reps json", function() {
 
 	it("returns the correct number of json objects", function() {
     var objectList = createReps(11);
-    	expect(objectList.length).toBe(11);
+    	expect(objectList.length).toBe(4);
   	});
 
     it("returns the correct objects", function() {
       var objectList = createReps(11);
       	expect(objectList[0].name).toBe('/');
-        expect(objectList[1].name).toBe(1);
-        expect(objectList[5].name).toBe(5);
-        expect(objectList[10].name).toBe(10);
+        expect(objectList[0].name1).toBe(1);
+        expect(objectList[0].name2).toBe(2);
+        expect(objectList[1].name).toBe(3);
+        expect(objectList[1].name1).toBe(4);
+        expect(objectList[1].name2).toBe(5);
+        expect(objectList[2].name).toBe(6);
+        expect(objectList[2].name1).toBe(7);
+        expect(objectList[2].name2).toBe(8);
+        expect(objectList[3].name).toBe(9);
+        expect(objectList[3].name1).toBe(10);
+        expect(objectList[3].name2).toBe(undefined);
     	});
 });
 

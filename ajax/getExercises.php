@@ -5,7 +5,7 @@ require_once 'connection.php';
 
 $workoutdayid = $_GET["id"];
 $exercises = R::getAll( 'SELECT * FROM workoutdayexercise
-  Join exercise on exercise.id = workoutdayexercise.exerciseid
+  Join exercise on exercise.exerciseid = workoutdayexercise.exerciseid
    Where workoutdayid = :workoutdayid
    Order by sequence',
 [':workoutdayid' => $workoutdayid  ]);

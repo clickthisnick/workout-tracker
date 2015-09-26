@@ -3,14 +3,20 @@
 require_once '../lib/rb.php';
 require_once 'connection.php';
 
-$id = $_POST["id"];
+$data = R::dispense( 'postdata' );
 
-$task = R::load( 'tasks', $id );
+$data->id = 10;
+$data->data = $_POST;
+$id = R::store( $data );
 
-foreach( $_POST as $key=>$value ) {
-	$task->$key = $value;
-}
+//$id = $_POST["id"];
 
-R::store( $task );
+//$task = R::load( 'tasks', $id );
+
+//foreach( $_POST as $key=>$value ) {
+//	$task->$key = $value;
+//}
+
+//R::store( $task );
 
 ?>

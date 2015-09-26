@@ -1,23 +1,43 @@
 var app = angular.module("todoApp", []);
-
+//TODO increase rep databse to 7 could be 100/100
 app.factory('Api',function($http){
   return {
     getPeople: function(onSuccuess,onFailure){
-      var database = {};
       var url = 'http://clickthisnick.com/workout/WorkoutTracker/ajax/getPeople.php';
       $http.get(url).
       success(onSuccuess).
       error(onFailure);
     },
+    getOldPeopleWorkoutData: function(onSuccuess,onFailure,activePeople,workoutdayid){
+
+      var jsonData = copyJSONArray(activePeople);
+      jsonData = addPropertyToEveyJSONObject(jsonData,'workoutdayid',workoutdayid)
+
+      for (var i = 0; i < jsonData.length; i++) {
+        jsonData[i].personid = jsonData[i].personid;
+        delete jsonData[i].$$hashKey;
+        delete jsonData[i].active;
+        delete jsonData[i].name;
+        delete jsonData[i].id;
+
+        var params = $.param(jsonData[i]);
+
+        $http({
+          url: 'http://clickthisnick.com/workout/WorkoutTracker/ajax/getOldPeopleWorkout.php',
+          method: "POST",
+          headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+          data: params
+        }).success(onSuccuess).
+        error(onFailure);
+      }
+    },
     getWorkouts: function(onSuccuess,onFailure){
-      var database = {};
       var url = 'http://clickthisnick.com/workout/WorkoutTracker/ajax/getWorkouts.php';
       $http.get(url).
       success(onSuccuess).
       error(onFailure);
     },
     getDays: function(onSuccuess,onFailure,workoutId){
-      var database = {};
       var url = 'http://clickthisnick.com/workout/WorkoutTracker/ajax/getDays.php';
       var doneUrl = url + '?id=' + workoutId;
       $http.get(doneUrl).
@@ -30,6 +50,69 @@ app.factory('Api',function($http){
       $http.get(doneUrl).
       success(onSuccuess).
       error(onFailure);
+    },
+    saveWorkout: function(onSuccuess,onFailure,jsonData,personWorkouts,exerciseCount){
+
+    //  alert('watch this');
+  //    alert(JSON.stringify(jsonData));
+  //    alert(jsonData.length);
+  //    alert(JSON.stringify(personWorkouts));
+  //    alert(personWorkouts.length);
+
+      if (jsonData.length / exerciseCount != personWorkouts.length){
+        return;
+      }
+
+      var jsonCopy = copyJSONArray(jsonData);
+
+      for (var i = 0; i < jsonCopy.length; i++) {
+        for (var x = 0; x < personWorkouts.length; x++) {
+          if(personWorkouts[x].personid == jsonCopy[i].personid){
+            jsonCopy[i].personworkoutid = personWorkouts[x].uuid;
+            break;
+          }
+        }
+
+        delete jsonCopy[i].$$hashKey;
+        delete jsonCopy[i].id;
+
+        jsonCopy[i].reps = jsonCopy[i].reps.toString();
+        jsonCopy[i].weight = jsonCopy[i].weight.toString();
+        alert('Saving');
+    //    alert(JSON.stringify(jsonCopy[i]));
+
+        var params = $.param(jsonCopy[i]);
+  //      alert(params);
+        $http({
+          url: 'http://clickthisnick.com/workout/WorkoutTracker/ajax/saveWorkout.php',
+          method: "POST",
+          headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+          data: params
+        }).success(onSuccuess).
+        error(onFailure);
+      }
+    },
+    startWorkout: function(onSuccuess,onFailure,activePeople,workoutDayId){
+      var jsonData = copyJSONArray(activePeople);
+      jsonData = addPropertyToEveyJSONObject(jsonData,'workoutdayid',workoutDayId)
+
+      for (var i = 0; i < jsonData.length; i++) {
+        jsonData[i].personid = jsonData[i].personid;
+        delete jsonData[i].$$hashKey;
+        delete jsonData[i].active;
+        delete jsonData[i].name;
+        delete jsonData[i].id;
+
+        var params = $.param(jsonData[i]);
+
+        $http({
+          url: 'http://clickthisnick.com/workout/WorkoutTracker/ajax/startWorkout.php',
+          method: "POST",
+          headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+          data: params
+        }).success(onSuccuess).
+        error(onFailure);
+      }
     }
   };
 })
@@ -48,15 +131,30 @@ app.controller('TodoListController', function(Api) {
   workout.selectedExercise = null;
   workout.workoutStarted = false;
   workout.emptyPersonId = -1;
-
+  workout.personworkoutid = [];
   workout.personReps = null;
   workout.personWeight = null;
+  workout.previousWorkoutData = [];
 
   workout.personExercise = null;
 
   failureFunction = function(data){
-    console.log('Error' + data);
+    alert('Error' + data);
   };
+
+
+  workout.saveWorkout = function(){
+
+    // alert('tt');
+
+    saveFunc = function(data){
+    //  alert('saved');
+    };
+
+    Api.saveWorkout(saveFunc,failureFunction,workout.workoutData,workout.exercises.length);
+
+  }
+
 
   var init = function(){
 
@@ -87,6 +185,20 @@ app.controller('TodoListController', function(Api) {
     Api.getDays(daysFunc,failureFunction,workoutId);
   }
 
+  startWorkoutFunc = function(data){
+    workout.personworkoutid.push(data);
+    Api.saveWorkout(saveWorkout,failureFunction,workout.workoutData,workout.personworkoutid,workout.exercises.length);
+  };
+
+  saveWorkout = function(data){
+  //  alert('saved');
+  }
+
+  workout.saveData = function(){
+  //  alert('going to save');
+    Api.saveWorkout(saveWorkout,failureFunction,workout.workoutData,workout.personworkoutid,workout.exercises.length);
+  }
+
   workout.startWorkout = function(workoutdayexerciseid){
 
     exerciseFunc = function(data){
@@ -94,12 +206,35 @@ app.controller('TodoListController', function(Api) {
       workout.exercises = dataa;
       workout.selectedExercise = workout.exercises[0];
       workout.workoutData = createWorkoutData(activePeople,workout.exercises);
+      Api.startWorkout(startWorkoutFunc,failureFunction,activePeople,workout.selectedDayId);
+
       return;
-      };
+    };
 
     Api.getExercises(exerciseFunc,failureFunction,workoutdayexerciseid);
     var activePeople = removeObjectsInJSONArray(workout.people, 'active', false);
     workout.selectedPerson = activePeople[0];
+
+    addPeopleToPreviousExercises = function(data){
+      if ( data == 0){
+          workout.previousWorkoutData = createWorkoutData(activePeople,workout.exercises);
+      }
+      else{
+        //[{"id":"90","personworkoutexerciseid":"92e3d3c0-569b-11e5-b607-04014aabd801","personworkoutid":"921f2e27-569b-11e5-b607-04014aabd801","exerciseid":"9adb655d-5045-11e5-b607-04014aabd801","reps":"0,0,0,0,0","weight":"0,0,0,0,0"},{"id":"91","personworkoutexerciseid":"92e3447f-569b-11e5-b607-04014aabd801","personworkoutid":"921f2e27-569b-11e5-b607-04014aabd801","exerciseid":"05c2ca2c-505d-11e5-b607-04014aabd801","reps":"0,0,0,0,0","weight":"0,0,0,0,0"}]
+        for (var i = 0; i < data.length; i++) {
+          delete data[i].id;
+          delete data[i].personworkoutexerciseid;
+          delete data[i].personworkoutid;
+          data[i].reps = data[i].reps.split(",");
+          data[i].weight = data[i].weight.split(",");
+          workout.previousWorkoutData.push(data[i]);
+
+        }
+      }
+    }
+
+    Api.getOldPeopleWorkoutData(addPeopleToPreviousExercises,failureFunction,activePeople,workout.selectedDayId);
+
   }
 
   workout.createEmptyArray = function(num){
@@ -111,57 +246,108 @@ app.controller('TodoListController', function(Api) {
     return theWorkout;
   }
 
-  workout.addRep = function(num){
-    $('#ChooseReps').modal('hide')
+  workout.addWeight = function(key){
+    //$('#ChooseReps').modal('hide')
     arrayLength = workout.workoutData.length - 1
     for (var i = 0; i <= arrayLength; i++) {
       var theWorkout = workout.workoutData[i];
-      if (theWorkout.personid == workout.selectedPerson.id && theWorkout.exerciseid == workout.selectedExercise.exerciseid){
-        workout.workoutData[i].reps[workout.repIndex] = num;
-        workout.repIndex = null;
+      if (theWorkout.personid == workout.selectedPerson.personid && theWorkout.exerciseid == workout.selectedExercise.exerciseid){
+        if (key == "Bar"){
+          workout.weightTotal += 45;
+        }
+        else if (key == "EZ Bar"){
+          workout.weightTotal += 15;
+        }
+        else if (key == "x2"){
+          workout.weightTotal *= 2;
+        }
+        else{
+          workout.weightTotal += key;
+        }
+        workout.workoutData[i].weight[workout.weightIndex] = workout.weightTotal;
+      }
+    }
+  }
+
+  workout.addRep = function(key){
+    //$('#ChooseReps').modal('hide')
+    arrayLength = workout.workoutData.length - 1
+    for (var i = 0; i <= arrayLength; i++) {
+      var theWorkout = workout.workoutData[i];
+      if (theWorkout.personid == workout.selectedPerson.personid && theWorkout.exerciseid == workout.selectedExercise.exerciseid){
+        if (workout.numTotal == ""){
+          workout.repTotal = key;
+          workout.workoutData[i].reps[workout.repIndex] = workout.repTotal
+        }
+        else{
+          workout.repTotal += key;
+          workout.workoutData[i].reps[workout.repIndex] = workout.repTotal
         }
       }
+    }
   }
+
+  workout.repTotal = "";
+  workout.repIndex = "";
+  workout.weightIndex = "";
+  workout.weightTotal = 0;
 
   workout.changePersonExerciseCurrentReps = function(index){
     workout.repIndex = index;
+    workout.repTotal = "";
     document.getElementById("ChooseReps").showModal();
-    }
+  }
 
   workout.changePersonExerciseCurrentWeight = function(index){
-    arrayLength = workout.workoutData.length - 1
-    for (var i = 0; i <= arrayLength; i++) {
-      var theWorkout = workout.workoutData[i];
-      if (theWorkout.personid == workout.selectedPerson.id && theWorkout.exerciseid == workout.selectedExercise.exerciseid){
-        workout.workoutData[i].weight[index] = 100;
-        return;
-      }
-    }
+    workout.weightIndex = index;
+    workout.weightTotal = 0;
+    document.getElementById("ChooseWeight").showModal();
   }
 
-/*
-  workout.getPersonRepsWeight = function(){
-    var theWorkout = workout.findPersonExerciseData();
-    alert('get person');
-    alert(JSON.stringify(theWorkout));
-    workout.personReps = theWorkout.reps;
-    workout.personWeight = theWorkout.weight;
-  }
-  */
-
-  workout.editReps = function(text,index){
-    if(text == 'Edit'){
-
+  workout.possibleReps = [
+    {
+      'name':"/",
+      'name1':'1',
+      'name2':'2',
+    },
+    {
+      'name':"3",
+      'name1':'4',
+      'name2':'5',
+    },
+    {
+      'name':"6",
+      'name1':'7',
+      'name2':'8',
+    },
+    {
+      'name':"9",
+      'name1':'0',
+      'name2':'Delete',
     }
-  };
+  ]
 
-  workout.reps = function(){
-    return createReps(11);
-  };
+  workout.possibleWeight = [
+    {
+      'name':"Bar",
+      'name1':'EZ Bar',
+      'name2':'x2',
+    },
+    {
+      'name':2.5,
+      'name1':5,
+      'name2':10,
+    },
+    {
+      'name':25,
+      'name1':35,
+      'name2':45,
+    }
+  ]
 
   workout.cyclePerson = function(){
     var activePeople = removeObjectsInJSONArray(workout.people, 'active', false);
-    workout.selectedPerson = nextObjectInJSONArrayCycle(workout.selectedPerson.id,'id',activePeople);
+    workout.selectedPerson = nextObjectInJSONArrayCycle(workout.selectedPerson.personid,'personid',activePeople);
   };
 
   workout.previousExercise = function(){
@@ -260,15 +446,24 @@ function previousObjectInJSONArray(value,property,jsonArray){
 }
 
 function createReps(num){
-  var json = createEmptyJSONArray(num);
-  var arrayIndex = json.length-1;
-  for (i = 0; i <= arrayIndex; i++) {
+  var number = Math.round(num/3)
+  var json = createEmptyJSONArray(number);
+  var arrayIndex = number+3;
+  var realIndex = 0
+  for (i = 0; realIndex < number; i+=3) {
+    alert(i);
+    alert(arrayIndex);
     if(i === 0){
-      json[i].name = '/';
+      json[realIndex].name = '/';
+      json[realIndex].name1 = i+1;
+      json[realIndex].name2 = i+2;
     }
     else{
-      json[i].name = i;
+      json[realIndex].name = i;
+      json[realIndex].name1 = i+1;
+      json[realIndex].name2 = i+2;
     }
+    realIndex++;
   }
   return json;
 }
@@ -307,23 +502,12 @@ function convertJSONObjectOfObjectsToJSONArray(JSONObject){
   return jsonArray;
 }
 
-/*
-function findPersonExerciseData(workoutData,selectedPerson,selectedExercise){
-  arrayLength = workoutData.length - 1
-  for (var i = 0; i <= arrayLength; i++) {
-    if (workoutData[i].personid == selectedPerson.id && workoutData[i].exerciseid == selectedExercise.exerciseid){
-      return workoutData[i];
-    }
-  }
-}
-*/
-
 function createWorkoutData(activePeople,exercises){
   var data = [];
   for (var i = 0; i < activePeople.length; i++) {
     for (var x = 0; x < exercises.length; x++) {
       data.push({
-        'personid':activePeople[i].id,
+        'personid':activePeople[i].personid,
         'exerciseid':exercises[x].exerciseid,
         'reps':createEmptyArray(exercises[x].reps),
         'weight':createEmptyArray(exercises[x].reps)}
@@ -331,22 +515,4 @@ function createWorkoutData(activePeople,exercises){
     }
   }
   return data;
-}
-
-function sweetaalert(){
-  alert('hiherealert');
-  swal({   title: "An input!",
-  text: "Write something interesting:",
-  type: "input",
-  showCancelButton: true,
-  closeOnConfirm: false,
-  animation: "slide-from-top",
-  inputPlaceholder: "Write something" },
-  function(inputValue){
-     if (inputValue === false) return false;
-       if (inputValue === "")
-       {     swal.showInputError("You need to write something!");
-        return false   }
-           swal("Nice!", "You wrote: " + inputValue, "success"); });
-
 }
