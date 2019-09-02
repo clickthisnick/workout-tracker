@@ -88,7 +88,6 @@ app.controller('WorkoutController', function() {
         workout.current = []
 
         workout.routines[workout.currentRoutineId].exercises.forEach((exercise) => {
-            console.log(exercise)
             workout.previous.push(
                 {
                     "name": exercise.name,
@@ -104,7 +103,6 @@ app.controller('WorkoutController', function() {
                 }
             )
         })
-        console.log(workout.previous)
     }
 
     workout.saveItems = function() {
