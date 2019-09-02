@@ -106,8 +106,13 @@ app.controller('WorkoutController', function() {
     }
 
     workout.saveItems = function() {
-        workout.current[workout.currentExerciseId].weight = workout.currentWeight.split(',')
-        workout.current[workout.currentExerciseId].reps = workout.currentReps.split(',')
+        if (workout.current[workout.currentExerciseId].weight !== []) {
+            workout.current[workout.currentExerciseId].weight = workout.currentWeight.split(',')
+        }
+
+        if (workout.current[workout.currentExerciseId].reps !== []) {
+            workout.current[workout.currentExerciseId].reps = workout.currentReps.split(',')
+        }
     }
 
     workout.loadItems = function() {
