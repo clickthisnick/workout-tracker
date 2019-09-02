@@ -19,27 +19,77 @@ app.controller('WorkoutController', function() {
             "name": "arms",
             "exercises": [
                 {
-                    "name": "skull crunchers",
+                    "name": "concentration curl (ez curl bar, seat low)",
                     "reps": [
-                        [1,2,3],
-                        [1,2,3],
+                        [6,6,5],
                     ],
                     "weight": [
-                        [5,6,7],
-                        [5,6,7],
+                        [25,30,32.5],
                     ]
                 },
                 {
-                    "name": "concentration curl",
+                    "name": "thick bar standing curl",
                     "reps": [
-                        [8,9,0],
-                        [8,9,0],
+                        [],
                     ],
                     "weight": [
-                        [1,2,3],
-                        [1,2,3],
+                        [15],
                     ]
-                }
+                },
+                {
+                    "name": "reverse cable curl",
+                    "reps": [
+                        [],
+                    ],
+                    "weight": [
+                        [],
+                    ]
+                },
+                {
+                    "name": "db incline hammer curls",
+                    "reps": [
+                        [],
+                    ],
+                    "weight": [
+                        [],
+                    ]
+                },
+                {
+                    "name": "skull crunchers + close grip pres",
+                    "reps": [
+                        [6,6,6],
+                    ],
+                    "weight": [
+                        [30,30,30],
+                    ]
+                },
+                {
+                    "name": "rope cable extension (good form/be careful of hair)",
+                    "reps": [
+                        [],
+                    ],
+                    "weight": [
+                        [],
+                    ]
+                },
+                {
+                    "name": "bench bent over db kickbacks",
+                    "reps": [
+                        [],
+                    ],
+                    "weight": [
+                        [],
+                    ]
+                },
+                {
+                    "name": "diamond pushups",
+                    "reps": [
+                        [],
+                    ],
+                    "weight": [
+                        [],
+                    ]
+                },
             ],
         },
         {
@@ -47,14 +97,78 @@ app.controller('WorkoutController', function() {
             "name": "chest/shoulders",
             "exercises": [
                 {
-                    "name": "skull crunchers",
-                    "reps": [],
-                    "weight": []
+                    "name": "bench press",
+                    "reps": [
+                        [
+                            [5,5,5,5]
+                        ],
+                    ],
+                    "weight": [
+                        [135,185,205,225],
+                    ]
                 },
                 {
-                    "name": "concentration curl",
-                    "reps": [],
-                    "weight": []
+                    "name": "pec fly",
+                    "reps": [
+                        [6,6,6],
+                    ],
+                    "weight": [
+                        [115,115,115],
+                    ]
+                },
+                {
+                    "name": "incline db press",
+                    "reps": [
+                        [],
+                    ],
+                    "weight": [
+                        [],
+                    ]
+                },
+                {
+                    "name": "dips",
+                    "reps": [
+                        [],
+                    ],
+                    "weight": [
+                        [],
+                    ]
+                },
+                {
+                    "name": "should press machine",
+                    "reps": [
+                        [],
+                    ],
+                    "weight": [
+                        [],
+                    ]
+                },
+                {
+                    "name": "side db raises",
+                    "reps": [
+                        [],
+                    ],
+                    "weight": [
+                        [],
+                    ]
+                },
+                {
+                    "name": "front db raises",
+                    "reps": [
+                        [],
+                    ],
+                    "weight": [
+                        [],
+                    ]
+                },
+                {
+                    "name": "db reverse incline flys",
+                    "reps": [
+                        [],
+                    ],
+                    "weight": [
+                        [],
+                    ]
                 }
             ],
         },
@@ -63,15 +177,77 @@ app.controller('WorkoutController', function() {
             "name": "legs/back",
             "exercises": [
                 {
-                    "name": "skull crunchers",
-                    "reps": [],
-                    "weight": []
+                    "name": "squat",
+                    "reps": [
+                        [6,6,6,6],
+                    ],
+                    "weight": [
+                        [],
+                    ]
                 },
                 {
-                    "name": "concentration curl",
-                    "reps": [],
-                    "weight": []
-                }
+                    "name": "db lunges",
+                    "reps": [
+                        [],
+                    ],
+                    "weight": [
+                        [],
+                    ]
+                },
+                {
+                    "name": "leg raises",
+                    "reps": [
+                        [],
+                    ],
+                    "weight": [
+                        [],
+                    ]
+                },
+                {
+                    "name": "leg press",
+                    "reps": [
+                        [],
+                    ],
+                    "weight": [
+                        [],
+                    ]
+                },
+                {
+                    "name": "front lat pull down",
+                    "reps": [
+                        [],
+                    ],
+                    "weight": [
+                        [],
+                    ]
+                },
+                {
+                    "name": "row rear delt 3 holes visible on chest panel",
+                    "reps": [
+                        [],
+                    ],
+                    "weight": [
+                        [],
+                    ]
+                },
+                {
+                    "name": "db straight leg deadlift",
+                    "reps": [
+                        [],
+                    ],
+                    "weight": [
+                        [],
+                    ]
+                },
+                {
+                    "name": "back crunch",
+                    "reps": [
+                        [],
+                    ],
+                    "weight": [
+                        [],
+                    ]
+                },
             ],
         },
     ]
