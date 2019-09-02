@@ -1,0 +1,98 @@
+<!doctype html>
+<html ng-app="WorkoutApp">
+
+<head>
+    <!-- Needed for mobile to function (somewhat) -->
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <!-- Import pouchdb, an offline client-side database that syncs -->
+    <!-- <script src="./assets/pouchdb.js"></script> -->
+
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.4/angular.min.js"></script>
+    <script src="src/workout.js"></script>
+
+    <link rel="stylesheet" type="text/css" href="assets/ceruleanBootswatch.min.css">
+</head>
+
+<body class="container" ng-controller="WorkoutController as workout">
+
+    <div ng-if="workout.started == false">
+
+        <h2> Choose Workout </h2>
+
+        <select class="form-control" ng-model="workout.routine" ng-change="workout.start(workout.routine)">
+            <option value="{{routine.id}}" ng-repeat="routine in workout.routines">{{routine.name}}</option>
+        </select>
+
+    </div>
+
+
+    <div ng-if="workout.started == true">
+        <h2> Workout: {{workout.routines[workout.currentRoutineId].name}} </h2>
+
+        <h3> Exercise: {{workout.current[workout.currentExerciseId].name}} </h2>
+
+            <!-- Exercises -->
+            <div class="row">
+                <div class="col-xs-12">
+                    </b>Previous:</b>
+                </div>
+            </div class="row">
+
+            <div class="row">
+                <div class="col-xs-3">
+                    Reps
+                </div>
+                <div class="col-xs-9">
+                    {{workout.previous[workout.currentExerciseId].reps}}
+                </div>
+            </div class="row">
+
+            <div class="row">
+                <div class="col-xs-3">
+                    Weight
+                </div>
+                <div class="col-xs-9">
+                    {{workout.previous[workout.currentExerciseId].weight}}
+                </div>
+            </div class="row">
+
+            <br>
+
+            <div class="row">
+                <div class="col-xs-12">
+                    </b>Current:</b>
+                </div>
+            </div class="row">
+
+            <div class="row">
+                <div class="col-xs-3">
+                    Reps
+                </div>
+                <div class="col-xs-9">
+                    <input ng-model = "workout.currentReps">
+                </div>
+            </div class="row">
+
+            <div class="row">
+                <div class="col-xs-3">
+                    Weight
+                </div>
+                <div class="col-xs-9">
+                    <input ng-model = "workout.currentWeight">
+                </div>
+            </div class="row">
+
+            <div class="row">
+                <div class="col-xs-6">
+                    <button ng-click="workout.previousExercise()"> Previous </button>
+                </div>
+                <div class="col-xs-6">
+                    <button ng-click="workout.nextExercise()"> Next </button>
+                </div>
+            </div>
+    </div>
+
+</body>
+
+</html>

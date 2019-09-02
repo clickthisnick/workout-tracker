@@ -1,0 +1,25 @@
+{
+  "name": "workouttracker",
+  "version": "1.0.0",
+  "description": "Workout Tracking written in Angular JS",
+  "main": "todo.js",
+  "directories": {
+    "lib": "lib"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/clickthisnick/WorkoutTracker.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/clickthisnick/WorkoutTracker/issues"
+  },
+  "homepage": "https://github.com/clickthisnick/WorkoutTracker#readme",
+  "dependencies": {
+    "pouchdb": "^7.1.1"
+  }
+}
