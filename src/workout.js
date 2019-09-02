@@ -103,25 +103,31 @@ app.controller('WorkoutController', function() {
                 }
             )
         })
+
+        workout.loadItems()
     }
 
     workout.saveItems = function() {
-        if (workout.current[workout.currentExerciseId].weight !== []) {
+        if (workout.currentWeight !== 0) {
             workout.current[workout.currentExerciseId].weight = workout.currentWeight.split(',')
         }
 
-        if (workout.current[workout.currentExerciseId].reps !== []) {
+        if (workout.currentReps !== 0) {
             workout.current[workout.currentExerciseId].reps = workout.currentReps.split(',')
         }
     }
 
     workout.loadItems = function() {
-        if (workout.current[workout.currentExerciseId].weight !== []) {
+        if (workout.current[workout.currentExerciseId].weight.length !== 0) {
             workout.currentWeight = workout.current[workout.currentExerciseId].weight.join(',')
+        } else {
+            workout.currentWeight = ""
         }
 
-        if (workout.current[workout.currentExerciseId].reps !== []) {
+        if (workout.current[workout.currentExerciseId].reps.length !== 0) {
             workout.currentReps = workout.current[workout.currentExerciseId].reps.join(',')
+        } else {
+            workout.currentReps = ""
         }
     }
 
