@@ -101,36 +101,44 @@ app.controller('WorkoutController', function() {
                     "reps": [
                         [
                             [5,5,5,5]
+                            [6,6,6,6]
                         ],
                     ],
                     "weight": [
                         [135,185,205,225],
+                        [135,185,190,195],
                     ]
                 },
                 {
                     "name": "pec fly",
                     "reps": [
                         [6,6,6],
+                        [15,9,9],
                     ],
                     "weight": [
                         [115,115,115],
+                        [130,115,100],
                     ]
                 },
                 {
                     "name": "incline db press",
                     "reps": [
                         [],
+                        [16,16,9],
                     ],
                     "weight": [
                         [],
+                        [35,35,35],
                     ]
                 },
                 {
                     "name": "dips",
                     "reps": [
                         [],
+                        [],
                     ],
                     "weight": [
+                        [],
                         [],
                     ]
                 },
@@ -138,36 +146,44 @@ app.controller('WorkoutController', function() {
                     "name": "should press machine",
                     "reps": [
                         [],
+                        [6,11,8],
                     ],
                     "weight": [
                         [],
+                        [70,55,55],
                     ]
                 },
                 {
                     "name": "side db raises",
                     "reps": [
                         [],
+                        [16,11,12],
                     ],
                     "weight": [
                         [],
+                        [12.5,12.5,10],
                     ]
                 },
                 {
                     "name": "front db raises",
                     "reps": [
                         [],
+                        [16,16,16],
                     ],
                     "weight": [
                         [],
+                        [12.5,12.5,12.5],
                     ]
                 },
                 {
                     "name": "db reverse incline flys",
                     "reps": [
                         [],
+                        [10,9,8],
                     ],
                     "weight": [
                         [],
+                        [10,10,10],
                     ]
                 }
             ],
