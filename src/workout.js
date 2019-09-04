@@ -99,10 +99,8 @@ app.controller('WorkoutController', function() {
                 {
                     "name": "bench press",
                     "reps": [
-                        [
-                            [5,5,5,5],
-                            [6,6,6,6],
-                        ],
+                        [5,5,5,5],
+                        [6,6,6,6],
                     ],
                     "weight": [
                         [135,185,205,225],
