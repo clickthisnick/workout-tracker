@@ -194,72 +194,87 @@ app.controller('WorkoutController', function() {
                     "name": "squat",
                     "reps": [
                         [6,6,6,6],
+                        [6,6,6,6],
                     ],
                     "weight": [
                         [],
+                        [135,205,225,245],
                     ]
                 },
                 {
                     "name": "db lunges",
                     "reps": [
                         [],
+                        [16,9,8],
                     ],
                     "weight": [
                         [],
+                        [35,35,35],
                     ]
                 },
                 {
                     "name": "leg raises",
                     "reps": [
                         [],
+                        [10,12,16],
                     ],
                     "weight": [
                         [],
+                        [100,85,70],
                     ]
                 },
                 {
                     "name": "leg press",
                     "reps": [
                         [],
+                        [16,16,16],
                     ],
                     "weight": [
-                        [],
+                        [85,85,85],
                     ]
                 },
                 {
                     "name": "front lat pull down",
                     "reps": [
                         [],
+                        [16,11,16],
                     ],
                     "weight": [
                         [],
+                        [100,100,85],
                     ]
                 },
                 {
                     "name": "row rear delt 3 holes visible on chest panel",
                     "reps": [
                         [],
+                        [16,11,16],
                     ],
                     "weight": [
                         [],
+                        [85.70,55],
                     ]
                 },
                 {
                     "name": "db straight leg deadlift",
                     "reps": [
                         [],
+                        [8,16,16],
                     ],
                     "weight": [
                         [],
+                        [35,30,30],
                     ]
                 },
                 {
                     "name": "back crunch",
                     "reps": [
                         [],
+                        [7,8,3],
                     ],
                     "weight": [
                         [],
+                        [25,0,0],
                     ]
                 },
             ],
