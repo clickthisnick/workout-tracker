@@ -22,71 +22,87 @@ app.controller('WorkoutController', function() {
                     "name": "concentration curl (ez curl bar, seat low)",
                     "reps": [
                         [6,6,5],
+                        [6,6,6],
                     ],
                     "weight": [
                         [25,30,32.5],
+                        [27.5,27.5,30],
                     ]
                 },
                 {
                     "name": "thick bar standing curl",
                     "reps": [
                         [],
+                        [16,16,8],
                     ],
                     "weight": [
                         [15],
+                        [20,20,20],
                     ]
                 },
                 {
                     "name": "reverse cable curl",
                     "reps": [
                         [],
+                        [16,16,16],
                     ],
                     "weight": [
                         [],
+                        [12.5,12.5,12.5],
                     ]
                 },
                 {
                     "name": "db incline hammer curls",
                     "reps": [
                         [],
+                        [5,10,16],
                     ],
                     "weight": [
                         [],
+                        [25,20,15],
                     ]
                 },
                 {
                     "name": "skull crunchers + close grip pres",
                     "reps": [
                         [6,6,6],
+                        [6,6,6],
                     ],
                     "weight": [
                         [30,30,30],
+                        [32.5,32.5,32.5],
                     ]
                 },
                 {
                     "name": "rope cable extension (good form/be careful of hair)",
                     "reps": [
                         [],
+                        [16,16,16],
                     ],
                     "weight": [
                         [],
+                        [17.5,17.5,17.5],
                     ]
                 },
                 {
                     "name": "bench bent over db kickbacks",
                     "reps": [
                         [],
+                        [14,9,9],
                     ],
                     "weight": [
                         [],
+                        [7.5,7.5,7.5],
                     ]
                 },
                 {
                     "name": "diamond pushups",
                     "reps": [
                         [],
+                        [8,8,8],
                     ],
                     "weight": [
+                        [],
                         [],
                     ]
                 },
