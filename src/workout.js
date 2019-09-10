@@ -117,54 +117,64 @@ app.controller('WorkoutController', function() {
                     "reps": [
                         [5,5,5,5],
                         [6,6,6,6],
+                        [6,6,6,6],
                     ],
                     "weight": [
                         [135,185,205,225],
                         [135,185,190,195],
+                        [135,205,205,205],
                     ]
                 },
                 {
-                    "name": "pec fly",
+                    "name": "pec fly (pin in 5)",
                     "reps": [
                         [6,6,6],
                         [15,9,9],
+                        [15,11,11],
                     ],
                     "weight": [
                         [115,115,115],
                         [130,115,100],
+                        [130,115,100],
                     ]
                 },
                 {
-                    "name": "incline db press",
+                    "name": "incline db press (pin in 4)",
                     "reps": [
                         [],
                         [16,16,9],
+                        [16,16,8],
                     ],
                     "weight": [
                         [],
                         [35,35,35],
+                        [35,35,35],
                     ]
                 },
                 {
-                    "name": "dips",
+                    "name": "flat bench close grip hammer db chest press",
                     "reps": [
                         [],
                         [],
+                        [9,13,16],
                     ],
                     "weight": [
                         [],
                         [],
+                        [35,30,30],
                     ]
                 },
                 {
-                    "name": "should press machine",
+                    "name": "shoulder press machine",
                     "reps": [
                         [],
                         [6,11,8],
+                        [7,11,16],
                     ],
                     "weight": [
                         [],
                         [70,55,55],
+                        [70,55,40],
                     ]
                 },
                 {
@@ -172,9 +182,11 @@ app.controller('WorkoutController', function() {
                     "reps": [
                         [],
                         [16,11,12],
+                        [16,12,13],
                     ],
                     "weight": [
                         [],
+                        [12.5,12.5,10],
                         [12.5,12.5,10],
                     ]
                 },
@@ -183,9 +195,11 @@ app.controller('WorkoutController', function() {
                     "reps": [
                         [],
                         [16,16,16],
+                        [16,16,16],
                     ],
                     "weight": [
                         [],
+                        [12.5,12.5,12.5],
                         [12.5,12.5,12.5],
                     ]
                 },
@@ -194,9 +208,11 @@ app.controller('WorkoutController', function() {
                     "reps": [
                         [],
                         [10,9,8],
+                        [12,10,7],
                     ],
                     "weight": [
                         [],
+                        [10,10,10],
                         [10,10,10],
                     ]
                 }
