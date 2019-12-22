@@ -36,7 +36,7 @@ app.controller('WorkoutController', function() {
                     "reps": [
                         [],
                         [16,16,8],
-                        [Standing EZ, 16,16,16],
+                        ['Standing EZ', 16,16,16],
                     ],
                     "weight": [
                         [15],
@@ -49,7 +49,7 @@ app.controller('WorkoutController', function() {
                     "reps": [
                         [],
                         [16,16,16],
-                        [Standing EZ,16,16,16],
+                        ['Standing EZ',16,16,16],
                     ],
                     "weight": [
                         [],
@@ -62,7 +62,7 @@ app.controller('WorkoutController', function() {
                     "reps": [
                         [],
                         [5,10,16],
-                        [Standing DB, 16,16,16],
+                        ['Standing DB', 16,16,16],
                     ],
                     "weight": [
                         [],
@@ -75,7 +75,7 @@ app.controller('WorkoutController', function() {
                     "reps": [
                         [6,6,6],
                         [6,6,6],
-                        [Overhead Db Raise, 16,16,16],
+                        ['Overhead Db Raise', 16,16,16],
                     ],
                     "weight": [
                         [30,30,30],
