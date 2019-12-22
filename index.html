@@ -30,7 +30,7 @@
     <div ng-if="workout.started == true">
         <h2> Workout: {{workout.routines[workout.currentRoutineId].name}} </h2>
 
-        <h3> Exercise: {{workout.current[workout.currentExerciseId].name}} </h2>
+        <h3> Exercise: {{workout.routines[workout.currentRoutineId].exercises[workout.currentExerciseId].name}} </h2>
 
             <!-- Exercises -->
             <div class="row">
@@ -44,7 +44,7 @@
                     Reps
                 </div>
                 <div class="col-xs-9">
-                    {{workout.previous[workout.currentExerciseId].reps}}
+                    {{workout.previousExerciseReps}}
                 </div>
             </div class="row">
 
@@ -53,7 +53,7 @@
                     Weight
                 </div>
                 <div class="col-xs-9">
-                    {{workout.previous[workout.currentExerciseId].weight}}
+                    {{workout.previousExerciseWeight}}
                 </div>
             </div class="row">
 
@@ -89,6 +89,18 @@
                 </div>
                 <div class="col-xs-6">
                     <button ng-click="workout.nextExercise()"> Next </button>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-xs-12">
+                    <button ng-click="workout.generateJSON()"> Save Workout </button>
+                </div>
+            </div>
+            <div ng-if="workout.saved == true"></div>
+                <div class="row">
+                    <div class="col-xs-12">
+                        <input ng-model = "workout.json">
+                    </div>
                 </div>
             </div>
     </div>

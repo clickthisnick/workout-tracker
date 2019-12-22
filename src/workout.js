@@ -5,6 +5,7 @@ app.controller('WorkoutController', function($http) {
     var workout = this;
 
     workout.started = false;
+    workout.saved = false;
 
     // TODO Use these later
     workout.equipment = {
@@ -13,7 +14,8 @@ app.controller('WorkoutController', function($http) {
         "bench bar": 45
     }
 
-    $http.get('src/workout.json').success(function (data){
+    // To get around cors locally.. load from github
+    $http.get('https://www.clickthisnick.com/workout-tracker/src/workout.json').success(function (data){
 		workout.routines = data['routines'];
     });
 
@@ -24,59 +26,54 @@ app.controller('WorkoutController', function($http) {
         workout.started = true
         workout.currentRoutineId = id - 1
         workout.currentExerciseId = 0
+        workout.exerciseCount = 0
 
-        workout.previous = []
-        workout.current = []
-
+        // Add new rep/weight entries to all exercises of loaded routine
         workout.routines[workout.currentRoutineId].exercises.forEach((exercise) => {
-            workout.previous.push(
-                {
-                    "name": exercise.name,
-                    "reps": exercise.reps.slice(Math.max(exercise.reps.length - 1, 0))[0],
-                    "weight": exercise.weight.slice(Math.max(exercise.weight.length - 1, 0))[0],
-                }
-            )
-            workout.current.push(
-                {
-                    "name": exercise.name,
-                    "reps": [],
-                    "weight": [],
-                }
-            )
+            // workout.routines[workout.currentRoutineId].exercises[workout.currentExerciseId]
+            exercise.reps.push([])
+            exercise.weight.push([])
+            workout.exerciseCount += 1
         })
 
-        workout.loadItems()
+        workout.refreshWorkoutData()
     }
 
     workout.saveItems = function() {
-        if (workout.currentWeight !== 0) {
-            workout.current[workout.currentExerciseId].weight = workout.currentWeight.split(',')
+        var currentExercise = workout.routines[workout.currentRoutineId].exercises[workout.currentExerciseId]
+
+        // Incase not filled out
+        if (workout.currentReps.length !== 0) {
+            var repLength = currentExercise.reps.length
+            currentExercise.reps[repLength - 1] = workout.currentReps.split(',')
         }
 
-        if (workout.currentReps !== 0) {
-            workout.current[workout.currentExerciseId].reps = workout.currentReps.split(',')
+        // Incase not filled out
+        if (workout.currentWeight.length !== 0) {
+            var weightLength = currentExercise.weight.length
+            currentExercise.weight[weightLength - 1] = workout.currentWeight.split(',')
         }
     }
 
-    workout.loadItems = function() {
-        if (workout.current[workout.currentExerciseId].weight.length !== 0) {
-            workout.currentWeight = workout.current[workout.currentExerciseId].weight.join(',')
-        } else {
-            workout.currentWeight = ""
-        }
+    workout.refreshWorkoutData = function() {
+        workout.previousExerciseData = workout.routines[workout.currentRoutineId].exercises[workout.currentExerciseId]
+        // TODO handle empty
+        workout.previousExerciseReps = workout.previousExerciseData.reps.slice(Math.max(workout.previousExerciseData.reps.length - 2, 0))[0]
+        workout.previousExerciseWeight = workout.previousExerciseData.weight.slice(Math.max(workout.previousExerciseData.weight.length - 2, 0))[0]
 
-        if (workout.current[workout.currentExerciseId].reps.length !== 0) {
-            workout.currentReps = workout.current[workout.currentExerciseId].reps.join(',')
-        } else {
-            workout.currentReps = ""
-        }
+        workout.currentExerciseData = workout.routines[workout.currentRoutineId].exercises[workout.currentExerciseId]
+
+        // These will be string inputs on page, but array in data model
+        workout.currentReps = workout.currentExerciseData.reps.slice(Math.max(workout.currentExerciseData.reps.length - 1, 0))[0].toString()
+        workout.currentWeight = workout.currentExerciseData.weight.slice(Math.max(workout.currentExerciseData.weight.length - 1, 0))[0].toString()
     }
 
     workout.nextExercise = function() {
-        if (workout.currentExerciseId < workout.current.length - 1) {
+        // TODO should just disable button if not available
+        if (workout.currentExerciseId < workout.exerciseCount - 1) {
             workout.saveItems()
             workout.currentExerciseId += 1
-            workout.loadItems()
+            workout.refreshWorkoutData()
         }
     }
 
@@ -84,12 +81,15 @@ app.controller('WorkoutController', function($http) {
         if (workout.currentExerciseId > 0) {
             workout.saveItems()
             workout.currentExerciseId -= 1
-            workout.loadItems()
+            workout.refreshWorkoutData()
         }
     }
 
-    // workout.generatejson = function() {
-
-    // }
+    workout.generateJSON = function() {
+        workout.saved = true;
+        var jsonData = JSON.stringify(workout.routines)
+        var jsonFirst = jsonData.substr(1);
+        workout.json = jsonFirst.substring(0, jsonFirst.length - 1);
+    }
 })
 
