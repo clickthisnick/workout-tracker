@@ -13,7 +13,7 @@ app.controller('WorkoutController', function($http) {
         "bench bar": 45
     }
 
-    $http.get('workout.json').success(function (data){
+    $http.get('src/workout.json').success(function (data){
 		workout.routines = data;
     });
 
