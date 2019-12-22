@@ -1,47 +1,6 @@
 {
     "routines": [
         {
-            "id": 4,
-            "name": "db home arms",
-            "exercises": [
-                {
-                    "name": "db curl",
-                    "reps": [
-                    ],
-                    "weight": [
-                    ]
-                },
-                {
-                    "name": "shoulder press",
-                    "reps": [
-                    ],
-                    "weight": [
-                    ]
-                },
-                {
-                    "name": "shrugs",
-                    "reps": [
-                    ],
-                    "weight": [
-                    ]
-                },
-                {
-                    "name": "tricep extension",
-                    "reps": [
-                    ],
-                    "weight": [
-                    ]
-                },
-                {
-                    "name": "db hold (standing farmers walk)",
-                    "reps": [
-                    ],
-                    "weight": [
-                    ]
-                }
-            ]
-        },
-        {
             "id": 1,
             "name": "arms",
             "exercises": [
@@ -366,6 +325,47 @@
                         [],
                         [25,0,0],
                         [0,0,0]
+                    ]
+                }
+            ]
+        },
+        {
+            "id": 4,
+            "name": "db home arms",
+            "exercises": [
+                {
+                    "name": "db curl",
+                    "reps": [
+                    ],
+                    "weight": [
+                    ]
+                },
+                {
+                    "name": "shoulder press",
+                    "reps": [
+                    ],
+                    "weight": [
+                    ]
+                },
+                {
+                    "name": "shrugs",
+                    "reps": [
+                    ],
+                    "weight": [
+                    ]
+                },
+                {
+                    "name": "tricep extension",
+                    "reps": [
+                    ],
+                    "weight": [
+                    ]
+                },
+                {
+                    "name": "db hold (standing farmers walk)",
+                    "reps": [
+                    ],
+                    "weight": [
                     ]
                 }
             ]
