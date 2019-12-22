@@ -44,13 +44,13 @@ app.controller('WorkoutController', function($http) {
         // Incase not filled out
         if (workout.currentReps.length !== 0) {
             var repLength = currentExercise.reps.length
-            currentExercise.reps[repLength - 1] = workout.currentReps.split(',')
+            currentExercise.reps[repLength - 1] = workout.currentReps.split(',').map(Number)
         }
 
         // Incase not filled out
         if (workout.currentWeight.length !== 0) {
             var weightLength = currentExercise.weight.length
-            currentExercise.weight[weightLength - 1] = workout.currentWeight.split(',')
+            currentExercise.weight[weightLength - 1] = workout.currentWeight.split(',').map(Number)
         }
     }
 
@@ -95,7 +95,7 @@ app.controller('WorkoutController', function($http) {
     }
 
     workout.generateJSON = function() {
-        workout.saved = true;
+        workout.saved = true
         workout.json = JSON.stringify(workout.data)
     }
 })
