@@ -14,7 +14,7 @@ app.controller('WorkoutController', function($http) {
     }
 
     $http.get('src/workout.json').success(function (data){
-		workout.routines = data;
+		workout.routines = [data];
     });
 
     workout.start = function(id) {
