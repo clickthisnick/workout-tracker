@@ -16,7 +16,7 @@ app.controller('WorkoutController', function($http) {
 
     // To get around cors locally.. load from github
     $http.get('https://www.clickthisnick.com/workout-tracker/src/workout.json').success(function (data){
-		workout.routines = data['routines'];
+		workout.data = data;
     });
 
     workout.start = function(id) {
@@ -29,8 +29,8 @@ app.controller('WorkoutController', function($http) {
         workout.exerciseCount = 0
 
         // Add new rep/weight entries to all exercises of loaded routine
-        workout.routines[workout.currentRoutineId].exercises.forEach((exercise) => {
-            // workout.routines[workout.currentRoutineId].exercises[workout.currentExerciseId]
+        workout.data.routines[workout.currentRoutineId].exercises.forEach((exercise) => {
+            // workout.data.routines[workout.currentRoutineId].exercises[workout.currentExerciseId]
             exercise.reps.push([])
             exercise.weight.push([])
             workout.exerciseCount += 1
@@ -40,7 +40,7 @@ app.controller('WorkoutController', function($http) {
     }
 
     workout.saveItems = function() {
-        var currentExercise = workout.routines[workout.currentRoutineId].exercises[workout.currentExerciseId]
+        var currentExercise = workout.data.routines[workout.currentRoutineId].exercises[workout.currentExerciseId]
 
         // Incase not filled out
         if (workout.currentReps.length !== 0) {
@@ -56,12 +56,22 @@ app.controller('WorkoutController', function($http) {
     }
 
     workout.refreshWorkoutData = function() {
-        workout.previousExerciseData = workout.routines[workout.currentRoutineId].exercises[workout.currentExerciseId]
-        // TODO handle empty
-        workout.previousExerciseReps = workout.previousExerciseData.reps.slice(Math.max(workout.previousExerciseData.reps.length - 2, 0))[0]
-        workout.previousExerciseWeight = workout.previousExerciseData.weight.slice(Math.max(workout.previousExerciseData.weight.length - 2, 0))[0]
+        workout.previousExerciseData = workout.data.routines[workout.currentRoutineId].exercises[workout.currentExerciseId]
 
-        workout.currentExerciseData = workout.routines[workout.currentRoutineId].exercises[workout.currentExerciseId]
+        // Handle first time using routine
+        if (workout.previousExerciseData.reps.length > 1) {
+            workout.previousExerciseReps = workout.previousExerciseData.reps.slice(Math.max(workout.previousExerciseData.reps.length - 2, 0))[0]
+        } else {
+            workout.previousExerciseReps = ""
+        }
+
+        if (workout.previousExerciseData.weight.length > 1) {
+            workout.previousExerciseWeight = workout.previousExerciseData.weight.slice(Math.max(workout.previousExerciseData.weight.length - 2, 0))[0]
+        } else {
+            workout.previousExerciseWeight = ""
+        }
+
+        workout.currentExerciseData = workout.data.routines[workout.currentRoutineId].exercises[workout.currentExerciseId]
 
         // These will be string inputs on page, but array in data model
         workout.currentReps = workout.currentExerciseData.reps.slice(Math.max(workout.currentExerciseData.reps.length - 1, 0))[0].toString()
@@ -87,7 +97,7 @@ app.controller('WorkoutController', function($http) {
 
     workout.generateJSON = function() {
         workout.saved = true;
-        var jsonData = JSON.stringify(workout.routines)
+        var jsonData = JSON.stringify(workout.data)
         var jsonFirst = jsonData.substr(1);
         workout.json = jsonFirst.substring(0, jsonFirst.length - 1);
     }
