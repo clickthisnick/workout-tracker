@@ -16,13 +16,12 @@ app.controller('WorkoutController', function($http) {
 
     // To get around cors locally.. load from github
     $http.get('https://www.clickthisnick.com/workout-tracker/src/workout.json').success(function (data){
-		workout.data = data;
+        workout.data = data;
     });
 
     workout.start = function(id) {
         // Changes the routine from the id to the whole entity
         // Also created arrays for reps and weight
-
         workout.started = true
         workout.currentRoutineId = id - 1
         workout.currentExerciseId = 0
@@ -97,9 +96,7 @@ app.controller('WorkoutController', function($http) {
 
     workout.generateJSON = function() {
         workout.saved = true;
-        var jsonData = JSON.stringify(workout.data)
-        var jsonFirst = jsonData.substr(1);
-        workout.json = jsonFirst.substring(0, jsonFirst.length - 1);
+        workout.json = JSON.stringify(workout.data)
     }
 })
 
