@@ -95,7 +95,12 @@ app.controller('WorkoutController', function($http) {
     }
 
     workout.generateJSON = function() {
+        // Ensure current page is saved
+        workout.saveItems()
+
+        // Show json entry box
         workout.saved = true
+
         workout.json = JSON.stringify(workout.data)
     }
 })
