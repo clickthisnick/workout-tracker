@@ -14,9 +14,19 @@ app.controller('WorkoutController', function($http) {
         "bench bar": 45
     }
 
-    // To get around cors locally.. load from github
-    $http.get('https://www.clickthisnick.com/workout-tracker/src/workout.json').success(function (data){
-        workout.data = data;
+    workout.data = {
+        "routines": [
+
+        ]
+    }
+
+    $http.get('https://www.clickthisnick.com/workout-tracker/src/workouts/active.json').success(function (active_workouts){
+        active_workouts.forEach((workout_file) => {
+            // To get around cors locally.. load from github
+            $http.get(`https://www.clickthisnick.com/workout-tracker/src/workouts/${workout_file}`).success(function (data){
+                workout.data.routines.push(data);
+            });
+        });
     });
 
     workout.start = function(id) {

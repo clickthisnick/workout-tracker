@@ -21,7 +21,7 @@
         <h2> Choose Workout </h2>
 
         <select class="form-control" ng-model="workout.routine" ng-change="workout.start(workout.routine)">
-            <option value="{{routine.id}}" ng-repeat="routine in workout.data.routines">{{routine.name}}</option>
+            <option ng-repeat="routine in workout.data.routines">{{routine.name}}</option>
         </select>
 
     </div>
