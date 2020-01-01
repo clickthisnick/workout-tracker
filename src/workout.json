@@ -1,7 +1,6 @@
 {
   "routines": [
     {
-      "id": 1,
       "name": "arms",
       "exercises": [
         {
@@ -64,7 +63,6 @@
       "$$hashKey": "object:4"
     },
     {
-      "id": 2,
       "name": "chest/shoulders",
       "exercises": [
         {
@@ -127,7 +125,6 @@
       "$$hashKey": "object:5"
     },
     {
-      "id": 3,
       "name": "legs/back",
       "exercises": [
         {
@@ -179,70 +176,6 @@
         }
       ],
       "$$hashKey": "object:6"
-    },
-    {
-      "id": 4,
-      "name": "db home arms",
-      "exercises": [
-        {
-          "name": "db curl",
-          "reps": [
-            [6, 6, 6],
-            [6, 6, 6],
-            [6, 6, 6]
-          ],
-          "weight": [
-            [25, 25, 30],
-            [30, 30, 30],
-            [35, 35, 35]
-          ]
-        },
-        {
-          "name": "shoulder press",
-          "reps": [
-            [6, 6, 6],
-            [6, 6, 6],
-            [6, 6, 6]
-          ],
-          "weight": [
-            [30, 30, 30],
-            [35, 35, 35],
-            [35, 35, 35]
-          ]
-        },
-        {
-          "name": "shrugs",
-          "reps": [
-            [12, 12, 12],
-            [12, 12, 12],
-            [12, 12, 12]
-          ],
-          "weight": [
-            [35, 35, 35],
-            [40, 40, 40],
-            [45, 45, 45]
-          ]
-        },
-        {
-          "name": "tricep extension",
-          "reps": [
-            [6, 6, 6],
-            [10, 10, 10],
-            [12, 12, 12]
-          ],
-          "weight": [
-            [15, 15, 15],
-            [15, 15, 15],
-            [15, 15, 15]
-          ]
-        },
-        {
-          "name": "db hold (standing farmers walk)",
-          "reps": [[], [], [60]],
-          "weight": [[], [], [45]]
-        }
-      ],
-      "$$hashKey": "object:7"
     }
   ]
 }

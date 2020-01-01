@@ -20,10 +20,12 @@ app.controller('WorkoutController', function($http) {
         ]
     }
 
-    $http.get('https://www.clickthisnick.com/workout-tracker/src/workouts/active.json').success(function (active_workouts){
-        active_workouts.forEach((workout_file) => {
+    var workout_link = "https://www.clickthisnick.com/workout-tracker/src/workouts"
+
+    $http.get(`${workout_link}/active.json`).success(function (active_workouts){
+        active_workouts['workouts'].forEach((workout_file) => {
             // To get around cors locally.. load from github
-            $http.get(`https://www.clickthisnick.com/workout-tracker/src/workouts/${workout_file}`).success(function (data){
+            $http.get(`${workout_link}/${workout_file}`).success(function (data){
                 workout.data.routines.push(data);
             });
         });
@@ -33,7 +35,7 @@ app.controller('WorkoutController', function($http) {
         // Changes the routine from the id to the whole entity
         // Also created arrays for reps and weight
         workout.started = true
-        workout.currentRoutineId = id - 1
+        workout.currentRoutineId = id
         workout.currentExerciseId = 0
         workout.exerciseCount = 0
 
@@ -111,7 +113,7 @@ app.controller('WorkoutController', function($http) {
         // Show json entry box
         workout.saved = true
 
-        workout.json = JSON.stringify(workout.data)
+        workout.json = JSON.stringify(workout.data.routines[workout.currentRoutineId])
     }
 })
 

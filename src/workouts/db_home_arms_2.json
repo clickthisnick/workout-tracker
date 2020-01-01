@@ -1,0 +1,38 @@
+{
+    "name": "db home arms 2",
+    "exercises": [
+      {
+        "name": "db hammer curl",
+        "reps": [
+        ],
+        "weight": [
+        ]
+      },
+      {
+        "name": "front db raise",
+        "reps": [
+        ],
+        "weight": [
+        ]
+      },
+      {
+        "name": "side db raise",
+        "reps": [
+        ],
+        "weight": [
+        ]
+      },
+      {
+        "name": "front db shoulder press",
+        "reps": [
+        ],
+        "weight": [
+        ]
+      },
+      {
+        "name": "reverse db curl",
+        "reps": [],
+        "weight": []
+      }
+    ],
+  }
