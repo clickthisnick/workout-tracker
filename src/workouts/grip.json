@@ -1,1 +1,26 @@
-{"name":"grip workout","exercises":[{"name":"green gripper fingertip right","reps":[[0,0,0],[25,30,15]],"weight":[[0,0,0],[]]},{"name":"green gripper fingertip left","reps":[[0,0,0],[15,20,50]],"weight":[[0,0,0],[]]}],"$$hashKey":"object:6"}
+{
+  "name": "grip workout",
+  "startMilliseconds": [],
+  "endMilliseconds": [],
+  "workoutTime": [],
+  "workoutTimeString": [],
+  "exercises": [
+    {
+      "name": "green gripper fingertip right",
+      "reps": [
+        [0, 0, 0],
+        [25, 30, 15]
+      ],
+      "weight": [[0, 0, 0], []]
+    },
+    {
+      "name": "green gripper fingertip left",
+      "reps": [
+        [0, 0, 0],
+        [15, 20, 50]
+      ],
+      "weight": [[0, 0, 0], []]
+    }
+  ],
+  "$$hashKey": "object:6"
+}

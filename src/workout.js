@@ -1,5 +1,16 @@
 var app = angular.module("WorkoutApp", []);
 
+function getTimeMilliseconds() {
+    let date = new Date();
+    return date.getTime();
+}
+
+function millisecondsToMinSeconds(ms) {
+    let ms_round = 1000*Math.round(ms/1000); // round to nearest second
+    let d = new Date(ms_round);
+    return d.getUTCMinutes() + ':' + d.getUTCSeconds(); // "4:59"
+}
+
 app.controller('WorkoutController', function($http) {
 
     var workout = this;
@@ -38,6 +49,11 @@ app.controller('WorkoutController', function($http) {
         workout.currentRoutineId = id
         workout.currentExerciseId = 0
         workout.exerciseCount = 0
+
+        workout.data.routines[workout.currentRoutineId].startMilliseconds.push(getTimeMilliseconds())
+        // var date = new Date(milliseconds);
+        // date.toString()
+        // Gives you human readable from that
 
         // Add new rep/weight entries to all exercises of loaded routine
         workout.data.routines[workout.currentRoutineId].exercises.forEach((exercise) => {
@@ -112,6 +128,23 @@ app.controller('WorkoutController', function($http) {
 
         // Show json entry box
         workout.saved = true
+
+        // Add an end time to the workout
+        workout.data.routines[workout.currentRoutineId].endMilliseconds.push(getTimeMilliseconds())
+
+        // Add a human readable workout time
+        let endMs = workout.data.routines[workout.currentRoutineId].endMilliseconds
+        endMs = endMs[endMs.length - 1];
+
+        let startMs = workout.data.routines[workout.currentRoutineId].startMilliseconds
+        startMs = startMs[startMs.length - 1];
+
+        let routineMs = endMs - startMs
+
+        workout.data.routines[workout.currentRoutineId].workoutTime.push(millisecondsToMinSeconds(routineMs));
+
+        let date = new Date(endMs);
+        workout.data.routines[workout.currentRoutineId].workoutTimeString.push(date.toString());
 
         workout.json = JSON.stringify(workout.data.routines[workout.currentRoutineId])
     }

@@ -1,1 +1,10 @@
-{"name":"workout name","exercises":[{"name":"exercise name","reps":[[0,0,0]],"weight":[[0,0,0]]}]}
+{
+    "name": "workout name",
+    "startMilliseconds": [],
+    "endMilliseconds": [],
+    "workoutTime": [],
+    "workoutTimeString": [].
+    "exercises": [
+      { "name": "exercise name", "reps": [[0, 0, 0]], "weight": [[0, 0, 0]] }
+    ]
+  }
