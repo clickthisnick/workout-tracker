@@ -3,7 +3,7 @@
     "startMilliseconds": [],
     "endMilliseconds": [],
     "workoutTime": [],
-    "workoutTimeString": [].
+    "workoutTimeString": [],
     "exercises": [
       { "name": "exercise name", "reps": [[0, 0, 0]], "weight": [[0, 0, 0]] }
     ]
