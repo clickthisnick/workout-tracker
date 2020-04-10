@@ -1,0 +1,12 @@
+{
+    "name": "leg workout",
+    "startMilliseconds": [],
+    "endMilliseconds": [],
+    "workoutTime": [],
+    "workoutTimeString": [],
+    "exercises": [
+      { "name": "db squats", "reps": [[0, 0, 0]], "weight": [[0, 0, 0]] },
+      { "name": "db lunges", "reps": [[0, 0, 0]], "weight": [[0, 0, 0]] },
+      { "name": "over head db squats", "reps": [[0, 0, 0]], "weight": [[0, 0, 0]] }
+    ]
+  }

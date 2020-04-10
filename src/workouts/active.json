@@ -2,6 +2,7 @@
     "workouts": [
         "db_home_arms.json",
         "db_home_arms_2.json",
-        "grip.json"
+        "grip.json",
+        "leg.json"
     ]
 }
