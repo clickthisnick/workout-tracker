@@ -1,12 +1,1 @@
-{
-    "name": "leg workout",
-    "startMilliseconds": [],
-    "endMilliseconds": [],
-    "workoutTime": [],
-    "workoutTimeString": [],
-    "exercises": [
-      { "name": "db squats", "reps": [[0, 0, 0]], "weight": [[0, 0, 0]] },
-      { "name": "db lunges", "reps": [[0, 0, 0]], "weight": [[0, 0, 0]] },
-      { "name": "over head db squats", "reps": [[0, 0, 0]], "weight": [[0, 0, 0]] }
-    ]
-  }
+{"name":"leg workout","startMilliseconds":[1586537886791],"endMilliseconds":[1586539037565],"workoutTime":["19:11"],"workoutTimeString":["Fri Apr 10 2020 13:17:17 GMT-0400 (Eastern Daylight Time)"],"exercises":[{"name":"db squats","reps":[[0,0,0],[6,6,6]],"weight":[[0,0,0],[25,25,25]]},{"name":"db lunges","reps":[[0,0,0],[6,6,6]],"weight":[[0,0,0],[25,25,25]]},{"name":"over head db squats","reps":[[0,0,0],[6,6,6]],"weight":[[0,0,0],[20,20,20]]}],"$$hashKey":"object:4"}
