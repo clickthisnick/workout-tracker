@@ -1,0 +1,13 @@
+{
+    "name": "chest/back",
+    "startMilliseconds": [],
+    "endMilliseconds": [],
+    "workoutTime": [],
+    "workoutTimeString": [],
+    "exercises": [
+      { "name": "chest master pushups", "reps": [[0, 0, 0]], "weight": [[0, 0, 0]] },
+      { "name": "1 db straight leg deadlift", "reps": [[0, 0, 0]], "weight": [[0, 0, 0]] },
+      { "name": "diamond pushups", "reps": [[0, 0, 0]], "weight": [[0, 0, 0]] },
+      { "name": "rows", "reps": [[0, 0, 0]], "weight": [[0, 0, 0]] }
+    ]
+  }
