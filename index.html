@@ -33,7 +33,7 @@
 
         <h2> Choose Workout. Click box and click off.. Some bug </h2>
 
-        <select class="form-control" ng-model="workout" ng-change="workout.start(workout.routine)">
+        <select class="form-control" ng-model="workout.routine" ng-change="workout.start(workout.routine)">
             <option value="{{$index}}" ng-repeat="routine in workout.data.routines | orderBy:'daysAgo' | reverse">{{routine.name}} - {{ routine.daysAgo }} Days Ago - {{routine.workoutTime[routine.workoutTime.length-1]}}</option>
         </select>
 
