@@ -80,21 +80,21 @@ app.controller('WorkoutController', function($http) {
         })
     })
 
-    workout.start = function(id) {
+    workout.start = function(name) {
         // Changes the routine from the id to the whole entity
         // Also created arrays for reps and weight
         workout.started = true
-        workout.currentRoutineId = id
+        workout.currentRoutine = workout.data.routines.filter((routine) => routine.name == name)[0]
         workout.currentExerciseId = 0
         workout.exerciseCount = 0
-        workout.data.routines[workout.currentRoutineId].startMilliseconds.push(getTimeMilliseconds())
+        workout.currentRoutine.startMilliseconds.push(getTimeMilliseconds())
         // var date = new Date(milliseconds);
         // date.toString()
         // Gives you human readable from that
 
         // Add new rep/weight entries to all exercises of loaded routine
-        workout.data.routines[workout.currentRoutineId].exercises.forEach((exercise) => {
-            // workout.data.routines[workout.currentRoutineId].exercises[workout.currentExerciseId]
+        workout.currentRoutine.exercises.forEach((exercise) => {
+            // workout.currentRoutine.exercises[workout.currentExerciseId]
             exercise.reps.push([])
             exercise.weight.push([])
             workout.exerciseCount += 1
@@ -104,7 +104,7 @@ app.controller('WorkoutController', function($http) {
     }
 
     workout.saveItems = function() {
-        var currentExercise = workout.data.routines[workout.currentRoutineId].exercises[workout.currentExerciseId]
+        var currentExercise = workout.currentRoutine.exercises[workout.currentExerciseId]
 
         // Incase not filled out
         if (workout.currentReps.length !== 0) {
@@ -120,7 +120,7 @@ app.controller('WorkoutController', function($http) {
     }
 
     workout.refreshWorkoutData = function() {
-        workout.previousExerciseData = workout.data.routines[workout.currentRoutineId].exercises[workout.currentExerciseId]
+        workout.previousExerciseData = workout.currentRoutine.exercises[workout.currentExerciseId]
 
         // Handle first time using routine
         if (workout.previousExerciseData.reps.length > 1) {
@@ -135,7 +135,7 @@ app.controller('WorkoutController', function($http) {
             workout.previousExerciseWeight = ""
         }
 
-        workout.currentExerciseData = workout.data.routines[workout.currentRoutineId].exercises[workout.currentExerciseId]
+        workout.currentExerciseData = workout.currentRoutine.exercises[workout.currentExerciseId]
 
         // These will be string inputs on page, but array in data model
         workout.currentReps = workout.currentExerciseData.reps.slice(Math.max(workout.currentExerciseData.reps.length - 1, 0))[0].toString()
@@ -167,23 +167,23 @@ app.controller('WorkoutController', function($http) {
         workout.saved = true
 
         // Add an end time to the workout
-        workout.data.routines[workout.currentRoutineId].endMilliseconds.push(getTimeMilliseconds())
+        workout.currentRoutine.endMilliseconds.push(getTimeMilliseconds())
 
         // Add a human readable workout time
-        let endMs = workout.data.routines[workout.currentRoutineId].endMilliseconds
+        let endMs = workout.currentRoutine.endMilliseconds
         endMs = endMs[endMs.length - 1];
 
-        let startMs = workout.data.routines[workout.currentRoutineId].startMilliseconds
+        let startMs = workout.currentRoutine.startMilliseconds
         startMs = startMs[startMs.length - 1];
 
         let routineMs = endMs - startMs
 
-        workout.data.routines[workout.currentRoutineId].workoutTime.push(millisecondsToMinSeconds(routineMs));
+        workout.currentRoutine.workoutTime.push(millisecondsToMinSeconds(routineMs));
 
         let date = new Date(endMs);
-        workout.data.routines[workout.currentRoutineId].workoutTimeString.push(date.toString());
+        workout.currentRoutine.workoutTimeString.push(date.toString());
 
-        workout.json = JSON.stringify(workout.data.routines[workout.currentRoutineId])
+        workout.json = JSON.stringify(workout.currentRoutine)
     }
 });
 
