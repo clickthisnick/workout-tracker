@@ -4,6 +4,7 @@
         "db_home_arms_2.json",
         "grip.json",
         "leg.json",
-        "chest.json"
+        "chest.json",
+        "abs.json"
     ]
 }

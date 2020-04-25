@@ -1,0 +1,13 @@
+{
+    "name": "abs",
+    "startMilliseconds": [],
+    "endMilliseconds": [],
+    "workoutTime": [],
+    "workoutTimeString": [],
+    "exercises": [
+      { "name": "plank", "reps": [[0, 0, 0]], "weight": [[0, 0, 0]] },
+      { "name": "side plank", "reps": [[0, 0, 0]], "weight": [[0, 0, 0]] },
+      { "name": "plank - knee to elbows", "reps": [[0, 0, 0]], "weight": [[0, 0, 0]] },
+      { "name": "db side to side", "reps": [[0, 0, 0]], "weight": [[0, 0, 0]] }
+    ],
+  }
