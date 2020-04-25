@@ -1,20 +1,11 @@
 {
   "name": "workout name",
-  "startMilliseconds": [
-      1587422556825
-  ],
-  "endMilliseconds": [
-      1587424361363
-  ],
-  "workoutTime": [
-      "30:5"
-  ],
-  "workoutTimeString": [
-      "Mon Apr 20 2020 19:12:41 GMT-0400 (Eastern Daylight Time)"
-  ],
+  "startMilliseconds": [],
+  "endMilliseconds": [],
+  "workoutTime": [],
+  "workoutTimeString": [],
   "exercises": [
-    { "name": "exercise", "reps": [[0, 0, 0]], "weight": [[0, 0, 0]] },
+    { "name": "exercise", "reps": [[0, 0, 0]], "weight": [[0, 0, 0]] }
   ]
   "REMOVE THIS": "DONT FORGET TO ADD TO ACTIVE.JSON"
-  "REMOVE THIS": "Dont remove any of the milliseconds or time stuff.."
 }
