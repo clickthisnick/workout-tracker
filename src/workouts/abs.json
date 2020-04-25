@@ -1,21 +1,18 @@
 {
-  "name": "abs",
+  "name": "abdominal workout",
   "startMilliseconds": [
-      1587422556825
+      1587424361310
   ],
   "endMilliseconds": [
-      1587424361363
+      1587424361399
   ],
   "workoutTime": [
-      "30:5"
+      "10:5"
   ],
   "workoutTimeString": [
-      "Mon Apr 20 2020 19:12:41 GMT-0400 (Eastern Daylight Time)"
+      "Mon Apr 20 2019 19:12:41 GMT-0400 (Eastern Daylight Time)"
   ],
   "exercises": [
-    { "name": "plank", "reps": [[0, 0, 0]], "weight": [[0, 0, 0]] },
-    { "name": "side plank", "reps": [[0, 0, 0]], "weight": [[0, 0, 0]] },
-    { "name": "plank knee to elbows", "reps": [[0, 0, 0]], "weight": [[0, 0, 0]] },
-    { "name": "db side to side", "reps": [[0, 0, 0]], "weight": [[0, 0, 0]] }
+    { "name": "plank", "reps": [[0, 0, 0]], "weight": [[0, 0, 0]] }
   ]
 }
