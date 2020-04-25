@@ -183,6 +183,7 @@ app.controller('WorkoutController', function($http) {
         let date = new Date(endMs);
         workout.currentRoutine.workoutTimeString.push(date.toString());
 
+        // Remove this $$hashKey
         workout.json = JSON.stringify(workout.currentRoutine)
     }
 });

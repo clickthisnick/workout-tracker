@@ -60,7 +60,6 @@
           "weight": [[], [], []]
         }
       ],
-      "$$hashKey": "object:4"
     },
     {
       "name": "chest/shoulders",
@@ -122,7 +121,6 @@
           "weight": [[], [10, 10, 10], [10, 10, 10]]
         }
       ],
-      "$$hashKey": "object:5"
     },
     {
       "name": "legs/back",
@@ -175,7 +173,6 @@
           "weight": [[], [25, 0, 0], [0, 0, 0]]
         }
       ],
-      "$$hashKey": "object:6"
     }
   ]
 }
