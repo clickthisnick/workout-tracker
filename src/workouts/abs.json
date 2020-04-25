@@ -1,9 +1,9 @@
 {
     "name": "abs workout",
-    "startMilliseconds": [0],
-    "endMilliseconds": [0],
-    "workoutTime": [0],
-    "workoutTimeString": [""],
+    "startMilliseconds": [],
+    "endMilliseconds": [],
+    "workoutTime": [],
+    "workoutTimeString": [],
     "exercises": [
       { "name": "plank", "reps": [[0, 0, 0]], "weight": [[0, 0, 0]] },
       { "name": "side plank", "reps": [[0, 0, 0]], "weight": [[0, 0, 0]] },

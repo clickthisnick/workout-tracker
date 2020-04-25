@@ -184,6 +184,9 @@ app.controller('WorkoutController', function($http) {
         workout.currentRoutine.workoutTimeString.push(date.toString());
 
         // Remove this $$hashKey
+        delete workout.currentRoutine["$$hashKey"]
+        delete workout.currentRoutine["daysAgo"]
+
         workout.json = JSON.stringify(workout.currentRoutine)
     }
 });
