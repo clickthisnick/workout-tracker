@@ -104,8 +104,11 @@
                 </div>
             </div>
             <div class="row">
-                <div class="col-xs-12">
+                <div class="col-xs-6">
                     <button ng-click="workout.generateJSON()"> Save Workout </button>
+                </div>
+                <div class="col-xs-6">
+                    <span id=timer></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<button ng-click="workout.timer()"> Timer </button>
                 </div>
             </div>
             <div ng-if="workout.saved == true"></div>

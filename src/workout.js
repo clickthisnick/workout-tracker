@@ -54,6 +54,22 @@ app.controller('WorkoutController', function($http) {
     workout.started = false;
     workout.saved = false;
 
+    workout.timer = function() {
+        var timeSpan = document.getElementById('timer');
+        var mins = 1.5;
+        var now = new Date().getTime();
+        var deadline = mins * 60 * 1000 + now;
+
+        setInterval(() => {
+            var currentTime = new Date().getTime();
+            var distance = deadline - currentTime;
+            var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            var seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+            timeSpan.innerHTML = minutes + 's' + seconds;
+        }, 500)
+    }
+
     // TODO Use these later
     workout.equipment = {
         "thick bar": 25,
