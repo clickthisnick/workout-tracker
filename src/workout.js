@@ -60,7 +60,13 @@ app.controller('WorkoutController', function($http) {
         var now = new Date().getTime();
         var deadline = mins * 60 * 1000 + now;
 
-        setInterval(() => {
+        try {
+            clearInterval(workout.refreshIntervalId);
+        } catch {
+            pass
+        }
+
+        workout.refreshIntervalId = setInterval(() => {
             var currentTime = new Date().getTime();
             var distance = deadline - currentTime;
             var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
