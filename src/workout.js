@@ -164,6 +164,22 @@ app.controller('WorkoutController', function($http) {
         workout.currentWeight = workout.currentExerciseData.weight.slice(Math.max(workout.currentExerciseData.weight.length - 1, 0))[0].toString()
     }
 
+    workout.addWeight = function(weight) {
+        if (workout.currentWeight != "") {
+            workout.currentWeight += ","
+        } 
+
+        workout.currentWeight += weight
+    }
+
+    workout.addReps = function(reps) {
+        if (workout.currentReps != "") {
+            workout.currentReps += ","
+        } 
+
+        workout.currentReps += reps
+    }
+
     workout.nextExercise = function() {
         // TODO should just disable button if not available
         if (workout.currentExerciseId < workout.exerciseCount - 1) {
