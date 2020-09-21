@@ -10,7 +10,7 @@
 
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.4/angular.min.js"></script>
     <script src="src/workout.js"></script>
-
+    
     <link rel="stylesheet" type="text/css" href="assets/ceruleanBootswatch.min.css">
 
     <script>
@@ -27,6 +27,38 @@
 </head>
 
 <body class="container" ng-controller="WorkoutController as workout">
+
+	<!-- Amplitude JS -->
+	<link rel="stylesheet" type="text/css" href="assets/amplitudejs/amplitudejs.css">
+	<link href="https://fonts.googleapis.com/css?family=Lato:400,400i" rel="stylesheet">
+	<!-- Amplitude JS -->
+
+	<div id="single-song-player">
+		<img data-amplitude-song-info="cover_art_url"/>
+		<div class="bottom-container">
+		<progress class="amplitude-song-played-progress" id="song-played-progress"></progress>
+
+		<div class="time-container">
+			<span class="current-time">
+			<span class="amplitude-current-minutes"></span>:<span class="amplitude-current-seconds"></span>
+			</span>
+			<span class="duration">
+			<span class="amplitude-duration-minutes"></span>:<span class="amplitude-duration-seconds"></span>
+			</span>
+		</div>
+
+		<div class="control-container">
+			<div class="amplitude-play-pause" id="play-pause"></div>
+			<div class="meta-container">
+			<span data-amplitude-song-info="name" class="song-name"></span>
+			<span data-amplitude-song-info="artist"></span>
+			</div>
+		</div>
+		</div>
+	</div>
+
+	<script src="assets/amplitudejs/amplitude.min.js"></script>
+	<script src="music/player.js"></script>
 
     <div ng-if="workout.started == false">
 
