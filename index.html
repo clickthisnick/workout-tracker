@@ -12,6 +12,18 @@
     <script src="src/workout.js"></script>
     
     <link rel="stylesheet" type="text/css" href="assets/ceruleanBootswatch.min.css">
+    <style>
+        body {
+            background-color: black;
+            color: white;
+        }
+
+        input,button {
+            background-color: rgb(58, 25, 25);
+            background: rgb(58, 25, 25);
+            color: white;
+        }
+    </style>
 
     <script>
         function getDaysAgo(workout) {
@@ -63,11 +75,11 @@
     <div ng-if="workout.started == false">
 
         <h2> Choose Workout. Click box and click off.. Some bug </h2>
-
-        <select class="form-control" ng-model="workout.routine" ng-change="workout.start(workout.routine)">
-            <option value="{{routine.name}}" ng-repeat="routine in workout.data.routines | orderBy:'daysAgo' | reverse">{{routine.name}} - {{ routine.daysAgo }} Days Ago - {{routine.workoutTime[routine.workoutTime.length-1]}}</option>
-        </select>
-
+        <div id=selectBox>
+            <select class="form-control" ng-model="workout.routine" ng-change="workout.start(workout.routine)">
+                <option value="{{routine.name}}" ng-repeat="routine in workout.data.routines | orderBy:'daysAgo' | reverse">{{routine.name}} - {{ routine.daysAgo }} Days Ago - {{routine.workoutTime[routine.workoutTime.length-1]}}</option>
+            </select>
+        </div>
     </div>
 
 

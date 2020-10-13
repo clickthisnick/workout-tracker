@@ -1,19 +1,30 @@
+function shuffle(array) {
+  var currentIndex = array.length, temporaryValue, randomIndex;
+
+  // While there remain elements to shuffle...
+  while (0 !== currentIndex) {
+
+    // Pick a remaining element...
+    randomIndex = Math.floor(Math.random() * currentIndex);
+    currentIndex -= 1;
+
+    // And swap it with the current element.
+    temporaryValue = array[currentIndex];
+    array[currentIndex] = array[randomIndex];
+    array[randomIndex] = temporaryValue;
+  }
+
+  return array;
+}
+
 Amplitude.init({
     "bindings": {
       37: 'prev',
       39: 'next',
       32: 'play_pause'
     },
-    "songs": [
-        // generateSongArray.py generates this from mp3 in music directory
-        {
-            "name": "Exapmple Song",
-            "artist": "Example",
-            "album": "",
-            "url": "music/example.mp3",
-            "cover_art_url": ""
-        }
-    ]
+    // Put generateMusic.py songs below..
+    "songs": shuffle()
   });
 
   window.onkeydown = function(e) {
