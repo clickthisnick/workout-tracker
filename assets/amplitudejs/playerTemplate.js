@@ -18,9 +18,13 @@ function shuffle(array) {
 }
 
 Amplitude.init({
+    // If you want to skip songs just drag to 0 seconds left
     "bindings": {
-      37: 'prev',
-      39: 'next',
+      // Left Arrow
+      //37: 'prev',
+
+      // Right Arrow
+      //39: 'next',
       32: 'play_pause'
     },
     // Put generateMusic.py songs below..

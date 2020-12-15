@@ -74,7 +74,7 @@
 
     <div ng-if="workout.started == false">
 
-        <h2> Choose Workout. Click box and click off.. Some bug </h2>
+        <h2> PUT PHONE IN DIFF ROOM. Choose Workout. Click box and click off.. Some bug PUT PHONE IN DIFF ROOM. </h2>
         <div id=selectBox>
             <select class="form-control" ng-model="workout.routine" ng-change="workout.start(workout.routine)">
                 <option value="{{routine.name}}" ng-repeat="routine in workout.data.routines | orderBy:'daysAgo' | reverse">{{routine.name}} - {{ routine.daysAgo }} Days Ago - {{routine.workoutTime[routine.workoutTime.length-1]}}</option>
@@ -99,9 +99,11 @@
                 <div class="col-xs-3">
                 </div>
                 <div class="col-xs-6">
+                    <button ng-click="workout.addReps((workout.previousExerciseReps[0] - 2))">{{workout.previousExerciseReps[0] - 2}}</button>
                     <button ng-click="workout.addReps((workout.previousExerciseReps[0] - 1))">{{workout.previousExerciseReps[0] - 1}}</button>
                     <button ng-click="workout.addReps((workout.previousExerciseReps[0]))">{{workout.previousExerciseReps[0]}}</button>
                     <button ng-click="workout.addReps((workout.previousExerciseReps[0] + 1))">{{workout.previousExerciseReps[0] + 1}}</button>
+                    <button ng-click="workout.addReps((workout.previousExerciseReps[0] + 2))">{{workout.previousExerciseReps[0] + 2}}</button>
                 </div>
             </div class="row">
 
@@ -127,9 +129,11 @@
                 <div class="col-xs-3">
                 </div>
                 <div class="col-xs-6">
+                    <button ng-click="workout.addWeight((workout.previousExerciseWeight[0] - 10))">{{workout.previousExerciseWeight[0] - 10}}</button>
                     <button ng-click="workout.addWeight((workout.previousExerciseWeight[0] - 5))">{{workout.previousExerciseWeight[0] - 5}}</button>
                     <button ng-click="workout.addWeight((workout.previousExerciseWeight[0]))">{{workout.previousExerciseWeight[0]}}</button>
                     <button ng-click="workout.addWeight((workout.previousExerciseWeight[0] + 5))">{{workout.previousExerciseWeight[0] + 5}}</button>
+                    <button ng-click="workout.addWeight((workout.previousExerciseWeight[0] + 10))">{{workout.previousExerciseWeight[0] + 10}}</button>
                 </div>
             </div class="row">
 

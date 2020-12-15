@@ -47,14 +47,26 @@ app.filter('reverse', function() {
     };
   });
 
-app.controller('WorkoutController', function($http) {
+function playSound(url) {
+    const audio = new Audio(url);
+    audio.play();
+}
 
+app.controller('WorkoutController', function($http) {    
     var workout = this;
 
     workout.started = false;
     workout.saved = false;
 
+    workout.timerStarted = false;
+
     workout.timer = function() {
+        if (workout.timerStarted) {
+            return
+        };
+
+        workout.timerStarted = true;
+
         var timeSpan = document.getElementById('timer');
         var mins = 1.5;
         var now = new Date().getTime();
@@ -72,7 +84,26 @@ app.controller('WorkoutController', function($http) {
             var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
             var seconds = Math.floor((distance % (1000 * 60)) / 1000);
 
-            timeSpan.innerHTML = minutes + 's' + seconds;
+            // The minutes are 1 off once negative
+            if (minutes < 0) {
+                minutes = minutes + 1
+            }
+
+            if (minutes == 0 && seconds == 0) {
+                workout.timerStarted = false;
+            }
+
+            if (minutes == 0 && seconds <= 0 && seconds > -2) {
+                playSound('sounds/a-tone.mp3')
+            }
+
+            let timeToShow = minutes + 'm ' + seconds + 's';
+
+            if (minutes == 0) {
+                timeToShow = seconds + 's';
+            }
+
+            timeSpan.innerHTML = timeToShow
         }, 500)
     }
 
@@ -170,6 +201,9 @@ app.controller('WorkoutController', function($http) {
         } 
 
         workout.currentWeight += weight
+
+        // Also restart the timer if not already
+        workout.timer()
     }
 
     workout.addReps = function(reps) {
@@ -178,6 +212,9 @@ app.controller('WorkoutController', function($http) {
         } 
 
         workout.currentReps += reps
+
+        // Also restart the timer if not already
+        workout.timer()
     }
 
     workout.nextExercise = function() {
