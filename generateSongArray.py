@@ -43,8 +43,8 @@ javascript += '''function shuffle(array) {
 
 Amplitude.init({
     "bindings": {
-      37: 'prev',
-      39: 'next',
+      //37: 'prev',
+      //39: 'next',
       32: 'play_pause'
     },
     "songs": shuffle('''
