@@ -1,19 +1,27 @@
 # !/usr/bin/python
 
 import os
+import re
 
 songs = []
 
 
 def addSong(path):
     if path.endswith('.mp3'):
-        songs.append({
-            "name": path.split('.mp3')[0].split('/')[-1],
-            "artist": "",
-            "album": "",
-            "url": path,
-            "cover_art_url": ""
-        })
+        # Special chars weren't working
+        # There's a better way to do this but this works for now
+        specialChars = [x for x in path if x.isalnum() is not True and x not in ['/', '-', '_', ' ', '[', ']', '(', ')', ',', "'", '.', '&', '!', '$']]
+        if specialChars:
+          print('Path: {} is not valid.'.format(path))
+          print('Contains special chars {}'.format(specialChars))
+        else:
+          songs.append({
+              "name": path.split('.mp3')[0].split('/')[-1],
+              "artist": "",
+              "album": "",
+              "url": path,
+              "cover_art_url": ""
+          })
 
 for root, folders, files in os.walk("music", topdown=False):
     for name in files:
@@ -43,8 +51,9 @@ javascript += '''function shuffle(array) {
 
 Amplitude.init({
     "bindings": {
-      //37: 'prev',
-      //39: 'next',
+      // Not using arrows since they are easy to hit
+      221: 'prev', // ]
+      220: 'next', // \
       32: 'play_pause'
     },
     "songs": shuffle('''
