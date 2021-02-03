@@ -5,6 +5,7 @@
         "grip.json",
         "leg.json",
         "chest.json",
-        "abs.json"
+        "abs.json",
+        "gym_equipment.json"
     ]
 }

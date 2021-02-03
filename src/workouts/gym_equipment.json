@@ -1,0 +1,14 @@
+{
+    "name": "gym machines",
+    "startMilliseconds": [],
+    "endMilliseconds": [],
+    "workoutTime": [],
+    "workoutTimeString": [],
+    "exercises": [
+      { "name": "Shoulder press machine. Lowest Seat", "reps": [[10, 10, 10]], "weight": [[100, 110, 110]] },
+      { "name": "Low Row. Seat 6 Chest 6.", "reps": [[10, 10, 10]], "weight": [[100, 110, 120]] },
+      { "name": "Chest Press. Seat 6, Hand Grips Back.", "reps": [[10, 10, 6]], "weight": [[130, 160, 170]] },
+      { "name": "Cable Rope Tricep Extensions", "reps": [[10, 10, 10]], "weight": [[50, 55, 55]] }
+    ]
+  }
+  
