@@ -1,0 +1,5 @@
+{"name":"body weight","startMilliseconds":[1617377382388],"endMilliseconds":[1617377909046],"workoutTime":["8:47"],"workoutTimeString":["Fri Apr 02 2021 11:38:29 GMT-0400 (Eastern Daylight Time)"],"exercises":[
+    {"name":"pushups","reps":[[0,0,0],[15,15,15]],"weight":[[0,0,0],[]]},
+    {"name":"squats","reps":[[0,0,0],[15,15,15]],"weight":[[0,0,0],[]]}
+]
+}
