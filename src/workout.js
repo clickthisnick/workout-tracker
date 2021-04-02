@@ -129,8 +129,11 @@ app.controller('WorkoutController', function($http) {
     }
 
     loadWorkoutData($http).then((routines) => {
+
         workout.data.routines = routines
     }).then(() => {
+        let selectBox = document.getElementById("selectBox");
+
         workout.data.routines.forEach((routine) => {
             let routineMs = routine.endMilliseconds[routine.endMilliseconds.length - 1]
             let ms = getTimeMilliseconds()
@@ -138,7 +141,15 @@ app.controller('WorkoutController', function($http) {
 
             let daysSinceLastDoneWorkout = Math.floor(msSinceWorkout / (1000 * 60 * 60) / 24)
             routine.daysAgo = daysSinceLastDoneWorkout
+
+            // TODO can sort by the longest workout ago
+            // | orderBy:'daysAgo' | reverse
+            let opt1 = document.createElement("option");
+            opt1.value = routine.name;
+            opt1.text = `${routine.name} - ${routine.daysAgo} Days Ago - ${routine.workoutTime[routine.workoutTime.length-1]}`
+            selectBox.add(opt1, null);
         })
+        
     })
 
     workout.start = function(name) {
