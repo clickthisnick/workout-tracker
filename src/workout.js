@@ -58,6 +58,14 @@ app.controller('WorkoutController', function($http) {
     workout.started = false;
     workout.saved = false;
 
+    // This is the last excercise rep
+    // Its used to calculate the rep button amount
+    workout.lastExerciseRep = ""
+
+    // This is the last excercise Weight
+    // Its used to calculate the Weight button amount
+    workout.lastExerciseWeight = ""
+
     workout.timerStarted = false;
 
     workout.timer = function() {
@@ -178,14 +186,18 @@ app.controller('WorkoutController', function($http) {
         // Handle first time using routine
         if (workout.previousExerciseData.reps.length > 1) {
             workout.previousExerciseReps = workout.previousExerciseData.reps.slice(Math.max(workout.previousExerciseData.reps.length - 2, 0))[0]
+            workout.lastExerciseRep = workout.previousExerciseReps[workout.previousExerciseReps.length - 1]
         } else {
             workout.previousExerciseReps = ""
+            workout.lastExerciseRep = ""
         }
 
         if (workout.previousExerciseData.weight.length > 1) {
             workout.previousExerciseWeight = workout.previousExerciseData.weight.slice(Math.max(workout.previousExerciseData.weight.length - 2, 0))[0]
+            workout.lastExerciseWeight = workout.previousExerciseWeight[workout.previousExerciseWeight.length - 1]
         } else {
             workout.previousExerciseWeight = ""
+            workout.lastExerciseWeight = ""
         }
 
         workout.currentExerciseData = workout.currentRoutine.exercises[workout.currentExerciseId]
