@@ -1,0 +1,13 @@
+{
+  "name": "Chest/Back",
+  "startMilliseconds": [],
+  "endMilliseconds": [],
+  "workoutTime": [],
+  "workoutTimeString": [],
+  "exercises": [
+    { "name": "db chest press", "reps": [[0, 0, 0]], "weight": [[0, 0, 0]] },
+    { "name": "db rows", "reps": [[0, 0, 0]], "weight": [[0, 0, 0]] },
+    { "name": "db incline chest press", "reps": [[0, 0, 0]], "weight": [[0, 0, 0]] },
+    { "name": "lat pull down", "reps": [[0, 0, 0]], "weight": [[0, 0, 0]] }
+  ]
+}
