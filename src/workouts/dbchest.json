@@ -1,13 +1,1 @@
-{
-  "name": "Chest/Back",
-  "startMilliseconds": [],
-  "endMilliseconds": [],
-  "workoutTime": [],
-  "workoutTimeString": [],
-  "exercises": [
-    { "name": "db chest press", "reps": [[0, 0, 0]], "weight": [[0, 0, 0]] },
-    { "name": "db rows", "reps": [[0, 0, 0]], "weight": [[0, 0, 0]] },
-    { "name": "db incline chest press", "reps": [[0, 0, 0]], "weight": [[0, 0, 0]] },
-    { "name": "lat pull down", "reps": [[0, 0, 0]], "weight": [[0, 0, 0]] }
-  ]
-}
+{"name":"Chest/Back","startMilliseconds":[1669471517261],"endMilliseconds":[1669473294820],"workoutTime":["29:38"],"workoutTimeString":["Sat Nov 26 2022 09:34:54 GMT-0500 (Eastern Standard Time)"],"exercises":[{"name":"db chest press","reps":[[0,0,0],[12,12,12]],"weight":[[0,0,0],[45,50,50]]},{"name":"db rows","reps":[[0,0,0],[12,12,10]],"weight":[[0,0,0],[50,50,50]]},{"name":"db incline chest press","reps":[[0,0,0],[12,12,11]],"weight":[[0,0,0],[35,45,50]]},{"name":"lat pull down","reps":[[0,0,0],[12,8,12]],"weight":[[0,0,0],[100,115,115]]}]}
