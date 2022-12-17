@@ -286,6 +286,11 @@ app.controller('WorkoutController', function($http) {
         delete workout.currentRoutine["daysAgo"]
 
         workout.json = JSON.stringify(workout.currentRoutine)
+
+        let a= document.createElement('a');
+        a.target= '_blank';
+        a.href= `mailto:foo?subject=${encodeURIComponent("Workout")}&body=${encodeURIComponent(workout.json)}`
+        a.click();
     }
 });
 
