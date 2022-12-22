@@ -157,6 +157,7 @@ app.controller('WorkoutController', function($http) {
         // Also created arrays for reps and weight
         workout.started = true
         workout.currentRoutine = workout.data.routines.filter((routine) => routine.name == name)[0]
+        workout.currentRoutine.name = workout.currentRoutine.name
         workout.currentExerciseId = 0
         workout.exerciseCount = 0
         workout.currentRoutine.startMilliseconds.push(getTimeMilliseconds())
