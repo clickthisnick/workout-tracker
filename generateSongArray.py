@@ -85,5 +85,5 @@ except FileExistsError:
     pass
 
 # Write the javascript to file with the songs
-with open("music/player.js", "w") as file:  
+with open("music/player.js", "w") as file:
     file.write(javascript)
