@@ -31,7 +31,7 @@ for root, folders, files in os.walk("music", topdown=False):
 javascript = ''
 
 javascript += '''function shuffle(array) {
-  var currentIndex = array.length, temporaryValue, randomIndex;
+  let currentIndex = array.length, temporaryValue, randomIndex;
 
   // While there remain elements to shuffle...
   while (0 !== currentIndex) {
@@ -71,8 +71,8 @@ javascript += ''')
     Handles a click on the song played progress bar.
   */
   document.getElementById('song-played-progress').addEventListener('click', function( e ){
-    var offset = this.getBoundingClientRect();
-    var x = e.pageX - offset.left;
+    let offset = this.getBoundingClientRect();
+    let x = e.pageX - offset.left;
 
     Amplitude.setSongPlayedPercentage( ( parseFloat( x ) / parseFloat( this.offsetWidth) ) * 100 );
   });

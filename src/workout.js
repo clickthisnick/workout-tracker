@@ -155,7 +155,7 @@ app.controller('WorkoutController', function($http) {
     workout.currentExerciseId = 0;
     workout.exerciseCount = 0;
     workout.currentRoutine.startMilliseconds.push(getTimeMilliseconds());
-    // var date = new Date(milliseconds);
+    // let date = new Date(milliseconds);
     // date.toString()
     // Gives you human readable from that
 

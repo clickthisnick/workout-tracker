@@ -11,7 +11,8 @@ module.exports = {
     'sourceType': 'module',
   },
   'rules': {
-    'max-len': ['error', {'code': 160}],
+    // 'max-len': ['error', {'code': 160}],
+    'max-len': 'off',
     'require-jsdoc': 'off',
     'no-invalid-this': 'off',
   },
