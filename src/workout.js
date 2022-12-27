@@ -6,8 +6,8 @@ function getTimeMilliseconds() {
 }
 
 function millisecondsToMinSeconds(ms) {
-  const ms_round = 1000*Math.round(ms/1000); // round to nearest second
-  const d = new Date(ms_round);
+  const msRound = 1000*Math.round(ms/1000); // round to nearest second
+  const d = new Date(msRound);
   return d.getUTCMinutes() + ':' + d.getUTCSeconds(); // "4:59"
 }
 
@@ -69,10 +69,6 @@ app.controller('WorkoutController', function($http) {
   workout.timerStarted = false;
 
   workout.timer = function() {
-    if (workout.timerStarted) {
-      return;
-    };
-
     workout.timerStarted = true;
 
     const timeSpan = document.getElementById('timer');

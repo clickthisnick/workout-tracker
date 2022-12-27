@@ -11,5 +11,8 @@ module.exports = {
     'sourceType': 'module',
   },
   'rules': {
+    'max-len': ['error', {'code': 160}],
+    'require-jsdoc': 'off',
+    'no-invalid-this': 'off',
   },
 };
