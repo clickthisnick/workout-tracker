@@ -135,7 +135,6 @@
                     <button ng-click="workout.addReps((workout.lastExerciseRep + 2))">{{workout.lastExerciseRep + 2}}</button>&nbsp;&nbsp;&nbsp;&nbsp;
                 </div>
             </div class="row">
-        </br></br>
             <div class="row">
                 <div class="col-xs-3">
                 </div>
@@ -158,7 +157,6 @@
                     <input ng-model = "workout.currentReps">
                 </div>
             </div class="row">
-        </br>
             <div class="row">
                 <div class="col-xs-3">
                     Weight
@@ -181,7 +179,7 @@
                     <button ng-click="workout.generateJSON()"> Save Workout </button>
                 </div>
                 <div class="col-xs-6">
-                    <span id=timer></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<button ng-click="workout.timer()"> Timer </button>
+                    <span id=timer></span><button ng-click="workout.timer()"> Timer </button>
                 </div>
             </div>
             <div ng-if="workout.saved == true"></div>
