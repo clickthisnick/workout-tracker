@@ -152,9 +152,22 @@ app.controller('WorkoutController', function($http) {
     workout.started = true;
     workout.currentRoutine = workout.data.routines.filter((routine) => routine.name == name)[0];
     workout.currentRoutine.name = workout.currentRoutine.name;
+    workout.currentRoutine.people = workout.currentRoutine.exercises[0].reps.keys();
+    workout.currentRoutine.currentPerson = workout.currentRoutine.people[0];
     workout.currentExerciseId = 0;
     workout.exerciseCount = 0;
     workout.currentRoutine.startMilliseconds.push(getTimeMilliseconds());
+
+    // add each person
+    console.log(workout.currentRoutine.people);
+    const selectPerson = document.getElementById('selectPerson');
+    workout.currentRoutine.people.forEach((people) => {
+      const opt1 = document.createElement('option');
+      opt1.value = people;
+      opt1.text = people;
+      selectPerson.add(opt1, null);
+    });
+
     // let date = new Date(milliseconds);
     // date.toString()
     // Gives you human readable from that
