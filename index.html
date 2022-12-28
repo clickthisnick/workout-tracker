@@ -89,18 +89,16 @@
     <div ng-if="workout.started == true">
         <span style="font-size: 16px;"> {{workout.currentRoutine.name.toLowerCase().capitalize()}} </span><span
             style="font-size: 12px;">- Last Completed: {{workout.currentRoutine.daysAgo}} days ago. </span>
-
+    </br>
+        <span style="font-size: 24px;">
+            {{workout.currentRoutine.exercises[workout.currentExerciseId].name.toLowerCase().capitalize()}}
+        </span>
         <div class="row">
-            <div class="col-xs-1">
-                <button ng-click="workout.previousExercise()"><</button>
+            <div class="col-xs-3">
+                <button ng-click="workout.previousExercise()">Prev</button>
             </div>
-            <div class="col-xs-10">
-                <span style="font-size: 24px;">
-                    {{workout.currentRoutine.exercises[workout.currentExerciseId].name.toLowerCase().capitalize()}}
-                </span>
-            </div>
-            <div class="col-xs-1">
-                <button ng-click="workout.nextExercise()">></button>
+            <div class="col-xs-9">
+                <button ng-click="workout.nextExercise()">Next</button>
             </div>
         </div>
 
