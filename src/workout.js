@@ -6,7 +6,7 @@ function getTimeMilliseconds() {
 }
 
 function millisecondsToMinSeconds(ms) {
-  const msRound = 1000*Math.round(ms/1000); // round to nearest second
+  const msRound = 1000 * Math.round(ms / 1000); // round to nearest second
   const d = new Date(msRound);
   return d.getUTCMinutes() + ':' + d.getUTCSeconds(); // "4:59"
 }
@@ -141,7 +141,7 @@ app.controller('WorkoutController', function($http) {
       // | orderBy:'daysAgo' | reverse
       const opt1 = document.createElement('option');
       opt1.value = routine.name;
-      opt1.text = `${routine.name} - ${routine.daysAgo} Days Ago - ${routine.workoutTime[routine.workoutTime.length-1]}`;
+      opt1.text = `${routine.name} - ${routine.daysAgo} Days Ago - ${routine.workoutTime[routine.workoutTime.length - 1]}`;
       selectBox.add(opt1, null);
     });
   });
@@ -152,21 +152,11 @@ app.controller('WorkoutController', function($http) {
     workout.started = true;
     workout.currentRoutine = workout.data.routines.filter((routine) => routine.name == name)[0];
     workout.currentRoutine.name = workout.currentRoutine.name;
-    workout.currentRoutine.people = workout.currentRoutine.exercises[0].reps.keys();
+    workout.currentRoutine.people = Object.keys(workout.currentRoutine.exercises[0].reps);
     workout.currentRoutine.currentPerson = workout.currentRoutine.people[0];
     workout.currentExerciseId = 0;
     workout.exerciseCount = 0;
     workout.currentRoutine.startMilliseconds.push(getTimeMilliseconds());
-
-    // add each person
-    console.log(workout.currentRoutine.people);
-    const selectPerson = document.getElementById('selectPerson');
-    workout.currentRoutine.people.forEach((people) => {
-      const opt1 = document.createElement('option');
-      opt1.value = people;
-      opt1.text = people;
-      selectPerson.add(opt1, null);
-    });
 
     // let date = new Date(milliseconds);
     // date.toString()
@@ -175,44 +165,52 @@ app.controller('WorkoutController', function($http) {
     // Add new rep/weight entries to all exercises of loaded routine
     workout.currentRoutine.exercises.forEach((exercise) => {
       // workout.currentRoutine.exercises[workout.currentExerciseId]
-      exercise.reps.push([]);
-      exercise.weight.push([]);
+      exercise.reps[workout.currentRoutine.currentPerson].push([]);
+      exercise.weight[workout.currentRoutine.currentPerson].push([]);
       workout.exerciseCount += 1;
     });
 
     workout.refreshWorkoutData();
   };
 
+  workout.changePeople = function(person) {
+    console.log(person);
+  };
+
   workout.saveItems = function() {
     const currentExercise = workout.currentRoutine.exercises[workout.currentExerciseId];
+    const currentExerciseReps = currentExercise.reps[workout.currentRoutine.currentPerson];
+    const currentExerciseWeight = currentExercise.weight[workout.currentRoutine.currentPerson];
 
     // Incase not filled out
     if (workout.currentReps.length !== 0) {
-      const repLength = currentExercise.reps.length;
-      currentExercise.reps[repLength - 1] = workout.currentReps.split(',').map(Number);
+      const repLength = currentExerciseReps.length;
+      currentExerciseReps[repLength - 1] = workout.currentReps.split(',').map(Number);
     }
 
     // Incase not filled out
     if (workout.currentWeight.length !== 0) {
-      const weightLength = currentExercise.weight.length;
-      currentExercise.weight[weightLength - 1] = workout.currentWeight.split(',').map(Number);
+      const weightLength = currentExerciseWeight.length;
+      currentExerciseWeight[weightLength - 1] = workout.currentWeight.split(',').map(Number);
     }
   };
 
   workout.refreshWorkoutData = function() {
     workout.previousExerciseData = workout.currentRoutine.exercises[workout.currentExerciseId];
+    workout.previousExerciseDataReps = workout.previousExerciseData.reps[workout.currentRoutine.currentPerson];
+    workout.previousExerciseDataWeight = workout.previousExerciseData.weight[workout.currentRoutine.currentPerson];
 
     // Handle first time using routine
-    if (workout.previousExerciseData.reps.length > 1) {
-      workout.previousExerciseReps = workout.previousExerciseData.reps.slice(Math.max(workout.previousExerciseData.reps.length - 2, 0))[0];
+    if (workout.previousExerciseDataReps.length > 1) {
+      workout.previousExerciseReps = workout.previousExerciseDataReps.slice(Math.max(workout.previousExerciseDataReps.length - 2, 0))[0];
       workout.lastExerciseRep = workout.previousExerciseReps[workout.previousExerciseReps.length - 1];
     } else {
       workout.previousExerciseReps = '';
       workout.lastExerciseRep = '';
     }
 
-    if (workout.previousExerciseData.weight.length > 1) {
-      workout.previousExerciseWeight = workout.previousExerciseData.weight.slice(Math.max(workout.previousExerciseData.weight.length - 2, 0))[0];
+    if (workout.previousExerciseDataWeight.length > 1) {
+      workout.previousExerciseWeight = workout.previousExerciseDataWeight.slice(Math.max(workout.previousExerciseDataWeight.length - 2, 0))[0];
       workout.lastExerciseWeight = workout.previousExerciseWeight[workout.previousExerciseWeight.length - 1];
     } else {
       workout.previousExerciseWeight = '';
@@ -220,10 +218,12 @@ app.controller('WorkoutController', function($http) {
     }
 
     workout.currentExerciseData = workout.currentRoutine.exercises[workout.currentExerciseId];
+    workout.currentExerciseDataReps = workout.currentExerciseData.reps[workout.currentRoutine.currentPerson];
+    workout.currentExerciseDataWeight = workout.currentExerciseData.weight[workout.currentRoutine.currentPerson];
 
     // These will be string inputs on page, but array in data model
-    workout.currentReps = workout.currentExerciseData.reps.slice(Math.max(workout.currentExerciseData.reps.length - 1, 0))[0].toString();
-    workout.currentWeight = workout.currentExerciseData.weight.slice(Math.max(workout.currentExerciseData.weight.length - 1, 0))[0].toString();
+    workout.currentReps = workout.currentExerciseDataReps.slice(Math.max(workout.currentExerciseDataReps.length - 1, 0))[0].toString();
+    workout.currentWeight = workout.currentExerciseDataWeight.slice(Math.max(workout.currentExerciseDataWeight.length - 1, 0))[0].toString();
   };
 
   workout.addWeight = function(weight) {
@@ -292,6 +292,8 @@ app.controller('WorkoutController', function($http) {
     // Remove this $$hashKey
     delete workout.currentRoutine['$$hashKey'];
     delete workout.currentRoutine['daysAgo'];
+    delete workout.currentRoutine['people'];
+    delete workout.currentRoutine['currentPerson'];
 
     workout.json = JSON.stringify(workout.currentRoutine);
 

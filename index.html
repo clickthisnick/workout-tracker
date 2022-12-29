@@ -4,10 +4,6 @@
 <head>
     <!-- Needed for mobile to function (somewhat) -->
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-
-    <!-- Import pouchdb, an offline client-side database that syncs -->
-    <!-- <script src="./assets/pouchdb.js"></script> -->
-
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.4/angular.min.js"></script>
     <script src="src/workout.js"></script>
 
@@ -49,14 +45,15 @@
     <div ng-if="workout.started == false">
         <div ng-if="workout.data.routines.length > 0"></div>
         <h2>Choose Workout</h2>
-        <select id=selectBox class="form-control" ng-model="workout.routine" ng-change="workout.start(workout.routine)">
+        <select id="selectBox" class="form-control" ng-model="workout.routine" ng-change="workout.start(workout.routine)">
             <!-- this is popuated after the data is loaded -->
         </select>
     </div>
 
     <div ng-if="workout.started == true">
-        <select id=selectPerson class="form-control" ng-model="workout.currentRoutine.people" ng-change="workout.start(workout.routine)">
+        <select ng-init="selectedPerson = workout.currentRoutine.people[0]" ng-model="selectedPerson" ng-options="x for x in workout.currentRoutine.people" ng-change="workout.changePeople(selectedPerson)">
         </select>
+        </br>
 
         <span style="font-size: 16px;"> {{workout.currentRoutine.name.toLowerCase().capitalize()}} </span><span
             style="font-size: 12px;">- Last Completed: {{workout.currentRoutine.daysAgo}} days ago. </span>

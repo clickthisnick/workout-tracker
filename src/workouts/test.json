@@ -5,26 +5,15 @@
     "workoutTime": [],
     "workoutTimeString": [],
     "exercises": [
-        {
-            "name": "exercise",
-            "reps": {
-                "me": [
-                    [
-                        0,
-                        0,
-                        0
-                    ]
-                ]
-            },
-            "weight": {
-                "me": [
-                    [
-                        0,
-                        0,
-                        0
-                    ]
-                ]
-            }
+      {
+        "name": "exercise",
+        "reps": {
+          "me": [[0, 0, 0]],
+          "other": [[0, 0, 0]]
+        }, "weight": {
+          "me": [[0, 0, 0]],
+          "other": [[0, 0, 0]]
         }
+      }
     ]
 }
