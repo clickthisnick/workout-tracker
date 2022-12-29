@@ -152,8 +152,8 @@ app.controller('WorkoutController', function($http) {
     workout.started = true;
     workout.currentRoutine = workout.data.routines.filter((routine) => routine.name == name)[0];
     workout.currentRoutine.name = workout.currentRoutine.name;
-    workout.currentRoutine.people = Object.keys(workout.currentRoutine.exercises[0].reps);
-    workout.currentRoutine.currentPerson = workout.currentRoutine.people[0];
+    const people = Object.keys(workout.currentRoutine.exercises[0].reps);
+    workout.currentRoutine.currentPerson = people[0];
     workout.currentExerciseId = 0;
     workout.exerciseCount = 0;
     workout.currentRoutine.startMilliseconds.push(getTimeMilliseconds());
@@ -164,9 +164,7 @@ app.controller('WorkoutController', function($http) {
 
     // Add new rep/weight entries to all exercises of loaded routine
     workout.currentRoutine.exercises.forEach((exercise) => {
-      workout.currentRoutine.people.forEach((person) => {
-        console.log(person);
-        console.log(exercise.weight);
+      people.forEach((person) => {
         exercise.reps[person].push([]);
         exercise.weight[person].push([]);
       });
@@ -183,43 +181,30 @@ app.controller('WorkoutController', function($http) {
   };
 
   workout.saveItems = function() {
+    // The only reason saveItems exists is because we can type out reps/weights as a stirng
+    // Which then needs to get converted into an array
+
     const currentExercise = workout.currentRoutine.exercises[workout.currentExerciseId];
     const currentExerciseReps = currentExercise.reps[workout.currentRoutine.currentPerson];
     const currentExerciseWeight = currentExercise.weight[workout.currentRoutine.currentPerson];
 
     // Incase not filled out
-    if (workout.currentReps && workout.currentReps.length !== 0) {
+    if (workout.currentRepsStr && workout.currentRepsStr.length !== 0) {
       const repLength = currentExerciseReps.length;
-      currentExerciseReps[repLength - 1] = workout.currentReps.split(',').map(Number);
+      currentExerciseReps[repLength - 1] = workout.currentRepsStr.split(',').map(Number);
     }
 
     // Incase not filled out
-    if (workout.currentWeights && workout.currentWeights.length !== 0) {
+    if (workout.currentWeightsStr && workout.currentWeightsStr.length !== 0) {
       const weightLength = currentExerciseWeight.length;
-      currentExerciseWeight[weightLength - 1] = workout.currentWeights.split(',').map(Number);
-    }
-  };
-
-  workout.getCurrentReps = function() {
-    // Incase not filled out
-    console.log(workout.currentReps);
-    if (workout.currentReps && workout.currentReps.length !== 0) {
-      return workout.currentReps.split(',').map(Number);
-    } else {
-      return [];
-    }
-  };
-
-  workout.getCurrentWeights = function() {
-    // Incase not filled out
-    if (workout.currentWeights && workout.currentWeights.length !== 0) {
-      return workout.currentWeights.split(',').map(Number);
-    } else {
-      return [];
+      currentExerciseWeight[weightLength - 1] = workout.currentWeightsStr.split(',').map(Number);
     }
   };
 
   workout.refreshWorkoutData = function() {
+    // This refreshs the workout data show to be the current person
+    // Also it refreshes the reps/weight boxes based on last values
+
     const currentExercise = workout.currentRoutine.exercises[workout.currentExerciseId];
     const currentExerciseReps = currentExercise.reps[workout.currentRoutine.currentPerson];
     const currentExerciseWeights = currentExercise.weight[workout.currentRoutine.currentPerson];
@@ -227,14 +212,15 @@ app.controller('WorkoutController', function($http) {
     workout.previousReps = currentExerciseReps.slice(Math.max(currentExerciseReps.length - 2, 0))[0];
     workout.previousWeights = currentExerciseWeights.slice(Math.max(currentExerciseWeights.length - 2, 0))[0];
 
-    workout.currentReps = currentExerciseReps[currentExerciseReps.length - 1].toString();
-    workout.currentWeights = currentExerciseWeights[currentExerciseWeights.length - 1].toString();
+    workout.currentRepsStr = currentExerciseReps[currentExerciseReps.length - 1].toString();
+    workout.currentWeightsStr = currentExerciseWeights[currentExerciseWeights.length - 1].toString();
 
-    console.log(workout.previousReps);
-    const exeriseReps = workout.previousReps.concat(workout.getCurrentReps());
+    // filter removes empty strings
+    // make getCurrentReps which converts from str to array quickly
+    const exeriseReps = workout.previousReps.concat(workout.currentRepsStr.split(',').map(Number)).filter((n) => n);
     const exeriseRepsLast = exeriseReps[exeriseReps.length - 1];
 
-    const exeriseWeight = workout.previousWeights.concat(workout.getCurrentWeights());
+    const exeriseWeight = workout.previousWeights.concat(workout.currentWeightsStr.split(',').map(Number)).filter((n) => n);
     const exeriseWeightLast = exeriseWeight[exeriseWeight.length - 1];
 
     workout.generateLastReps(exeriseRepsLast);
@@ -242,13 +228,13 @@ app.controller('WorkoutController', function($http) {
   };
 
   workout.addWeights = function(amount) {
-    if (!workout.currentWeights) {
-      workout.currentWeights = '';
+    if (!workout.currentWeightsStr) {
+      workout.currentWeightsStr = '';
     } else {
-      workout.currentWeights += ',';
+      workout.currentWeightsStr += ',';
     }
 
-    workout.currentWeights += amount;
+    workout.currentWeightsStr += amount;
     workout.saveItems();
     workout.refreshWorkoutData();
 
@@ -259,6 +245,10 @@ app.controller('WorkoutController', function($http) {
   };
 
   workout.generateLastWeights = function(lastExceriseWeight) {
+    if (!lastExceriseWeight) {
+      lastExceriseWeight = 0;
+    }
+
     workout.lastExerciseWeights = [
       lastExceriseWeight - 10,
       lastExceriseWeight - 5,
@@ -269,6 +259,9 @@ app.controller('WorkoutController', function($http) {
   };
 
   workout.generateLastReps = function(lastExerciseRep) {
+    if (!lastExerciseRep) {
+      lastExerciseRep = 0;
+    }
     workout.lastExerciseReps = [
       lastExerciseRep - 10,
       lastExerciseRep - 5,
@@ -280,13 +273,13 @@ app.controller('WorkoutController', function($http) {
 
 
   workout.addReps = function(reps) {
-    if (!workout.currentReps) {
-      workout.currentReps = '';
+    if (!workout.currentRepsStr) {
+      workout.currentRepsStr = '';
     } else {
-      workout.currentReps += ',';
+      workout.currentRepsStr += ',';
     }
 
-    workout.currentReps += reps;
+    workout.currentRepsStr += reps;
     workout.saveItems();
     workout.refreshWorkoutData();
 
@@ -315,6 +308,7 @@ app.controller('WorkoutController', function($http) {
     // Show json entry box
     workout.saved = true;
 
+    // Once you hit save you cannot click it again
     // Add an end time to the workout
     workout.currentRoutine.endMilliseconds.push(getTimeMilliseconds());
 
@@ -335,7 +329,6 @@ app.controller('WorkoutController', function($http) {
     // Remove this $$hashKey
     delete workout.currentRoutine['$$hashKey'];
     delete workout.currentRoutine['daysAgo'];
-    delete workout.currentRoutine['people'];
     delete workout.currentRoutine['currentPerson'];
 
     workout.json = JSON.stringify(workout.currentRoutine);
