@@ -174,7 +174,9 @@ app.controller('WorkoutController', function($http) {
   };
 
   workout.changePeople = function(person) {
-    console.log(person);
+    workout.saveItems();
+    workout.currentRoutine.currentPerson = person;
+    workout.refreshWorkoutData();
   };
 
   workout.saveItems = function() {
