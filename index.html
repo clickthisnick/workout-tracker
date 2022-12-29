@@ -82,7 +82,7 @@
                 Reps
             </div>
             <div class="col-xs-9">
-                {{workout.previousExerciseReps}}
+                {{workout.previousReps}}
             </div>
         </div class="row">
 
@@ -91,7 +91,7 @@
                 Weight
             </div>
             <div class="col-xs-6">
-                {{workout.previousExerciseWeight}}
+                {{workout.previousWeights}}
             </div>
         </div class="row">
         </br>
@@ -106,15 +106,11 @@
             <div class="col-xs-3">
             </div>
             <div class="col-xs-6">
-                <button ng-click="workout.addReps((workout.lastExerciseRep - 2))">{{workout.lastExerciseRep -
-                    2}}</button>&nbsp;
-                <button ng-click="workout.addReps((workout.lastExerciseRep - 1))">{{workout.lastExerciseRep -
-                    1}}</button>&nbsp;
-                <button ng-click="workout.addReps((workout.lastExerciseRep))">{{workout.lastExerciseRep}}</button>&nbsp;
-                <button ng-click="workout.addReps((workout.lastExerciseRep + 1))">{{workout.lastExerciseRep +
-                    1}}</button>&nbsp;
-                <button ng-click="workout.addReps((workout.lastExerciseRep + 2))">{{workout.lastExerciseRep +
-                    2}}</button>&nbsp;
+                <button ng-click="workout.addReps(workout.lastExerciseReps[0])">{{workout.lastExerciseReps[0]}}</button>&nbsp;
+                <button ng-click="workout.addReps(workout.lastExerciseReps[1])">{{workout.lastExerciseReps[1]}}</button>&nbsp;
+                <button ng-click="workout.addReps(workout.lastExerciseReps[2])">{{workout.lastExerciseReps[2]}}</button>&nbsp;
+                <button ng-click="workout.addReps(workout.lastExerciseReps[3])">{{workout.lastExerciseReps[3]}}</button>&nbsp;
+                <button ng-click="workout.addReps(workout.lastExerciseReps[4])">{{workout.lastExerciseReps[4]}}</button>&nbsp;
             </div>
         </div class="row">
         <div class="row">
@@ -130,23 +126,18 @@
                 Weight
             </div>
             <div class="col-xs-9">
-                <input ng-model="workout.currentWeight">
+                <input ng-model="workout.currentWeights">
             </div>
         </div class="row">
         <div class="row">
             <div class="col-xs-3">
             </div>
             <div class="col-xs-6">
-                <button ng-click="workout.addWeight((workout.lastExerciseWeight - 10))">{{workout.lastExerciseWeight -
-                    10}}</button>&nbsp;
-                <button ng-click="workout.addWeight((workout.lastExerciseWeight - 5))">{{workout.lastExerciseWeight -
-                    5}}</button>&nbsp;
-                <button
-                    ng-click="workout.addWeight((workout.lastExerciseWeight))">{{workout.lastExerciseWeight}}</button>&nbsp;
-                <button ng-click="workout.addWeight((workout.lastExerciseWeight + 5))">{{workout.lastExerciseWeight +
-                    5}}</button>&nbsp;
-                <button ng-click="workout.addWeight((workout.lastExerciseWeight + 10))">{{workout.lastExerciseWeight +
-                    10}}</button>&nbsp;
+                <button ng-click="workout.addWeights(workout.lastExerciseWeights[0])">{{workout.lastExerciseWeights[0]}}</button>&nbsp;
+                <button ng-click="workout.addWeights(workout.lastExerciseWeights[1])">{{workout.lastExerciseWeights[1]}}</button>&nbsp;
+                <button ng-click="workout.addWeights(workout.lastExerciseWeights[2])">{{workout.lastExerciseWeights[2]}}</button>&nbsp;
+                <button ng-click="workout.addWeights(workout.lastExerciseWeights[3])">{{workout.lastExerciseWeights[3]}}</button>&nbsp;
+                <button ng-click="workout.addWeights(workout.lastExerciseWeights[4])">{{workout.lastExerciseWeights[4]}}</button>&nbsp;
             </div>
         </div class="row">
         </br>

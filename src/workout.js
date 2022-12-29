@@ -164,9 +164,12 @@ app.controller('WorkoutController', function($http) {
 
     // Add new rep/weight entries to all exercises of loaded routine
     workout.currentRoutine.exercises.forEach((exercise) => {
-      // workout.currentRoutine.exercises[workout.currentExerciseId]
-      exercise.reps[workout.currentRoutine.currentPerson].push([]);
-      exercise.weight[workout.currentRoutine.currentPerson].push([]);
+      workout.currentRoutine.people.forEach((person) => {
+        console.log(person);
+        console.log(exercise.weight);
+        exercise.reps[person].push([]);
+        exercise.weight[person].push([]);
+      });
       workout.exerciseCount += 1;
     });
 
@@ -185,64 +188,69 @@ app.controller('WorkoutController', function($http) {
     const currentExerciseWeight = currentExercise.weight[workout.currentRoutine.currentPerson];
 
     // Incase not filled out
-    if (workout.currentReps.length !== 0) {
+    if (workout.currentReps && workout.currentReps.length !== 0) {
       const repLength = currentExerciseReps.length;
       currentExerciseReps[repLength - 1] = workout.currentReps.split(',').map(Number);
     }
 
     // Incase not filled out
-    if (workout.currentWeight.length !== 0) {
+    if (workout.currentWeights && workout.currentWeights.length !== 0) {
       const weightLength = currentExerciseWeight.length;
-      currentExerciseWeight[weightLength - 1] = workout.currentWeight.split(',').map(Number);
+      currentExerciseWeight[weightLength - 1] = workout.currentWeights.split(',').map(Number);
+    }
+  };
+
+  workout.getCurrentReps = function() {
+    // Incase not filled out
+    console.log(workout.currentReps);
+    if (workout.currentReps && workout.currentReps.length !== 0) {
+      return workout.currentReps.split(',').map(Number);
+    } else {
+      return [];
+    }
+  };
+
+  workout.getCurrentWeights = function() {
+    // Incase not filled out
+    if (workout.currentWeights && workout.currentWeights.length !== 0) {
+      return workout.currentWeights.split(',').map(Number);
+    } else {
+      return [];
     }
   };
 
   workout.refreshWorkoutData = function() {
-    workout.previousExerciseData = workout.currentRoutine.exercises[workout.currentExerciseId];
-    workout.previousExerciseDataReps = workout.previousExerciseData.reps[workout.currentRoutine.currentPerson];
-    workout.previousExerciseDataWeight = workout.previousExerciseData.weight[workout.currentRoutine.currentPerson];
+    const currentExercise = workout.currentRoutine.exercises[workout.currentExerciseId];
+    const currentExerciseReps = currentExercise.reps[workout.currentRoutine.currentPerson];
+    const currentExerciseWeights = currentExercise.weight[workout.currentRoutine.currentPerson];
 
-    // Handle first time using routine
-    if (workout.previousExerciseDataReps.length > 1) {
-      workout.previousExerciseReps = workout.previousExerciseDataReps.slice(Math.max(workout.previousExerciseDataReps.length - 2, 0))[0];
-      workout.lastExerciseRep = workout.previousExerciseReps[workout.previousExerciseReps.length - 1];
-    } else {
-      workout.previousExerciseReps = '';
-      workout.lastExerciseRep = '';
-    }
+    workout.previousReps = currentExerciseReps.slice(Math.max(currentExerciseReps.length - 2, 0))[0];
+    workout.previousWeights = currentExerciseWeights.slice(Math.max(currentExerciseWeights.length - 2, 0))[0];
 
-    if (workout.previousExerciseDataWeight.length > 1) {
-      workout.previousExerciseWeight = workout.previousExerciseDataWeight.slice(Math.max(workout.previousExerciseDataWeight.length - 2, 0))[0];
-      workout.lastExerciseWeight = workout.previousExerciseWeight[workout.previousExerciseWeight.length - 1];
-    } else {
-      workout.previousExerciseWeight = '';
-      workout.lastExerciseWeight = '';
-    }
+    workout.currentReps = currentExerciseReps[currentExerciseReps.length - 1].toString();
+    workout.currentWeights = currentExerciseWeights[currentExerciseWeights.length - 1].toString();
 
-    workout.currentExerciseData = workout.currentRoutine.exercises[workout.currentExerciseId];
-    workout.currentExerciseDataReps = workout.currentExerciseData.reps[workout.currentRoutine.currentPerson];
-    workout.currentExerciseDataWeight = workout.currentExerciseData.weight[workout.currentRoutine.currentPerson];
+    console.log(workout.previousReps);
+    const exeriseReps = workout.previousReps.concat(workout.getCurrentReps());
+    const exeriseRepsLast = exeriseReps[exeriseReps.length - 1];
 
-    // These will be string inputs on page, but array in data model
-    if (workout.currentExerciseDataReps.length > 1) {
-      workout.currentReps = workout.currentExerciseDataReps.slice(Math.max(workout.currentExerciseDataReps.length - 1, 0))[0].toString();
-    } else {
-      workout.currentReps = '';
-    }
+    const exeriseWeight = workout.previousWeights.concat(workout.getCurrentWeights());
+    const exeriseWeightLast = exeriseWeight[exeriseWeight.length - 1];
 
-    if (workout.previousExerciseDataWeight.length > 1) {
-      workout.currentWeight = workout.currentExerciseDataWeight.slice(Math.max(workout.currentExerciseDataWeight.length - 1, 0))[0].toString();
-    } else {
-      workout.currentWeight = '';
-    }
+    workout.generateLastReps(exeriseRepsLast);
+    workout.generateLastWeights(exeriseWeightLast);
   };
 
-  workout.addWeight = function(weight) {
-    if (workout.currentWeight != '') {
-      workout.currentWeight += ',';
+  workout.addWeights = function(amount) {
+    if (!workout.currentWeights) {
+      workout.currentWeights = '';
+    } else {
+      workout.currentWeights += ',';
     }
 
-    workout.currentWeight += weight;
+    workout.currentWeights += amount;
+    workout.saveItems();
+    workout.refreshWorkoutData();
 
     // Also restart the timer if not already
     if (!workout.timerStarted) {
@@ -250,12 +258,37 @@ app.controller('WorkoutController', function($http) {
     }
   };
 
+  workout.generateLastWeights = function(lastExceriseWeight) {
+    workout.lastExerciseWeights = [
+      lastExceriseWeight - 10,
+      lastExceriseWeight - 5,
+      lastExceriseWeight,
+      lastExceriseWeight + 5,
+      lastExceriseWeight + 10,
+    ];
+  };
+
+  workout.generateLastReps = function(lastExerciseRep) {
+    workout.lastExerciseReps = [
+      lastExerciseRep - 10,
+      lastExerciseRep - 5,
+      lastExerciseRep,
+      lastExerciseRep + 5,
+      lastExerciseRep + 10,
+    ];
+  };
+
+
   workout.addReps = function(reps) {
-    if (workout.currentReps != '') {
+    if (!workout.currentReps) {
+      workout.currentReps = '';
+    } else {
       workout.currentReps += ',';
     }
 
     workout.currentReps += reps;
+    workout.saveItems();
+    workout.refreshWorkoutData();
 
     // Also restart the timer if not already
     if (!workout.timerStarted) {
