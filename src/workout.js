@@ -224,8 +224,17 @@ app.controller('WorkoutController', function($http) {
     workout.currentExerciseDataWeight = workout.currentExerciseData.weight[workout.currentRoutine.currentPerson];
 
     // These will be string inputs on page, but array in data model
-    workout.currentReps = workout.currentExerciseDataReps.slice(Math.max(workout.currentExerciseDataReps.length - 1, 0))[0].toString();
-    workout.currentWeight = workout.currentExerciseDataWeight.slice(Math.max(workout.currentExerciseDataWeight.length - 1, 0))[0].toString();
+    if (workout.currentExerciseDataReps.length > 1) {
+      workout.currentReps = workout.currentExerciseDataReps.slice(Math.max(workout.currentExerciseDataReps.length - 1, 0))[0].toString();
+    } else {
+      workout.currentReps = '';
+    }
+
+    if (workout.previousExerciseDataWeight.length > 1) {
+      workout.currentWeight = workout.currentExerciseDataWeight.slice(Math.max(workout.currentExerciseDataWeight.length - 1, 0))[0].toString();
+    } else {
+      workout.currentWeight = '';
+    }
   };
 
   workout.addWeight = function(weight) {
@@ -236,7 +245,9 @@ app.controller('WorkoutController', function($http) {
     workout.currentWeight += weight;
 
     // Also restart the timer if not already
-    workout.timer();
+    if (!workout.timerStarted) {
+      workout.timer();
+    }
   };
 
   workout.addReps = function(reps) {
@@ -247,24 +258,21 @@ app.controller('WorkoutController', function($http) {
     workout.currentReps += reps;
 
     // Also restart the timer if not already
-    workout.timer();
+    if (!workout.timerStarted) {
+      workout.timer();
+    }
   };
 
   workout.nextExercise = function() {
-    // TODO should just disable button if not available
-    if (workout.currentExerciseId < workout.exerciseCount - 1) {
-      workout.saveItems();
-      workout.currentExerciseId += 1;
-      workout.refreshWorkoutData();
-    }
+    workout.saveItems();
+    workout.currentExerciseId += 1;
+    workout.refreshWorkoutData();
   };
 
   workout.previousExercise = function() {
-    if (workout.currentExerciseId > 0) {
-      workout.saveItems();
-      workout.currentExerciseId -= 1;
-      workout.refreshWorkoutData();
-    }
+    workout.saveItems();
+    workout.currentExerciseId -= 1;
+    workout.refreshWorkoutData();
   };
 
   workout.generateJSON = function() {

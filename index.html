@@ -63,10 +63,10 @@
         </span>
         <div class="row">
             <div class="col-xs-3">
-                <button ng-click="workout.previousExercise()">Prev</button>
+                <button ng-click="workout.previousExercise()" ng-disabled="workout.currentExerciseId <= 0">Prev</button>
             </div>
             <div class="col-xs-9">
-                <button ng-click="workout.nextExercise()">Next</button>
+                <button ng-click="workout.nextExercise()" ng-disabled="workout.currentExerciseId >= workout.exerciseCount - 1">Next</button>
             </div>
         </div>
 
