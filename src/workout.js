@@ -152,8 +152,8 @@ app.controller('WorkoutController', function($http) {
     workout.started = true;
     workout.currentRoutine = workout.data.routines.filter((routine) => routine.name == name)[0];
     workout.currentRoutine.name = workout.currentRoutine.name;
-    const people = Object.keys(workout.currentRoutine.exercises[0].reps);
-    workout.currentRoutine.currentPerson = people[0];
+    workout.currentRoutine.people = Object.keys(workout.currentRoutine.exercises[0].reps);
+    workout.currentRoutine.currentPerson = workout.currentRoutine.people[0];
     workout.currentExerciseId = 0;
     workout.exerciseCount = 0;
     workout.currentRoutine.startMilliseconds.push(getTimeMilliseconds());
@@ -164,7 +164,7 @@ app.controller('WorkoutController', function($http) {
 
     // Add new rep/weight entries to all exercises of loaded routine
     workout.currentRoutine.exercises.forEach((exercise) => {
-      people.forEach((person) => {
+      workout.currentRoutine.people.forEach((person) => {
         exercise.reps[person].push([]);
         exercise.weight[person].push([]);
       });
