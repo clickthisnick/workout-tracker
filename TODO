@@ -1,3 +1,3 @@
 Remove empty [] from peoples workouts so we aren't saving extra data
 ^ after show the # of times person completed workout
-^ make average length of workout dependant on # of people
+^ make average length of workout dependent on # of people

@@ -9,7 +9,11 @@ repos:
     -   id: check-yaml
     -   id: check-added-large-files
 -   repo: https://github.com/pre-commit/mirrors-eslint
-    rev: 'v8.31.0'  # Use the sha / tag you want to point at
+    rev: 'v8.32.0'  # Use the sha / tag you want to point at
     hooks:
     -   id: eslint
         args: [--fix]
+-   repo: https://github.com/codespell-project/codespell
+    rev: v2.2.2
+    hooks:
+    -   id: codespell

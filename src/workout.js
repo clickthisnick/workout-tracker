@@ -58,11 +58,11 @@ app.controller('WorkoutController', function($http) {
   workout.started = false;
   workout.saved = false;
 
-  // This is the last excercise rep
+  // This is the last exercise rep
   // Its used to calculate the rep button amount
   workout.lastExerciseRep = '';
 
-  // This is the last excercise Weight
+  // This is the last exercise Weight
   // Its used to calculate the Weight button amount
   workout.lastExerciseWeight = '';
 
@@ -181,20 +181,20 @@ app.controller('WorkoutController', function($http) {
   };
 
   workout.saveItems = function() {
-    // The only reason saveItems exists is because we can type out reps/weights as a stirng
+    // The only reason saveItems exists is because we can type out reps/weights as a string
     // Which then needs to get converted into an array
 
     const currentExercise = workout.currentRoutine.exercises[workout.currentExerciseId];
     const currentExerciseReps = currentExercise.reps[workout.currentRoutine.currentPerson];
     const currentExerciseWeight = currentExercise.weight[workout.currentRoutine.currentPerson];
 
-    // Incase not filled out
+    // In case not filled out
     if (workout.currentRepsStr && workout.currentRepsStr.length !== 0) {
       const repLength = currentExerciseReps.length;
       currentExerciseReps[repLength - 1] = workout.currentRepsStr.split(',').map(Number);
     }
 
-    // Incase not filled out
+    // In case not filled out
     if (workout.currentWeightsStr && workout.currentWeightsStr.length !== 0) {
       const weightLength = currentExerciseWeight.length;
       currentExerciseWeight[weightLength - 1] = workout.currentWeightsStr.split(',').map(Number);
@@ -202,7 +202,7 @@ app.controller('WorkoutController', function($http) {
   };
 
   workout.refreshWorkoutData = function() {
-    // This refreshs the workout data show to be the current person
+    // This refreshes the workout data show to be the current person
     // Also it refreshes the reps/weight boxes based on last values
 
     const currentExercise = workout.currentRoutine.exercises[workout.currentExerciseId];
