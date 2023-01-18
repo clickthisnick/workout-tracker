@@ -1,23 +1,23 @@
 {
-  "name": "workout-tracker",
-  "version": "1.0.0",
-  "description": "Workout Tracking written in Angular JS",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+  "author": "",
+  "bugs": {
+    "url": "https://github.com/clickthisnick/workout-tracker/issues"
   },
+  "description": "Workout Tracking written in Angular JS",
+  "devDependencies": {
+    "eslint": "^8.30.0",
+    "eslint-config-google": "^0.14.0"
+  },
+  "homepage": "https://github.com/clickthisnick/workout-tracker#readme",
+  "license": "ISC",
+  "main": "index.js",
+  "name": "workout-tracker",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/clickthisnick/workout-tracker.git"
   },
-  "author": "",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/clickthisnick/workout-tracker/issues"
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "homepage": "https://github.com/clickthisnick/workout-tracker#readme",
-  "devDependencies": {
-    "eslint": "^8.30.0",
-    "eslint-config-google": "^0.14.0"
-  }
+  "version": "1.0.0"
 }
