@@ -330,6 +330,7 @@ app.controller('WorkoutController', function($http) {
     delete workout.currentRoutine['$$hashKey'];
     delete workout.currentRoutine['daysAgo'];
     delete workout.currentRoutine['currentPerson'];
+    delete workout.currentRoutine['people'];
 
     workout.json = JSON.stringify(workout.currentRoutine);
 
