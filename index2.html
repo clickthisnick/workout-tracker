@@ -23,6 +23,7 @@
     <script>
         // Global we can reset at any point
         let timerInterval = ""; 
+        const url = new URL(location.href);
 
         const loadWorkoutOptions = async () => {
             const response = await fetch('https://www.clickthisnick.com/workout-tracker/src/workouts/active.json');
@@ -46,7 +47,6 @@
             const response = await fetch(`https://www.clickthisnick.com/workout-tracker/src/workouts/${routine}`);
             const resp = await response.json(); //extract JSON from the http response
 
-            const url = new URL(location.href);
             url.searchParams.set('name', resp['name']);
             url.searchParams.set('exercises', JSON.stringify(resp['exercises']));
             url.searchParams.set('previousWorkout', JSON.stringify(resp['workouts'][resp['workouts'].length - 1]));
@@ -69,16 +69,15 @@
             location.href = url
         }
 
-        function startWorkout(workoutName, params) {
+        function startWorkout(workoutName) {
             // Hide the dropdown menu
             document.getElementById("selectWorkout").style.visibility = "hidden";
 
             // Redirects to url with routineSelected
             // That way if browser refreshes we don't lose our state
-            const url = new URL(location.href);
             if (!url.searchParams.get("name")) {
                 // Load the data into the url bar and refresh
-                getData(workoutName, params)
+                getData(workoutName)
                 return
             }
 
@@ -87,14 +86,16 @@
 
         function saveExerciseData(url, reloadPage = false) {
             const currentExerciseId = parseInt(url.searchParams.get("currentExerciseId"))
-            const exerciseData = getExerciseData(url.searchParams.get("exerciseData"))
             const reps = document.getElementById('reps').value
-            const weight = document.getElementById('weight').value
+            const weights = document.getElementById('weights').value
+            const currentReps = loadJSONQueryParamter(url.searchParams.get('currentReps'));
+            const currentWeights = loadJSONQueryParamter(url.searchParams.get('currentWeights'));
 
-            exerciseData[currentExerciseId][0] = reps.split(",")
-            exerciseData[currentExerciseId][1] = weight.split(",")
+            currentReps[currentExerciseId] = reps.split(",")
+            currentWeights[currentExerciseId] = weights.split(",")
 
-            url.searchParams.set("exerciseData", JSON.stringify(exerciseData));
+            url.searchParams.set("currentReps", JSON.stringify(currentReps))
+            url.searchParams.set("currentWeights", JSON.stringify(currentWeights))
 
             if (reloadPage) {
                reloadPage(url)
@@ -102,12 +103,11 @@
         }
 
         function nextExercise() {
-            const url = new URL(location.href);
             const currentExercideId = parseInt(url.searchParams.get("currentExerciseId"))
-            const exerciseData = getExerciseData(params.exerciseData);
+            const exercises = loadJSONQueryParamter(url.searchParams.get('exercises'));
 
             // Dont allow next if we are at the last exercise
-            if (currentExercideId == exerciseData.length -1 ) {
+            if (currentExercideId == exercises.length -1 ) {
                 return
             }
 
@@ -117,7 +117,6 @@
         }
 
         function prevExercise() {
-            const url = new URL(location.href);
             const currentExercideId = parseInt(url.searchParams.get("currentExerciseId"))
 
             // Dont allow negative indexs
@@ -127,12 +126,7 @@
 
             saveExerciseData(url);
             url.searchParams.set("currentExerciseId", currentExercideId - 1);
-
             reloadPage(url)
-        }
-
-        function getExerciseData(exerciseDataQueryParam) {
-            return JSON.parse(decodeQueryParam(exerciseDataQueryParam));
         }
 
         function loadJSONQueryParamter(data) {
@@ -146,31 +140,23 @@
             return daysSinceLastDoneWorkout = Math.floor(msSinceWorkout / (1000 * 60 * 60) / 24);
         }
 
-        function getQueryParameters() {
-            return new Proxy(new URLSearchParams(window.location.search), {
-                get: (searchParams, prop) => searchParams.get(prop),
-            });
-        }
-
         function getNewExerciseData(exercises, url, key) {
             if (url.searchParams.get(key)) {
-                return getExerciseData(url.searchParams.get(key))
+                return loadJSONQueryParamter(url.searchParams.get(key))
             }
 
             const value = JSON.stringify(Array(exercises.length).fill([]))
             url.searchParams.set(key, value)
-            return getExerciseData(value)
+            return loadJSONQueryParamter(value)
         }
 
         function renderPage() {
-            const url = new URL(location.href);
-
             const name = url.searchParams.get('name')
             const exercises = loadJSONQueryParamter(url.searchParams.get('exercises'));
             const previousWorkout = loadJSONQueryParamter(url.searchParams.get('previousWorkout'));
             const startMilliseconds = url.searchParams.get('startMilliseconds')
             const currentExerciseId = parseInt(url.searchParams.get('currentExerciseId'))
-            const currentExercsie = exercises[currentExerciseId]
+            const currentExercise = exercises[currentExerciseId]
  
             const currentReps = getNewExerciseData(exercises, url, "currentReps")
             const currentWeights = getNewExerciseData(exercises, url, "currentWeights")
@@ -182,7 +168,7 @@
             const previousWorkoutExerciseReps = previousWorkout['reps'][currentExerciseId];
             const previousWorkoutExerciseWeights = previousWorkout['weights'][currentExerciseId];
 
-            document.getElementById('currentExercise').innerHTML = currentExercsie
+            document.getElementById('currentExercise').innerHTML = currentExercise
             document.getElementById('previousWorkoutExerciseReps').innerHTML = `Reps: ${previousWorkoutExerciseReps}`
             document.getElementById('previousWorkoutExerciseWeights').innerHTML = `Weight: ${previousWorkoutExerciseWeights}`
 
@@ -192,18 +178,14 @@
 
         function selectWorkout() {
             selectedWorkoutRoutineName = document.getElementById("selectWorkout").value;
-            startWorkout(selectedWorkoutRoutineName, null)
+            startWorkout(selectedWorkoutRoutineName)
         }
 
-        const params = getQueryParameters()
-
         // Check if we already have the data in the url bar
-        const name = params.name;
-
-        if (name) {
+        if (url.searchParams.get('name')) {
             // This timeout ensures this gets executed _after_ the html renders
             setTimeout(function() {
-                startWorkout(name, params)
+                startWorkout(name)
             }, 0); // 0 second in milliseconds
         } else {
             // Load the drop down so user can select the workout name
@@ -211,15 +193,13 @@
         }
 
         function saveWorkout() {
-            const url = new URL(location.href);
-            const exerciseDataParam = url.searchParams.get("exerciseData")
-            const exerciseData = getExerciseData(exerciseDataParam);
-
+            console.log('hi')
+            console.log(url.searchParams.get("currentReps"))
             const data = {
                 "startMilliseconds": url.searchParams.get("startMilliseconds"),
                 "endMilliseconds":  getTimeMillisecondsDate(),
-                "reps": exerciseData.reps,
-                "weights": exerciseData.weights,
+                "reps": url.searchParams.get("currentReps"),
+                "weights": url.searchParams.get("currentWeights"),
             }
 
             const a = document.createElement('a');
