@@ -1,0 +1,27 @@
+{
+    "name": "Chest/Back",
+    "startMilliseconds": [
+        1669471517261
+    ],
+    "endMilliseconds": [
+        1669473294820
+    ],
+    "workoutTime": [
+        "18:37"
+    ],
+    "workoutTimeString": [
+        "Mon Sep 25 2023 21:01:02 GMT-0400 (Eastern Daylight Time)"
+    ],
+    "exercises": [
+        "db chest press",
+        "db rows",
+        "db incline chest press",
+        "lat pull down"
+    ],
+    "reps": [
+        [[12,12,12],[12,12,12],[12,12,12],[12,12,12],[12,12,12]]
+    ],
+    "weight": [
+        [[35,35,35],[35,35,35],[35,35,35],[35,35,35],[35,35,35]]
+    ]
+}

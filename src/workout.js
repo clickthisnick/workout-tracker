@@ -124,32 +124,19 @@ app.controller('WorkoutController', function($http) {
     ],
   };
 
-  loadWorkoutData($http).then((routines) => {
-    workout.data.routines = routines;
-  }).then(() => {
-    const selectBox = document.getElementById('selectBox');
-
-    workout.data.routines.forEach((routine) => {
-      const routineMs = routine.endMilliseconds[routine.endMilliseconds.length - 1];
-      const ms = getTimeMilliseconds();
-      const msSinceWorkout = ms - routineMs;
-
-      const daysSinceLastDoneWorkout = Math.floor(msSinceWorkout / (1000 * 60 * 60) / 24);
-      routine.daysAgo = daysSinceLastDoneWorkout;
-
-      // TODO can sort by the longest workout ago
-      // | orderBy:'daysAgo' | reverse
-      const opt1 = document.createElement('option');
-      opt1.value = routine.name;
-      opt1.text = `${routine.name} - ${routine.daysAgo} Days Ago - ${routine.workoutTime[routine.workoutTime.length - 1]}`;
-      selectBox.add(opt1, null);
-    });
+  const params = new Proxy(new URLSearchParams(window.location.search), {
+    get: (searchParams, prop) => searchParams.get(prop),
   });
+  
+  // routine.name
+  // Get the value of "some_key" in eg "https://example.com/?name=some_value"
+  const routineName = params.name; // "some_value"
 
   workout.start = function(name) {
     // Changes the routine from the id to the whole entity
     // Also created arrays for reps and weight
     workout.started = true;
+    console.log
     workout.currentRoutine = workout.data.routines.filter((routine) => routine.name == name)[0];
     workout.currentRoutine.name = workout.currentRoutine.name;
     workout.currentRoutine.people = Object.keys(workout.currentRoutine.exercises[0].reps);
@@ -339,4 +326,32 @@ app.controller('WorkoutController', function($http) {
     a.href = `mailto:remove_this@email.com?subject=${encodeURIComponent('Workout')}&body=${encodeURIComponent(workout.json)}`;
     a.click();
   };
+
+  loadWorkoutData($http).then((routines) => {
+    workout.data.routines = routines;
+  }).then(() => {
+    const selectBox = document.getElementById('selectBox');
+
+    workout.data.routines.forEach((routine) => {
+      const routineMs = routine.endMilliseconds[routine.endMilliseconds.length - 1];
+      const ms = getTimeMilliseconds();
+      const msSinceWorkout = ms - routineMs;
+
+      const daysSinceLastDoneWorkout = Math.floor(msSinceWorkout / (1000 * 60 * 60) / 24);
+      routine.daysAgo = daysSinceLastDoneWorkout;
+
+      // TODO can sort by the longest workout ago
+      // | orderBy:'daysAgo' | reverse
+      const opt1 = document.createElement('option');
+      opt1.value = routine.name;
+      opt1.text = `${routine.name} - ${routine.daysAgo} Days Ago - ${routine.workoutTime[routine.workoutTime.length - 1]}`;
+      selectBox.add(opt1, null);
+
+      if (routineName) {
+        workout.start("Chest/Back")
+      }
+    });
+  });
+
+
 });

@@ -4,3 +4,4 @@ Remove empty [] from peoples workouts so we aren't saving extra data
 ^ its annoying if I forget to enter in a workout before working out again I have to combine the workouts - maybe a script or better format
 ^ show last time each person did the workout, not just one person
 ^ show amount of people who have done the workout
+^ my browser refreshes and I lose everything - making some sort of query parameter state would be nice
