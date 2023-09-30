@@ -1,15 +1,15 @@
 {
     "name": "Chest/Back",
     "exercises": [
-        "db chest press",
-        "db rows",
-        "db incline chest press",
-        "lat pull down"
+        "db curl",
+        "shoulder press",
+        "shrugs (reps is for each side)",
+        "standing one arm tricep extension"
     ],
     "workouts": [
         {
-            "startMilliseconds": 1669471517261,
-            "endMilliseconds": 1669473294820,
+            "startMilliseconds": 1674860685023,
+            "endMilliseconds": 1674862415895,
             "reps": "[[12,12,12],[12,12,12],[12,12,12],[12,12,12]]",
             "weights": "[[35,35,35],[35,35,35],[35,35,35],[35,35,35]]"
         }

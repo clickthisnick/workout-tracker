@@ -1,0 +1,45 @@
+{
+  "REMOVE THIS": "DONT FORGET TO ADD TO ACTIVE.JSON",
+  "endMilliseconds": [],
+  "exercises": [
+    {
+      "name": "exercise",
+      "reps": {
+        "me": [
+          [
+            0,
+            0,
+            0
+          ]
+        ],
+        "other": [
+          [
+            0,
+            0,
+            0
+          ]
+        ]
+      },
+      "weight": {
+        "me": [
+          [
+            0,
+            0,
+            0
+          ]
+        ],
+        "other": [
+          [
+            0,
+            0,
+            0
+          ]
+        ]
+      }
+    }
+  ],
+  "name": "workout name",
+  "startMilliseconds": [],
+  "workoutTime": [],
+  "workoutTimeString": []
+}
