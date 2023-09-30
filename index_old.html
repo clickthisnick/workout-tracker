@@ -1,0 +1,163 @@
+<!doctype html>
+<html ng-app="WorkoutApp">
+
+<head>
+    <!-- Needed for mobile to function (somewhat) -->
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.4/angular.min.js"></script>
+    <script src="src/workout.js"></script>
+
+    <link rel="stylesheet" type="text/css" href="assets/ceruleanBootswatch.min.css">
+    <style>
+        body {
+            background-color: black;
+            color: white;
+        }
+
+        input,
+        button {
+            background-color: rgb(58, 25, 25);
+            background: rgb(58, 25, 25);
+            color: white;
+        }
+    </style>
+
+    <script>
+        function getDaysAgo(workout) {
+            let lastRoutineFinish = workout.endMilliseconds;
+            let lastRoutineFinishMs = lastRoutineFinish[lastRoutineFinish.length - 1];
+
+            let today = new Date();
+            let oldDate = new Date(lastRoutineFinishMs);
+            let msInDay = 24 * 60 * 60 * 1000;
+            return today - oldDate / msInDay
+        }
+
+        String.prototype.capitalize = function () {
+            return this.replace(/(^|\s)([a-z])/g, function (m, p1, p2) { return p1 + p2.toUpperCase(); });
+        };
+
+    </script>
+</head>
+
+<body class="container" ng-controller="WorkoutController as workout">
+
+    <div ng-if="workout.started == false">
+        <div ng-if="workout.data.routines.length > 0"></div>
+        <h2>Choose Workout</h2>
+        <select id="selectBox" class="form-control" ng-model="workout.routine" ng-change="workout.start(workout.routine)">
+            <!-- this is popuated after the data is loaded -->
+        </select>
+    </div>
+
+    <div ng-if="workout.started == true">
+        <select ng-init="selectedPerson = workout.currentRoutine.people[0]" ng-model="selectedPerson" ng-options="x for x in workout.currentRoutine.people" ng-change="workout.changePeople(selectedPerson)">
+        </select>
+        </br>
+
+        <span style="font-size: 16px;"> {{workout.currentRoutine.name.toLowerCase().capitalize()}} </span><span
+            style="font-size: 12px;">- Last Completed: {{workout.currentRoutine.daysAgo}} days ago. </span>
+    </br>
+        <span style="font-size: 24px;">
+            {{workout.currentRoutine.exercises[workout.currentExerciseId].name.toLowerCase().capitalize()}}
+        </span>
+        <div class="row">
+            <div class="col-xs-3">
+                <button ng-click="workout.previousExercise()" ng-disabled="workout.currentExerciseId <= 0">Prev</button>
+            </div>
+            <div class="col-xs-9">
+                <button ng-click="workout.nextExercise()" ng-disabled="workout.currentExerciseId >= workout.exerciseCount - 1">Next</button>
+            </div>
+        </div>
+
+        <!-- Exercises -->
+        <div class="row">
+            <div class="col-xs-12">
+                </b>Previous:</b>
+            </div>
+        </div class="row">
+
+        <div class="row">
+            <div class="col-xs-3">
+                Reps
+            </div>
+            <div class="col-xs-9">
+                {{workout.previousReps}}
+            </div>
+        </div class="row">
+
+        <div class="row">
+            <div class="col-xs-3">
+                Weight
+            </div>
+            <div class="col-xs-6">
+                {{workout.previousWeights}}
+            </div>
+        </div class="row">
+        </br>
+
+        <div class="row">
+            <div class="col-xs-12">
+                </b>Current:</b>
+            </div>
+        </div class="row">
+
+        <div class="row">
+            <div class="col-xs-3">
+            </div>
+            <div class="col-xs-6">
+                <button ng-click="workout.addReps(workout.lastExerciseReps[0])">{{workout.lastExerciseReps[0]}}</button>&nbsp;
+                <button ng-click="workout.addReps(workout.lastExerciseReps[1])">{{workout.lastExerciseReps[1]}}</button>&nbsp;
+                <button ng-click="workout.addReps(workout.lastExerciseReps[2])">{{workout.lastExerciseReps[2]}}</button>&nbsp;
+                <button ng-click="workout.addReps(workout.lastExerciseReps[3])">{{workout.lastExerciseReps[3]}}</button>&nbsp;
+                <button ng-click="workout.addReps(workout.lastExerciseReps[4])">{{workout.lastExerciseReps[4]}}</button>&nbsp;
+            </div>
+        </div class="row">
+        <div class="row">
+            <div class="col-xs-3">
+                Reps
+            </div>
+            <div class="col-xs-9">
+                <input ng-model="workout.currentRepsStr">
+            </div>
+        </div class="row">
+        <div class="row">
+            <div class="col-xs-3">
+                Weight
+            </div>
+            <div class="col-xs-9">
+                <input ng-model="workout.currentWeightsStr">
+            </div>
+        </div class="row">
+        <div class="row">
+            <div class="col-xs-3">
+            </div>
+            <div class="col-xs-6">
+                <button ng-click="workout.addWeights(workout.lastExerciseWeights[0])">{{workout.lastExerciseWeights[0]}}</button>&nbsp;
+                <button ng-click="workout.addWeights(workout.lastExerciseWeights[1])">{{workout.lastExerciseWeights[1]}}</button>&nbsp;
+                <button ng-click="workout.addWeights(workout.lastExerciseWeights[2])">{{workout.lastExerciseWeights[2]}}</button>&nbsp;
+                <button ng-click="workout.addWeights(workout.lastExerciseWeights[3])">{{workout.lastExerciseWeights[3]}}</button>&nbsp;
+                <button ng-click="workout.addWeights(workout.lastExerciseWeights[4])">{{workout.lastExerciseWeights[4]}}</button>&nbsp;
+            </div>
+        </div class="row">
+        </br>
+        <div class="row">
+            <div class="col-xs-6">
+                <button ng-click="workout.generateJSON()"> Save Workout </button>
+            </div>
+            <div class="col-xs-6">
+                <button ng-click="workout.timer()"> Timer </button>&nbsp;<span id=timer></span>
+            </div>
+        </div>
+        <div ng-if="workout.saved == true">
+            <div class="row">
+                <div class="col-xs-12">
+                    <input ng-model="workout.json">
+                </div>
+            </div>
+        </div>
+    </div>
+
+</body>
+
+</html>
