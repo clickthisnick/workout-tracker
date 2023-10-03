@@ -48,6 +48,7 @@
             const resp = await response.json(); //extract JSON from the http response
 
             url.searchParams.set('name', resp['name']);
+            url.searchParams.set('file', routine);
             url.searchParams.set('exercises', JSON.stringify(resp['exercises']));
 
             const previousWorkoutIndex = resp['workouts'].length - 1
@@ -213,7 +214,10 @@
 
             const a = document.createElement('a');
             a.target = '_blank';
-            a.href = `mailto:remove_this@email.com?subject=${encodeURIComponent(url.searchParams.get("routineName"))}&body=${JSON.stringify(data)}`;
+            let body = "https://github.com/clickthisnick/workout-tracker/blob/main/src/workouts/dbchest.json%0D%0A%0D%0A%0D%0A"
+            body += "," + JSON.stringify(data)
+
+            a.href = `mailto:remove_this@email.com?subject=${encodeURIComponent(url.searchParams.get("routineName"))}&body=${body}`;
             a.click();
         }
 
