@@ -214,7 +214,7 @@
 
             const a = document.createElement('a');
             a.target = '_blank';
-            let body = "https://github.com/clickthisnick/workout-tracker/blob/main/src/workouts/dbchest.json%0D%0A%0D%0A%0D%0A"
+            let body = `https://github.com/clickthisnick/workout-tracker/edit/main/src/workouts/${url.searchParams.get("file")}%0D%0A%0D%0A%0D%0A`
             body += "," + JSON.stringify(data)
 
             a.href = `mailto:remove_this@email.com?subject=${encodeURIComponent(url.searchParams.get("routineName"))}&body=${body}`;
