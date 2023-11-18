@@ -1,10 +1,8 @@
 {
-    "name": "Db Arms Exclusive",
+    "name": "Legs",
     "exercises": [
-        "db straight curl",
-        "cable tricep extensions",        
-        "db hammer curl half up",
-        "seated one arm tricep extension"
+        "db squats",
+        "db lunges"
     ],
     "workouts": [
         {

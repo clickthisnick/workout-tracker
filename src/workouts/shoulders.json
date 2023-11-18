@@ -1,10 +1,10 @@
 {
-    "name": "Db Arms Exclusive",
+    "name": "Shoulders",
     "exercises": [
-        "db straight curl",
-        "cable tricep extensions",        
-        "db hammer curl half up",
-        "seated one arm tricep extension"
+        "shoulder press",
+        "standing db side raises",
+        "seated kettleball raises",
+        "standing dumbbell upright row"
     ],
     "workouts": [
         {
@@ -12,6 +12,6 @@
             "endMilliseconds": 0,
             "reps": "[[],[]]",
             "weights": "[[],[]]"
-        }
+        },
     ]
 }
