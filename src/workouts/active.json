@@ -1,6 +1,8 @@
 {
     "workouts": [
+        "dbarms.json",
         "dbchest.json",
-        "dbarms.json"
+        "legs.json",
+        "shoulders.json"
     ]
 }
