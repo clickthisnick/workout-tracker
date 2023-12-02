@@ -21,3 +21,7 @@ repos:
     rev: v2.2.2
     hooks:
     -   id: codespell
+  - repo: https://github.com/crate-ci/typos
+    rev: v1.16.23
+    hooks:
+      - id: typos
