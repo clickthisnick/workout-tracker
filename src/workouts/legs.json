@@ -5,11 +5,6 @@
         "db lunges"
     ],
     "workouts": [
-        {
-            "startMilliseconds": 0,
-            "endMilliseconds": 0,
-            "reps": "[[],[]]",
-            "weights": "[[],[]]"
-        }
+        {"startMilliseconds":"1702516260333","endMilliseconds":1702517449966,"reps":"[[\"Leg press 12\",\"12\",\"12 \"],[\"Leg extension 12\",\"12\",\"12\"],[\"Leg curl 12\",\"12\",\"12\"],[]]","weights":"[[\"130\",\"130\",\"145\"],[\"70\",\"80\",\"90\"],[\"90\",\"110\",\"110\"],[]]"}
     ]
 }
