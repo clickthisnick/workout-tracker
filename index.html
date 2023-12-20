@@ -217,7 +217,7 @@
             let body = `https://github.com/clickthisnick/workout-tracker/edit/main/src/workouts/${url.searchParams.get("file")}%0D%0A%0D%0A%0D%0A`
             body += "," + JSON.stringify(data)
 
-            a.href = `mailto:remove_this@email.com?subject=${encodeURIComponent(url.searchParams.get("routineName"))}&body=${body}`;
+            a.href = `mailto:remove_this@email.com?subject=${encodeURIComponent(`Workout - ${url.searchParams.get("name")}`)}&body=${body}`;
             a.click();
         }
 

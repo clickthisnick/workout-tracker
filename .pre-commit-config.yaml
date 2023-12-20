@@ -10,8 +10,6 @@ repos:
     -   id: check-added-large-files
     -   id: check-json
     -   id: check-merge-conflict
-    -   id: pretty-format-json
-        args: [--autofix]
 -   repo: https://github.com/pre-commit/mirrors-eslint
     rev: 'v8.32.0'  # Use the sha / tag you want to point at
     hooks:
@@ -24,4 +22,4 @@ repos:
   - repo: https://github.com/crate-ci/typos
     rev: v1.16.23
     hooks:
-      - id: typos
+    -   id: typos
