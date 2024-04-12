@@ -1,0 +1,16 @@
+{
+  "name": "routinename",
+  "workouts": [
+      {
+          "startMilliseconds": 0,
+          "endMilliseconds": 0,
+          "exercises": [
+            {
+                "name": "exercise #1",
+                "reps": [],
+                "weights": []
+            }
+          ]
+      }
+  ]
+}

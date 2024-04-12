@@ -1,0 +1,301 @@
+<!doctype html>
+<html ng-app="WorkoutApp">
+
+<head>
+    <!-- Needed for mobile to function (somewhat) -->
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <link rel="stylesheet" type="text/css" href="assets/ceruleanBootswatch.min.css">
+    <style>
+        body {
+            background-color: black;
+            color: white;
+        }
+
+        input,
+        button {
+            background-color: rgb(58, 25, 25);
+            background: rgb(58, 25, 25);
+            color: white;
+        }
+    </style>
+
+    <script>
+        // Global we can reset at any point
+        let timerInterval = ""; 
+        const url = new URL(location.href);
+
+        const loadWorkoutOptions = async () => {
+            const response = await fetch('https://www.clickthisnick.com/workout-tracker/src/workouts/active.json');
+            const workouts = await response.json(); //extract JSON from the http response
+            const workoutNames = workouts['workouts']
+            var select = document.getElementById("selectWorkout");
+
+            for(var i = 0; i < workoutNames.length; i++) {
+                var opt = workoutNames[i];
+                var el = document.createElement("option");
+                el.textContent = opt;
+                el.value = opt;
+                select.appendChild(el);
+            }
+        }
+
+        // If I want this to work without internet once its loaded, I need to cache this in the browser
+        // Or check if it will be cached - maybe browsers already do that
+        // Check duration if browser already cache - ie will this last up to an hour
+        const getData = async (routine, params) => {
+            const response = await fetch(`https://www.clickthisnick.com/workout-tracker/src/workouts/${routine}`);
+            const resp = await response.json(); //extract JSON from the http response
+
+            const workout = resp['workouts']
+            const workoutIndex = workout.length - 1
+
+            const previousWorkout = workout[workoutIndex]
+
+            url.searchParams.set('name', resp['name']);
+            url.searchParams.set('file', routine);
+            url.searchParams.set('previousWorkout', JSON.stringify(previousWorkout));
+
+            url.searchParams.set('startMilliseconds', getTimeMillisecondsDate());
+            // We start off showing the first exercise
+            url.searchParams.set('currentExerciseId', 0);
+            url.searchParams.set('daysAgo', calulateDaysAgo(previousWorkout['endMilliseconds']));
+            
+            reloadPage(url)
+        }
+
+        function decodeQueryParam(p) {
+            return decodeURIComponent(p.replace(/\+/g, " "));
+        }
+
+        function getTimeMillisecondsDate() {
+            const date = new Date();
+            return date.getTime();
+        }
+
+        function reloadPage(url) {
+            location.href = url
+        }
+
+        function startWorkout(workoutName) {
+            // Hide the dropdown menu
+            document.getElementById("selectWorkout").style.visibility = "hidden";
+
+            // Redirects to url with routineSelected
+            // That way if browser refreshes we don't lose our state
+            if (!url.searchParams.get("name")) {
+                // Load the data into the url bar and refresh
+                getData(workoutName)
+                return
+            }
+
+            renderPage()
+        }
+
+        function saveExerciseData(url, reload = false) {
+            const currentExerciseId = parseInt(url.searchParams.get("currentExerciseId"))
+            const reps = document.getElementById('reps').value
+            const weights = document.getElementById('weights').value
+            const currentReps = loadJSONQueryParameter(url.searchParams.get('currentReps'));
+            const currentWeights = loadJSONQueryParameter(url.searchParams.get('currentWeights'));
+
+            currentReps[currentExerciseId] = reps.split(",")
+            currentWeights[currentExerciseId] = weights.split(",")
+
+            url.searchParams.set("currentReps", JSON.stringify(currentReps))
+            url.searchParams.set("currentWeights", JSON.stringify(currentWeights))
+
+            if (reload) {
+               reloadPage(url)
+            }
+        }
+
+        function nextExercise() {
+            const currentExercideId = parseInt(url.searchParams.get("currentExerciseId"))
+            const exercises = loadJSONQueryParameter(url.searchParams.get('exercises'));
+
+            // Dont allow next if we are at the last exercise
+            if (currentExercideId == exercises.length -1 ) {
+                return
+            }
+
+            saveExerciseData(url);
+            url.searchParams.set("currentExerciseId", currentExercideId + 1);
+            reloadPage(url)
+        }
+
+        function prevExercise() {
+            const currentExercideId = parseInt(url.searchParams.get("currentExerciseId"))
+
+            // Dont allow negative indexs
+            if (currentExercideId == 0) {
+                return
+            }
+
+            saveExerciseData(url);
+            url.searchParams.set("currentExerciseId", currentExercideId - 1);
+            reloadPage(url)
+        }
+
+        function loadJSONQueryParameter(data) {
+            return JSON.parse(decodeQueryParam(data));
+        }
+
+        function calulateDaysAgo(endMilliseconds) {
+            const ms = getTimeMillisecondsDate();
+            const msSinceWorkout = ms - endMilliseconds;
+
+            return daysSinceLastDoneWorkout = Math.floor(msSinceWorkout / (1000 * 60 * 60) / 24);
+        }
+
+        function getNewExerciseData(exercises, url, key) {
+            if (url.searchParams.get(key)) {
+                return loadJSONQueryParameter(url.searchParams.get(key))
+            }
+
+            const value = JSON.stringify(Array(exercises.length).fill([]))
+            url.searchParams.set(key, value)
+            return loadJSONQueryParameter(value)
+        }
+
+        function renderPage() {
+            const name = url.searchParams.get('name')
+            const previousWorkout = loadJSONQueryParameter(url.searchParams.get('previousWorkout'));
+            const startMilliseconds = url.searchParams.get('startMilliseconds')
+            const currentExerciseId = parseInt(url.searchParams.get('currentExerciseId'))
+            const daysAgo = parseInt(url.searchParams.get('daysAgo'))
+
+            const previousExercises = previousWorkout['exercises']
+            const prevousExercise = previousExercises[currentExerciseId]
+
+            console.log(previousExercises)
+            const currentExerciseName = previousExercises[currentExerciseId]['name']
+
+            // const currentReps = getNewExerciseData(exercises, url, "currentReps")
+            // const currentWeights = getNewExerciseData(exercises, url, "currentWeights")
+
+            const currentReps = [0,0,0,0,0,0]
+            const currentWeights = [0,0,0,0,0,0]
+
+            document.getElementById('workoutName').innerHTML = name
+            document.getElementById('workoutLastCompleted').innerHTML = `Last Completed: ${daysAgo} days ago.`
+            document.getElementById('workout').style.visibility = 'visible'
+
+            const previousWorkoutExerciseReps = prevousExercise['reps']
+            const previousWorkoutExerciseWeights = prevousExercise['weights']
+
+            document.getElementById('currentExercise').innerHTML = currentExerciseName
+            document.getElementById('previousWorkoutExerciseReps').innerHTML = `Reps: ${previousWorkoutExerciseReps}`
+            document.getElementById('previousWorkoutExerciseWeights').innerHTML = `Weight: ${previousWorkoutExerciseWeights}`
+
+            document.getElementById('reps').value = currentReps[currentExerciseId]
+            document.getElementById('weights').value = currentWeights[currentExerciseId]
+        }
+
+        function selectWorkout() {
+            selectedWorkoutRoutineName = document.getElementById("selectWorkout").value;
+            startWorkout(selectedWorkoutRoutineName)
+        }
+
+        // Check if we already have the data in the url bar
+        if (url.searchParams.get('name')) {
+            // This timeout ensures this gets executed _after_ the html renders
+            setTimeout(function() {
+                startWorkout(name)
+            }, 0); // 0 second in milliseconds
+        } else {
+            // Load the drop down so user can select the workout name
+            loadWorkoutOptions()
+        }
+
+        function saveWorkout() {
+            saveExerciseData(url, true);
+
+            const data = {
+                "startMilliseconds": url.searchParams.get("startMilliseconds"),
+                "endMilliseconds":  getTimeMillisecondsDate(),
+                "reps": url.searchParams.get("currentReps"),
+                "weights": url.searchParams.get("currentWeights"),
+            }
+
+            const a = document.createElement('a');
+            a.target = '_blank';
+            let body = `https://github.com/clickthisnick/workout-tracker/edit/main/src/workouts/${url.searchParams.get("file")}%0D%0A%0D%0A%0D%0A`
+            body += "," + JSON.stringify(data)
+
+            a.href = `mailto:remove_this@email.com?subject=${encodeURIComponent(`Workout - ${url.searchParams.get("name")}`)}&body=${body}`;
+            a.click();
+        }
+
+        function resetTimer() {
+            const timeSpan = document.getElementById('timer');
+            const mins = 1.5;
+            const now = new Date().getTime();
+            const deadline = mins * 60 * 1000 + now;
+
+            try {
+                clearInterval(timerInterval);
+            } catch {
+                pass;
+            }
+
+            timerInterval = setInterval(() => {
+            const currentTime = new Date().getTime();
+            const distance = deadline - currentTime;
+            let minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+            // The minutes are 1 off once negative
+            if (minutes < 0) {
+                minutes = minutes + 1;
+            }
+
+            if (minutes == 0 && seconds == 0) {
+                timerStarted = false;
+            }
+
+            if (minutes == 0 && seconds <= 0 && seconds > -2) {
+                playSound('sounds/a-tone.mp3');
+            }
+
+            let timeToShow = minutes + 'm ' + seconds + 's';
+
+            if (minutes == 0) {
+                timeToShow = seconds + 's';
+            }
+
+            timeSpan.innerHTML = timeToShow;
+            }, 500);
+        };
+
+    </script>
+</head>
+
+<select id="selectWorkout" onchange="selectWorkout()">
+    <option>Choose a workout</option>
+</select>
+
+<div id="workout" style="visibility:hidden">
+    <div id="header">
+        <span id="workoutName"></span><br>
+        <span id="workoutLastCompleted"></span><br>
+        <span id="currentExercise"></span>
+        <br>
+        <button onclick="prevExercise()">Prev</button>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <button onclick="nextExercise()">Next</button>
+        <br><br>Previous:<br>
+        <span id="previousWorkoutExerciseReps"></span><br>
+        <span id="previousWorkoutExerciseWeights"></span><br>
+        Current:
+        <span id="currentWorkoutExerciseReps"></span><br>
+        <span id="currentWorkoutExerciseWeights"></span><br>
+        <label for="reps">Reps:</label>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="text" id="reps" name="reps"><br><br>
+        <label for="weights">Weight:</label>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="text" id="weights" name="weights"><br><br>
+        <button onclick="saveWorkout()">Save Workout</button>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <button onclick="resetTimer()">Timer</button><span id="timer"></span>     
+    </div>
+</div>
