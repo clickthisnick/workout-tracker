@@ -1,15 +1,32 @@
 {
-  "name": "routinename",
-  "exercises": [
-      "foo",
-      "bar"
-  ],
-  "workouts": [
+    "name": "Back/Core",
+    "workouts": [
       {
-          "startMilliseconds": 0,
-          "endMilliseconds": 0,
-          "reps": "[[],[]]",
-          "weights": "[[],[]]"
+        "startMilliseconds": 0,
+        "endMilliseconds": 0,
+        "exercises": [
+            {
+              "name": "lat pull downs",
+              "reps": "",
+              "weights": ""
+            },
+            {
+              "name": "cable rows",
+              "reps": "",
+              "weights": ""
+            },
+            {
+              "name": "back hyperextensions",
+              "reps": "",
+              "weights": ""
+            },
+            {
+              "name": "cable rows",
+              "reps": "",
+              "weights": ""
+            }
+        ]
       }
-  ]
-}
+    ]
+  }
+  
