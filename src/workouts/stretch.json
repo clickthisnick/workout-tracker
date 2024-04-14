@@ -12,6 +12,7 @@
             }
         ]
       }
+       ,{"startMilliseconds":1713057700557,"endMilliseconds":1713058499647,"exercises":[{"name":"Toe touch","reps":"1","weights":"30s"},{"name":"Butterfly","reps":"1","weights":"30"},{"name":"Seated one leg toe touch","reps":"Left,right","weights":"30,30"},{"name":"Cobra","reps":"1","weights":"30"}]} 
     ]
   }
   
