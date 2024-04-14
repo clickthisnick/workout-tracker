@@ -47,20 +47,28 @@
             const response = await fetch(`https://www.clickthisnick.com/workout-tracker/src/workouts/${routine}`);
             const resp = await response.json(); //extract JSON from the http response
 
+            const workout = resp['workouts']
+            const workoutIndex = workout.length - 1
+
+            const previousWorkout = workout[workoutIndex]
+
             url.searchParams.set('name', resp['name']);
             url.searchParams.set('file', routine);
-            url.searchParams.set('exercises', JSON.stringify(resp['exercises']));
-
-            const previousWorkoutIndex = resp['workouts'].length - 1
-            const previousWorkout = resp['workouts'][previousWorkoutIndex]
-            previousWorkout['reps'] = JSON.parse(previousWorkout['reps'])
-            previousWorkout['weights'] = JSON.parse(previousWorkout['weights'])
-
             url.searchParams.set('previousWorkout', JSON.stringify(previousWorkout));
-            url.searchParams.set('startMilliseconds', getTimeMillisecondsDate());
+
+            const currentWorkout = previousWorkout
+            currentWorkout['startMilliseconds'] = getTimeMillisecondsDate()
+            currentWorkout['endMilliseconds'] = 0
+
+            // Zeroing out the reps/weights for the current workout
+            for (let i = 0; i < currentWorkout['exercises'].length; i++) {
+                currentWorkout['exercises'][i]['reps'] = ""
+                currentWorkout['exercises'][i]['weights'] = ""
+            }
+
+            url.searchParams.set('currentWorkout', JSON.stringify(currentWorkout));
             // We start off showing the first exercise
             url.searchParams.set('currentExerciseId', 0);
-            url.searchParams.set('daysAgo', calulateDaysAgo(previousWorkout['endMilliseconds']));
             
             reloadPage(url)
         }
@@ -94,17 +102,18 @@
         }
 
         function saveExerciseData(url, reload = false) {
+            const currentWorkout = loadJSONQueryParameter(url.searchParams.get('currentWorkout'));
             const currentExerciseId = parseInt(url.searchParams.get("currentExerciseId"))
+
             const reps = document.getElementById('reps').value
             const weights = document.getElementById('weights').value
-            const currentReps = loadJSONQueryParameter(url.searchParams.get('currentReps'));
-            const currentWeights = loadJSONQueryParameter(url.searchParams.get('currentWeights'));
+            const currentExerciseName = document.getElementById('currentExerciseName').value
 
-            currentReps[currentExerciseId] = reps.split(",")
-            currentWeights[currentExerciseId] = weights.split(",")
+            currentWorkout['exercises'][currentExerciseId]['name'] = currentExerciseName
+            currentWorkout['exercises'][currentExerciseId]['reps'] = reps
+            currentWorkout['exercises'][currentExerciseId]['weights'] = weights
 
-            url.searchParams.set("currentReps", JSON.stringify(currentReps))
-            url.searchParams.set("currentWeights", JSON.stringify(currentWeights))
+            url.searchParams.set("currentWorkout", JSON.stringify(currentWorkout))
 
             if (reload) {
                reloadPage(url)
@@ -112,15 +121,26 @@
         }
 
         function nextExercise() {
+            const currentWorkout = loadJSONQueryParameter(url.searchParams.get('currentWorkout'));
             const currentExercideId = parseInt(url.searchParams.get("currentExerciseId"))
-            const exercises = loadJSONQueryParameter(url.searchParams.get('exercises'));
-
-            // Dont allow next if we are at the last exercise
-            if (currentExercideId == exercises.length -1 ) {
-                return
-            }
+            const currentExercisesMaxIndex = currentWorkout['exercises'].length - 1
 
             saveExerciseData(url);
+
+            if (currentExercideId + 1 > currentExercisesMaxIndex) {
+                const currentWorkout = loadJSONQueryParameter(url.searchParams.get('currentWorkout'));
+                currentWorkout['exercises'].push(
+                    {
+                        "name": "",
+                        "reps": "",
+                        "weights": ""
+                    }
+                )
+
+                url.searchParams.set('currentWorkout', JSON.stringify(currentWorkout));
+            }
+            
+            
             url.searchParams.set("currentExerciseId", currentExercideId + 1);
             reloadPage(url)
         }
@@ -149,41 +169,44 @@
             return daysSinceLastDoneWorkout = Math.floor(msSinceWorkout / (1000 * 60 * 60) / 24);
         }
 
-        function getNewExerciseData(exercises, url, key) {
-            if (url.searchParams.get(key)) {
-                return loadJSONQueryParameter(url.searchParams.get(key))
-            }
-
-            const value = JSON.stringify(Array(exercises.length).fill([]))
-            url.searchParams.set(key, value)
-            return loadJSONQueryParameter(value)
-        }
-
         function renderPage() {
             const name = url.searchParams.get('name')
-            const exercises = loadJSONQueryParameter(url.searchParams.get('exercises'));
             const previousWorkout = loadJSONQueryParameter(url.searchParams.get('previousWorkout'));
-            const startMilliseconds = url.searchParams.get('startMilliseconds')
+            const currentWorkout = loadJSONQueryParameter(url.searchParams.get('currentWorkout'));
             const currentExerciseId = parseInt(url.searchParams.get('currentExerciseId'))
-            const currentExercise = exercises[currentExerciseId]
-            const daysAgo = url.searchParams.get('daysAgo')
- 
-            const currentReps = getNewExerciseData(exercises, url, "currentReps")
-            const currentWeights = getNewExerciseData(exercises, url, "currentWeights")
+            const daysAgo = calulateDaysAgo(previousWorkout['endMilliseconds'])
+
+            const previousExercises = previousWorkout['exercises']
+
+            let prevousExercise = ""
+            if (currentExerciseId <= previousExercises.length - 1) {
+                prevousExercise = previousExercises[currentExerciseId]
+            } else {
+                prevousExercise = {
+                    "name": "-",
+                    "reps": "-",
+                    "weights": "-",
+                }
+            }
+            
+
+            const currentExercises = currentWorkout['exercises']
+            const currentExercise = currentExercises[currentExerciseId]
+            const currentExerciseName = currentExercise['name']
 
             document.getElementById('workoutName').innerHTML = name
             document.getElementById('workoutLastCompleted').innerHTML = `Last Completed: ${daysAgo} days ago.`
             document.getElementById('workout').style.visibility = 'visible'
 
-            const previousWorkoutExerciseReps = previousWorkout['reps'][currentExerciseId];
-            const previousWorkoutExerciseWeights = previousWorkout['weights'][currentExerciseId];
+            const previousWorkoutExerciseReps = prevousExercise['reps']
+            const previousWorkoutExerciseWeights = prevousExercise['weights']
 
-            document.getElementById('currentExercise').innerHTML = currentExercise
+            document.getElementById('currentExerciseName').value = currentExerciseName
             document.getElementById('previousWorkoutExerciseReps').innerHTML = `Reps: ${previousWorkoutExerciseReps}`
             document.getElementById('previousWorkoutExerciseWeights').innerHTML = `Weight: ${previousWorkoutExerciseWeights}`
 
-            document.getElementById('reps').value = currentReps[currentExerciseId]
-            document.getElementById('weights').value = currentWeights[currentExerciseId]
+            document.getElementById('reps').value = currentExercise['reps']
+            document.getElementById('weights').value = currentExercise['weights']
         }
 
         function selectWorkout() {
@@ -205,17 +228,14 @@
         function saveWorkout() {
             saveExerciseData(url, true);
 
-            const data = {
-                "startMilliseconds": url.searchParams.get("startMilliseconds"),
-                "endMilliseconds":  getTimeMillisecondsDate(),
-                "reps": url.searchParams.get("currentReps"),
-                "weights": url.searchParams.get("currentWeights"),
-            }
+            const currentWorkout = loadJSONQueryParameter(url.searchParams.get('currentWorkout'));
+
+            currentWorkout['endMilliseconds'] = getTimeMillisecondsDate()
 
             const a = document.createElement('a');
             a.target = '_blank';
             let body = `https://github.com/clickthisnick/workout-tracker/edit/main/src/workouts/${url.searchParams.get("file")}%0D%0A%0D%0A%0D%0A`
-            body += "," + JSON.stringify(data)
+            body += "," + JSON.stringify(currentWorkout)
 
             a.href = `mailto:remove_this@email.com?subject=${encodeURIComponent(`Workout - ${url.searchParams.get("name")}`)}&body=${body}`;
             a.click();
@@ -273,7 +293,7 @@
     <div id="header">
         <span id="workoutName"></span><br>
         <span id="workoutLastCompleted"></span><br>
-        <span id="currentExercise"></span>
+        <input type="text" id="currentExerciseName" name="currentExerciseName">
         <br>
         <button onclick="prevExercise()">Prev</button>
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
