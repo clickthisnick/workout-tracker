@@ -228,6 +228,12 @@
         function saveWorkout() {
             saveExerciseData(url, true);
 
+            const email = url.searchParams.get('email')
+            let sendTo = email
+            if (!email) {
+                sendTo = "remove_this@email.com"
+            }
+
             const currentWorkout = loadJSONQueryParameter(url.searchParams.get('currentWorkout'));
 
             currentWorkout['endMilliseconds'] = getTimeMillisecondsDate()
@@ -237,7 +243,7 @@
             let body = `https://github.com/clickthisnick/workout-tracker/edit/main/src/workouts/${url.searchParams.get("file")}%0D%0A%0D%0A%0D%0A`
             body += "," + JSON.stringify(currentWorkout)
 
-            a.href = `mailto:remove_this@email.com?subject=${encodeURIComponent(`Workout - ${url.searchParams.get("name")}`)}&body=${body}`;
+            a.href = `mailto:${sendTo}?subject=${encodeURIComponent(`Workout - ${url.searchParams.get("name")}`)}&body=${body}`;
             a.click();
         }
 
