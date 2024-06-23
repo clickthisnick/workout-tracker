@@ -5,6 +5,7 @@
         "dbchest.json",
         "legs.json",
         "shoulders.json",
-        "stretch.json"
+        "stretch.json",
+        "homechest.json"
     ]
 }
