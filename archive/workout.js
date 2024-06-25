@@ -47,6 +47,21 @@ app.filter('reverse', function() {
   };
 });
 
+function playSound(duration=4) {
+  const audio = document.getElementById("beep")
+
+  if (audio) {
+      // overrides the empty sound already played on the object
+      // this is so ios will asynchronously play the sounds
+      if (duration == 4) {
+          audio.src = "../sounds/a-tone.mp3"
+      } else {
+          audio.src = "../sounds/a-tone.mp3"
+      }
+      audio.play()
+  }
+}
+
 function playSound(url) {
   const audio = new Audio(url);
   audio.play();
@@ -72,7 +87,7 @@ app.controller('WorkoutController', function($http) {
     workout.timerStarted = true;
 
     const timeSpan = document.getElementById('timer');
-    const mins = 1.5;
+    const mins = .1;
     const now = new Date().getTime();
     const deadline = mins * 60 * 1000 + now;
 
@@ -98,7 +113,7 @@ app.controller('WorkoutController', function($http) {
       }
 
       if (minutes == 0 && seconds <= 0 && seconds > -2) {
-        playSound('sounds/a-tone.mp3');
+        playSound();
       }
 
       let timeToShow = minutes + 'm ' + seconds + 's';

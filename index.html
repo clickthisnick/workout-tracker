@@ -5,6 +5,12 @@
     <!-- Needed for mobile to function (somewhat) -->
     <meta name="viewport" content="width=device-width, initial-scale=1" />
 
+    <audio id="beep">
+        <!-- https://stackoverflow.com/a/68107904 -->
+        <source src = "data:audio/mpeg;base64,SUQzBAAAAAABEVRYWFgAAAAtAAADY29tbWVudABCaWdTb3VuZEJhbmsuY29tIC8gTGFTb25vdGhlcXVlLm9yZwBURU5DAAAAHQAAA1N3aXRjaCBQbHVzIMKpIE5DSCBTb2Z0d2FyZQBUSVQyAAAABgAAAzIyMzUAVFNTRQAAAA8AAANMYXZmNTcuODMuMTAwAAAAAAAAAAAAAAD/80DEAAAAA0gAAAAATEFNRTMuMTAwVVVVVVVVVVVVVUxBTUUzLjEwMFVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVf/zQsRbAAADSAAAAABVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVf/zQMSkAAADSAAAAABVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV">
+        Your browser does not support the audio element.
+    </audio>
+
     <link rel="stylesheet" type="text/css" href="assets/ceruleanBootswatch.min.css">
     <style>
         body {
@@ -24,6 +30,22 @@
         // Global we can reset at any point
         let timerInterval = ""; 
         const url = new URL(location.href);
+
+        function playSound() {
+            const audio = document.getElementById("beep")
+
+            if (audio) {
+                // https://stackoverflow.com/a/68107904
+                // overrides the empty sound already played on the object
+                // this is so ios will asynchronously play the sounds
+                audio.src = "sounds/a-tone.mp3"
+                
+                audio.play()
+                audio.play()
+                audio.play()
+                audio.play()
+            }
+        }
 
         const loadWorkoutOptions = async () => {
             const response = await fetch('https://www.clickthisnick.com/workout-tracker/src/workouts/active.json');
@@ -249,7 +271,7 @@
 
         function resetTimer() {
             const timeSpan = document.getElementById('timer');
-            const mins = 1.5;
+            const mins = .1; // TODO 1.5
             const now = new Date().getTime();
             const deadline = mins * 60 * 1000 + now;
 
@@ -275,7 +297,7 @@
             }
 
             if (minutes == 0 && seconds <= 0 && seconds > -2) {
-                playSound('sounds/a-tone.mp3');
+                playSound();
             }
 
             let timeToShow = minutes + 'm ' + seconds + 's';
