@@ -1,0 +1,32 @@
+{
+    "name": "Home Chest",
+    "workouts": [
+      {
+        "startMilliseconds": 0,
+        "endMilliseconds": 0,
+        "exercises": [
+            {
+              "name": "Cable Bicep Curl",
+              "reps": "",
+              "weights": ""
+            },
+            {
+              "name": "Single Arm Cable Bicep Curl",
+              "reps": "",
+              "weights": ""
+            },
+            {
+              "name": "Seated Tricep Press",
+              "reps": "",
+              "weights": ""
+            },
+            {
+              "name": "Trcip Kickbacks Ups",
+              "reps": "",
+              "weights": ""
+            }
+        ]
+      }
+    ]
+  }
+  

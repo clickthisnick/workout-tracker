@@ -6,6 +6,7 @@
         "legs.json",
         "shoulders.json",
         "stretch.json",
-        "homechest.json"
+        "homechest.json",
+        "home_cable_arm.json"
     ]
 }
