@@ -1,5 +1,5 @@
 {
-    "name": "Home Chest",
+    "name": "Home Cable Arms",
     "workouts": [
       {
         "startMilliseconds": 0,
@@ -26,7 +26,9 @@
               "weights": ""
             }
         ]
-      }
+      },
+        
+        {"startMilliseconds":1720276303901,"endMilliseconds":1720277203303,"exercises":[{"name":"Cable Bicep Curl","reps":"","weights":""},{"name":"Single Arm Cable Bicep Curl","reps":"","weights":""},{"name":"Single Arm Standing Tricep Press","reps":"12,12,12","weights":"5,5,5"},{"name":"Tricep Kickbacks Ups","reps":"","weights":""},{"name":"","reps":"5,5,5","weights":"12,12,12"}]}
     ]
   }
   
