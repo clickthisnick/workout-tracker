@@ -29,6 +29,7 @@
       },
         
         {"startMilliseconds":1720276303901,"endMilliseconds":1720277203303,"exercises":[{"name":"Cable Bicep Curl","reps":"","weights":""},{"name":"Single Arm Cable Bicep Curl","reps":"","weights":""},{"name":"Single Arm Standing Tricep Press","reps":"12,12,12","weights":"5,5,5"},{"name":"Tricep Kickbacks Ups","reps":"","weights":""},{"name":"","reps":"5,5,5","weights":"12,12,12"}]}
+        ,{"startMilliseconds":1720561394528,"endMilliseconds":1720563808255,"exercises":[{"name":"Cable Bicep Curl","reps":"12,12,12","weights":"15,15,15"},{"name":"Single Arm Cable Bicep Curl","reps":"12,12,12","weights":"10,10,10"},{"name":"Single Arm Standing Tricep Press","reps":"12,12,12","weights":"6,7,8"},{"name":"Tricep Kickbacks Ups","reps":"12,12,12","weights":"6,6,6"},{"name":"","reps":"","weights":""},{"name":"","reps":"","weights":""},{"name":"","reps":"","weights":""}]}
     ]
   }
   
