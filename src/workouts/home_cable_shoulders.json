@@ -26,8 +26,9 @@
               "weights": ""
             }
         ]
-      },
+      }
 ,{"startMilliseconds":1720831769213,"endMilliseconds":1720834086516,"exercises":[{"name":"Seated Shoulder Press","reps":"12,12,12","weights":"15,15,15"},{"name":"Single Arm Front Raise","reps":"12,12,12","weights":"4,4,4"},{"name":"Single Arm Rows","reps":"12,12,12","weights":"15,15,15"},{"name":"Single Arm Standing Lateral Arm Raises","reps":"6,6,12","weights":"2,3,3"}]}
+        
 
 
     ]
