@@ -4,7 +4,7 @@
     <!-- Needed for mobile to function (somewhat) -->
     <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <audio id="beep" preload="auto" autoPlay="">
+    <audio id="beep" preload="auto">
         <!-- https://stackoverflow.com/a/68107904 -->
         <source src="sounds/a-tone.mp3" type="audio/mpeg">
         <!-- <source src = "data:audio/mpeg;base64,SUQzBAAAAAABEVRYWFgAAAAtAAADY29tbWVudABCaWdTb3VuZEJhbmsuY29tIC8gTGFTb25vdGhlcXVlLm9yZwBURU5DAAAAHQAAA1N3aXRjaCBQbHVzIMKpIE5DSCBTb2Z0d2FyZQBUSVQyAAAABgAAAzIyMzUAVFNTRQAAAA8AAANMYXZmNTcuODMuMTAwAAAAAAAAAAAAAAD/80DEAAAAA0gAAAAATEFNRTMuMTAwVVVVVVVVVVVVVUxBTUUzLjEwMFVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVf/zQsRbAAADSAAAAABVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVf/zQMSkAAADSAAAAABVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV"> -->
@@ -282,6 +282,8 @@
         }
 
         function resetTimer() {
+            document.getElementById('beep').play()
+            document.getElementById('beep').pause()
             const timeSpan = document.getElementById('timer');
             const mins = .1 // 1.5;
             const now = new Date().getTime();
@@ -309,7 +311,7 @@
             }
 
             if (minutes == 0 && seconds <= 0 && seconds > -2) {
-                playSound();
+                document.getElementById('beep').play()
             }
 
             let timeToShow = minutes + 'm ' + seconds + 's';
@@ -351,14 +353,6 @@
         <button onclick="saveWorkout()">Save Workout</button>
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
         <button onclick="resetTimer()">Timer</button><span id="timer"></span>    
-
-        <audio controls preload="auto" style="width:100%;">
-            <source src="sounds/a-tone.mp3" type="audio/mpeg">
-            Your browser does not support the audio element.
-        </audio>
-
-        <button onclick="document.getElementById('beep').play()">Play</button>
-
 
     </div>
 </div>
