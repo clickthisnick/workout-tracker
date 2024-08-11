@@ -13,6 +13,17 @@
 
     <link rel="stylesheet" type="text/css" href="assets/ceruleanBootswatch.min.css">
     <style>
+
+        audio::-internal-media-controls-download-button {
+            display:none;
+        }
+        audio::-webkit-media-controls-enclosure {
+            overflow:hidden;
+        }
+        audio::-webkit-media-controls-panel {
+            width: calc(100% + 33px);
+        }  
+
         body {
             background-color: black;
             color: white;
@@ -340,6 +351,14 @@
         <button onclick="saveWorkout()">Save Workout</button>
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
         <button onclick="resetTimer()">Timer</button><span id="timer"></span>    
+
+        <audio controls preload="auto" style="width:100%;">
+            <source src="sounds/a-tone.mp3" type="audio/mpeg">
+            Your browser does not support the audio element.
+        </audio>
+
+        <button onclick="document.getElementById('beep').play()">Play</button>
+
 
     </div>
 </div>
