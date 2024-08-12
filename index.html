@@ -222,7 +222,6 @@
                     "weights": "-",
                 }
             }
-            
 
             const currentExercises = currentWorkout['exercises']
             const currentExercise = currentExercises[currentExerciseId]
@@ -285,7 +284,7 @@
             document.getElementById('beep').play()
             document.getElementById('beep').pause()
             const timeSpan = document.getElementById('timer');
-            const mins = .1 // 1.5;
+            const mins = 1.5;
             const now = new Date().getTime();
             const deadline = mins * 60 * 1000 + now;
 
