@@ -94,10 +94,11 @@
             currentWorkout['startMilliseconds'] = getTimeMillisecondsDate()
             currentWorkout['endMilliseconds'] = 0
 
-            // Zeroing out the reps/weights for the current workout
+            // Zeroing out the reps/weights/times for the current workout
             for (let i = 0; i < currentWorkout['exercises'].length; i++) {
                 currentWorkout['exercises'][i]['reps'] = ""
                 currentWorkout['exercises'][i]['weights'] = ""
+                currentWorkout['exercises'][i]['times'] = ""
             }
 
             url.searchParams.set('currentWorkout', JSON.stringify(currentWorkout));
@@ -141,11 +142,13 @@
 
             const reps = document.getElementById('reps').value
             const weights = document.getElementById('weights').value
+            const times = document.getElementById('times').value
             const currentExerciseName = document.getElementById('currentExerciseName').value
 
             currentWorkout['exercises'][currentExerciseId]['name'] = currentExerciseName
             currentWorkout['exercises'][currentExerciseId]['reps'] = reps
             currentWorkout['exercises'][currentExerciseId]['weights'] = weights
+            currentWorkout['exercises'][currentExerciseId]['times'] = times
 
             url.searchParams.set("currentWorkout", JSON.stringify(currentWorkout))
 
@@ -167,7 +170,8 @@
                     {
                         "name": "",
                         "reps": "",
-                        "weights": ""
+                        "weights": "",
+                        "times": ""
                     }
                 )
 
@@ -220,6 +224,7 @@
                     "name": "-",
                     "reps": "-",
                     "weights": "-",
+                    "time": "-",
                 }
             }
 
@@ -233,13 +238,16 @@
 
             const previousWorkoutExerciseReps = prevousExercise['reps']
             const previousWorkoutExerciseWeights = prevousExercise['weights']
+            const previousWorkoutExerciseTimes = prevousExercise['time']
 
             document.getElementById('currentExerciseName').value = currentExerciseName
             document.getElementById('previousWorkoutExerciseReps').innerHTML = `Reps: ${previousWorkoutExerciseReps}`
             document.getElementById('previousWorkoutExerciseWeights').innerHTML = `Weight: ${previousWorkoutExerciseWeights}`
+            document.getElementById('previousWorkoutExerciseTimes').innerHTML = `Times: ${previousWorkoutExerciseTimes}`
 
             document.getElementById('reps').value = currentExercise['reps']
             document.getElementById('weights').value = currentExercise['weights']
+            document.getElementById('times').value = currentExercise['times']
         }
 
         function selectWorkout() {
@@ -342,13 +350,17 @@
         <br><br>Previous:<br>
         <span id="previousWorkoutExerciseReps"></span><br>
         <span id="previousWorkoutExerciseWeights"></span><br>
+        <span id="previousWorkoutExerciseTimes"></span><br>
         Current:
         <span id="currentWorkoutExerciseReps"></span><br>
         <span id="currentWorkoutExerciseWeights"></span><br>
+        <span id="currentWorkoutExerciseTimes"></span><br>
         <label for="reps">Reps:</label>
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="text" id="reps" name="reps"><br><br>
         <label for="weights">Weight:</label>
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="text" id="weights" name="weights"><br><br>
+        <label for="times">Time:</label>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="text" id="times" name="times"><br><br>
         <button onclick="saveWorkout()">Save Workout</button>
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
         <button onclick="resetTimer()">Timer</button><span id="timer"></span>    
