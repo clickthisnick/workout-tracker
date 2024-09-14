@@ -40,6 +40,8 @@
     <script>
         // Global we can reset at any point
         let timerInterval = ""; 
+        let currentTimer = 0;
+
         const url = new URL(location.href);
 
         function playSound() {
@@ -59,28 +61,35 @@
             }
         }
 
+        // python3 -m http.server
+        const baseUrl = 'https://www.clickthisnick.com/workout-tracker'
+        // When running locally just go to this url and then everything works since its on the same server/port
+        // const baseUrl = 'http://localhost:8000'
+
         const loadWorkoutOptions = async () => {
-            const response = await fetch('https://www.clickthisnick.com/workout-tracker/src/workouts/active.json');
+            const response = await fetch(`${baseUrl}/src/workouts/active.json`);
             const workouts = await response.json(); //extract JSON from the http response
             const workoutNames = workouts['workouts']
-            var select = document.getElementById("selectWorkout");
+            let select = document.getElementById("selectWorkout");
 
-            for(var i = 0; i < workoutNames.length; i++) {
-                var opt = workoutNames[i];
-                var el = document.createElement("option");
-                el.textContent = opt;
-                el.value = opt;
+            workoutNames.forEach(workout => {
+                let el = document.createElement("option");
+                el.textContent = workout;
+                el.value = workout;
                 select.appendChild(el);
-            }
+            })
         }
 
         // If I want this to work without internet once its loaded, I need to cache this in the browser
         // Or check if it will be cached - maybe browsers already do that
         // Check duration if browser already cache - ie will this last up to an hour
         const getData = async (routine, params) => {
-            const response = await fetch(`https://www.clickthisnick.com/workout-tracker/src/workouts/${routine}`);
+            // The browser caches this so sometimes you need to refresh the file directly
+            // Especially if using this locally
+            const response = await fetch(`${baseUrl}/src/workouts/${routine}`);
             const resp = await response.json(); //extract JSON from the http response
 
+            console.log(resp['workouts'].length)
             const workout = resp['workouts']
             const workoutIndex = workout.length - 1
 
@@ -177,8 +186,8 @@
 
                 url.searchParams.set('currentWorkout', JSON.stringify(currentWorkout));
             }
-            
-            
+
+
             url.searchParams.set("currentExerciseId", currentExercideId + 1);
             reloadPage(url)
         }
@@ -200,11 +209,26 @@
             return JSON.parse(decodeQueryParam(data));
         }
 
+        function calculateLastWorkoutDuration(milliseconds) {
+            // TODO double check this math it is right
+            let minutes = Math.floor(milliseconds / 1000 / 60)
+            let seconds = Math.round((milliseconds - (minutes * 1000 * 60)) / 1000)
+
+            return [minutes, seconds]
+        }
+
         function calulateDaysAgo(endMilliseconds) {
             const ms = getTimeMillisecondsDate();
             const msSinceWorkout = ms - endMilliseconds;
 
             return daysSinceLastDoneWorkout = Math.floor(msSinceWorkout / (1000 * 60 * 60) / 24);
+        }
+
+        function setCurrentWorkoutDuration(currentWorkout) {
+            const currentWorkoutDurationMilliseconds = Date.now() - currentWorkout['startMilliseconds']
+            const currentWorkoutDurationMillisecondsMinutes = Math.floor((currentWorkoutDurationMilliseconds % (1000 * 60 * 60)) / (1000 * 60));
+            const currentWorkoutDurationMillisecondsSeconds = Math.floor((currentWorkoutDurationMilliseconds % (1000 * 60)) / 1000);
+            document.getElementById('workoutCurrentDuration').innerHTML = `Current Duration: ${currentWorkoutDurationMillisecondsMinutes} minutes. ${currentWorkoutDurationMillisecondsSeconds} seconds.`
         }
 
         function renderPage() {
@@ -213,6 +237,9 @@
             const currentWorkout = loadJSONQueryParameter(url.searchParams.get('currentWorkout'));
             const currentExerciseId = parseInt(url.searchParams.get('currentExerciseId'))
             const daysAgo = calulateDaysAgo(previousWorkout['endMilliseconds'])
+            const previousWorkoutDuration = calculateLastWorkoutDuration(previousWorkout['endMilliseconds'] - previousWorkout['startMilliseconds'])
+            const previousWorkoutDurationMinutes = previousWorkoutDuration[0]
+            const previousWorkoutDurationSeconds = previousWorkoutDuration[1]
 
             const previousExercises = previousWorkout['exercises']
 
@@ -234,11 +261,18 @@
 
             document.getElementById('workoutName').innerHTML = name
             document.getElementById('workoutLastCompleted').innerHTML = `Last Completed: ${daysAgo} days ago.`
+            document.getElementById('workoutLastDuration').innerHTML = `Last Duration: ${previousWorkoutDurationMinutes} minutes. ${previousWorkoutDurationSeconds} seconds.`
+            setCurrentWorkoutDuration(currentWorkout)
+
+            setInterval(() => {
+                setCurrentWorkoutDuration(currentWorkout)
+            }, 500);
+
             document.getElementById('workout').style.visibility = 'visible'
 
-            const previousWorkoutExerciseReps = prevousExercise['reps']
-            const previousWorkoutExerciseWeights = prevousExercise['weights']
-            const previousWorkoutExerciseTimes = prevousExercise['time']
+            const previousWorkoutExerciseReps = prevousExercise['reps'] || ""
+            const previousWorkoutExerciseWeights = prevousExercise['weights'] || ""
+            const previousWorkoutExerciseTimes = prevousExercise['time'] || ""
 
             document.getElementById('currentExerciseName').value = currentExerciseName
             document.getElementById('previousWorkoutExerciseReps').innerHTML = `Reps: ${previousWorkoutExerciseReps}`
@@ -266,6 +300,23 @@
             loadWorkoutOptions()
         }
 
+        function saveTime() {
+            // saves The time from the current countdown into the times box
+            let times = document.getElementById('times').value
+            let timeValue = `${Math.floor(currentTimer)}`;
+
+            // Don't save the timer value if you haven't started the timer
+            if (timeValue == 0) {
+                return
+            }
+
+            if (times) {
+                timeValue = `${times},${timeValue}`
+            }
+
+            document.getElementById('times').value = timeValue
+        }
+
         function saveWorkout() {
             saveExerciseData(url, true);
 
@@ -279,6 +330,14 @@
 
             currentWorkout['endMilliseconds'] = getTimeMillisecondsDate()
 
+            // Filter out any exercies without a name like if you press next a bunch of times
+            // or you want to delete anything just delete the name
+            currentWorkout['exercises'] = currentWorkout['exercises'].filter(exercise => {
+                if (exercise['name']) {
+                    return exercise
+                }
+            })
+
             const a = document.createElement('a');
             a.target = '_blank';
             let body = `https://github.com/clickthisnick/workout-tracker/edit/main/src/workouts/${url.searchParams.get("file")}%0D%0A%0D%0A%0D%0A`
@@ -289,6 +348,7 @@
         }
 
         function resetTimer() {
+            currentTimer = 0
             document.getElementById('beep').play()
             document.getElementById('beep').pause()
             const timeSpan = document.getElementById('timer');
@@ -303,31 +363,32 @@
             }
 
             timerInterval = setInterval(() => {
-            const currentTime = new Date().getTime();
-            const distance = deadline - currentTime;
-            let minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-            const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+                const currentTime = new Date().getTime();
+                const distance = deadline - currentTime;
+                let minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+                const seconds = Math.floor((distance % (1000 * 60)) / 1000);
 
-            // The minutes are 1 off once negative
-            if (minutes < 0) {
-                minutes = minutes + 1;
-            }
+                // The minutes are 1 off once negative
+                if (minutes < 0) {
+                    minutes = minutes + 1;
+                }
 
-            if (minutes == 0 && seconds == 0) {
-                timerStarted = false;
-            }
+                if (minutes == 0 && seconds == 0) {
+                    timerStarted = false;
+                }
 
-            if (minutes == 0 && seconds <= 0 && seconds > -2) {
-                document.getElementById('beep').play()
-            }
+                if (minutes == 0 && seconds <= 0 && seconds > -2) {
+                    document.getElementById('beep').play()
+                }
 
-            let timeToShow = minutes + 'm ' + seconds + 's';
+                let timeToShow = minutes + 'm ' + seconds + 's';
 
-            if (minutes == 0) {
-                timeToShow = seconds + 's';
-            }
+                if (minutes == 0) {
+                    timeToShow = seconds + 's';
+                }
 
-            timeSpan.innerHTML = timeToShow;
+                currentTimer += .5
+                timeSpan.innerHTML = timeToShow;
             }, 500);
         };
 
@@ -342,28 +403,54 @@
     <div id="header">
         <span id="workoutName"></span><br>
         <span id="workoutLastCompleted"></span><br>
+        <span id="workoutLastDuration"></span><br>
+        <span id="workoutCurrentDuration"></span><br>
         <input type="text" id="currentExerciseName" name="currentExerciseName">
         <br>
         <button onclick="prevExercise()">Prev</button>
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
         <button onclick="nextExercise()">Next</button>
-        <br><br>Previous:<br>
+        <br><br><b>Previous:</b><br>
         <span id="previousWorkoutExerciseReps"></span><br>
         <span id="previousWorkoutExerciseWeights"></span><br>
-        <span id="previousWorkoutExerciseTimes"></span><br>
-        Current:
-        <span id="currentWorkoutExerciseReps"></span><br>
-        <span id="currentWorkoutExerciseWeights"></span><br>
-        <span id="currentWorkoutExerciseTimes"></span><br>
-        <label for="reps">Reps:</label>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="text" id="reps" name="reps"><br><br>
-        <label for="weights">Weight:</label>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="text" id="weights" name="weights"><br><br>
-        <label for="times">Time:</label>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="text" id="times" name="times"><br><br>
+        <span id="previousWorkoutExerciseTimes"></span><br><br>
+        <b>Current:</b><br>
+        <table>
+            <tbody>
+                <tr>
+                    <td>
+                        <label for="reps">Reps:</label>
+                    </td>
+                    <td>
+                        <input type="text" id="reps" name="reps"><br><br>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <label for="weights">Weight:&nbsp;&nbsp;&nbsp;&nbsp;</label>
+                    </td>
+                    <td>
+                        <input type="text" id="weights" name="weights"><br><br>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <label for="times">Time:</label>
+                    </td>
+                    <td>
+                        <input type="text" id="times" name="times">
+                    </td>
+                    <td>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<button onclick="saveTime()">Save Time</button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <br><br><br><br>
+
         <button onclick="saveWorkout()">Save Workout</button>
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-        <button onclick="resetTimer()">Timer</button><span id="timer"></span>    
+        <button onclick="resetTimer()">Timer</button>&nbsp;&nbsp;&nbsp;<span id="timer"></span>    
 
     </div>
 </div>

@@ -1,7 +1,4 @@
-Remove empty [] from peoples workouts so we aren't saving extra data
-^ after show the # of times person completed workout
-^ make average length of workout dependent on # of people
-^ its annoying if I forget to enter in a workout before working out again I have to combine the workouts - maybe a script or better format
-^ show last time each person did the workout, not just one person
-^ show amount of people who have done the workout
-^ my browser refreshes and I lose everything - making some sort of query parameter state would be nice
+
+Maker timer adjustable and savingable per exercise
+Remove the minute from count down and just do seconds
+Keep the input from the exercise but also allow for a dropdown - in future you could show an image based on the fixed key
