@@ -22,7 +22,7 @@
 
     <script>
         // Global we can reset at any point
-        let timerInterval = ""; 
+        let timerInterval = "";
         const url = new URL(location.href);
 
         const loadWorkoutOptions = async () => {
@@ -61,7 +61,7 @@
             // We start off showing the first exercise
             url.searchParams.set('currentExerciseId', 0);
             url.searchParams.set('daysAgo', calulateDaysAgo(previousWorkout['endMilliseconds']));
-            
+
             reloadPage(url)
         }
 
@@ -128,7 +128,7 @@
         function prevExercise() {
             const currentExercideId = parseInt(url.searchParams.get("currentExerciseId"))
 
-            // Dont allow negative indexs
+            // Dont allow negative indices
             if (currentExercideId == 0) {
                 return
             }
@@ -167,7 +167,7 @@
             const currentExerciseId = parseInt(url.searchParams.get('currentExerciseId'))
             const currentExercise = exercises[currentExerciseId]
             const daysAgo = url.searchParams.get('daysAgo')
- 
+
             const currentReps = getNewExerciseData(exercises, url, "currentReps")
             const currentWeights = getNewExerciseData(exercises, url, "currentWeights")
 
@@ -290,6 +290,6 @@
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="text" id="weights" name="weights"><br><br>
         <button onclick="saveWorkout()">Save Workout</button>
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-        <button onclick="resetTimer()">Timer</button><span id="timer"></span>     
+        <button onclick="resetTimer()">Timer</button><span id="timer"></span>
     </div>
 </div>

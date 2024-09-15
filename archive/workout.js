@@ -142,7 +142,7 @@ app.controller('WorkoutController', function($http) {
   const params = new Proxy(new URLSearchParams(window.location.search), {
     get: (searchParams, prop) => searchParams.get(prop),
   });
-  
+
   // routine.name
   // Get the value of "some_key" in eg "https://example.com/?name=some_value"
   const routineName = params.name; // "some_value"

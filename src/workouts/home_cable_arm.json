@@ -27,17 +27,17 @@
             }
         ]
       },
-        
+
         {"startMilliseconds":1720276303901,"endMilliseconds":1720277203303,"exercises":[{"name":"Cable Bicep Curl","reps":"","weights":""},{"name":"Single Arm Cable Bicep Curl","reps":"","weights":""},{"name":"Single Arm Standing Tricep Press","reps":"12,12,12","weights":"5,5,5"},{"name":"Tricep Kickbacks Ups","reps":"","weights":""},{"name":"","reps":"5,5,5","weights":"12,12,12"}]}
         ,{"startMilliseconds":1720561394528,"endMilliseconds":1720563808255,"exercises":[{"name":"Cable Bicep Curl","reps":"12,12,12","weights":"15,15,15"},{"name":"Single Arm Cable Bicep Curl","reps":"12,12,12","weights":"10,10,10"},{"name":"Single Arm Standing Tricep Press","reps":"12,12,12","weights":"6,7,8"},{"name":"Tricep Kickbacks Ups","reps":"12,12,12","weights":"6,6,6"},{"name":"","reps":"","weights":""},{"name":"","reps":"","weights":""},{"name":"","reps":"","weights":""}]}
         ,{"startMilliseconds":1720747049198,"endMilliseconds":1720750061418,"exercises":[{"name":"Cable Bicep Curl","reps":"12,12,12","weights":"16,16,16"},{"name":"Single Arm Cable Bicep Curl","reps":"12,12,12","weights":"11,11,11"},{"name":"Single Arm Standing Tricep Press","reps":"12,12,12","weights":"9,9,9"},{"name":"Tricep Kickbacks Ups","reps":"12,12,12","weights":"7,7,7,"},{"name":"","reps":"","weights":""},{"name":"","reps":"","weights":""},{"name":"","reps":"","weights":""}]}
 ,{"startMilliseconds":1720967856459,"endMilliseconds":1720970459481,"exercises":[{"name":"Cable Bicep Curl","reps":"12,12,7","weights":"17,17,17"},{"name":"Single Arm Cable Bicep Curl","reps":"12,12,12","weights":"12,12,12"},{"name":"Single Arm Standing Tricep Press","reps":"12,12,12","weights":"10,10,10"},{"name":"Tricep Kickbacks Ups","reps":"12,12,12","weights":"7,7,7"},{"name":"","reps":"","weights":""},{"name":"","reps":"","weights":""},{"name":"","reps":"","weights":""}]}
-,{"startMilliseconds":1721573564020,"endMilliseconds":1721576433309,"exercises":[{"name":"Cable Bicep Curl","reps":"12,12,9","weights":"20,20,20"},{"name":"Single Arm Cable Bicep Curl","reps":"12,12,12","weights":"14,14,14"},{"name":"Single Arm Standing Tricep Press","reps":"12,12,12","weights":"11,11,11"},{"name":"Tricep Kickbacks Ups","reps":"12,12,12","weights":"8,8,8"},{"name":"","reps":"","weights":""},{"name":"","reps":"","weights":""},{"name":"","reps":"","weights":""}]}    
-    
-    
+,{"startMilliseconds":1721573564020,"endMilliseconds":1721576433309,"exercises":[{"name":"Cable Bicep Curl","reps":"12,12,9","weights":"20,20,20"},{"name":"Single Arm Cable Bicep Curl","reps":"12,12,12","weights":"14,14,14"},{"name":"Single Arm Standing Tricep Press","reps":"12,12,12","weights":"11,11,11"},{"name":"Tricep Kickbacks Ups","reps":"12,12,12","weights":"8,8,8"},{"name":"","reps":"","weights":""},{"name":"","reps":"","weights":""},{"name":"","reps":"","weights":""}]}
+
+
 ,{"startMilliseconds":1722472826901,"endMilliseconds":1722474584483,"exercises":[{"name":"Cable Bicep Curl","reps":"12,11,7","weights":"21,21,21"},{"name":"Single Arm Cable Bicep Curl","reps":"12,12,12","weights":"15,15,15"},{"name":"Single Arm Standing Tricep Press","reps":"","weights":""},{"name":"Tricep Kickbacks Ups","reps":"","weights":""},{"name":"","reps":"","weights":""},{"name":"","reps":"","weights":""},{"name":"","reps":"","weights":""}]}
-    
-    
+
+
 ,{"startMilliseconds":1722472826901,"endMilliseconds":1722474584483,"exercises":[{"name":"Cable Bicep Curl","reps":"12,11,7","weights":"21,21,21"},{"name":"Single Arm Cable Bicep Curl","reps":"12,12,12","weights":"15,15,15"},{"name":"Single Arm Standing Tricep Press","reps":"","weights":""},{"name":"Tricep Kickbacks Ups","reps":"","weights":""},{"name":"","reps":"","weights":""},{"name":"","reps":"","weights":""},{"name":"","reps":"","weights":""}]}
 
 ,{"startMilliseconds":1722989547779,"endMilliseconds":1722993337114,"exercises":[{"name":"Cable Bicep Curl","reps":"11,11,5","weights":"22,21,21"},{"name":"Single Arm Cable Bicep Curl","reps":"8,11,12","weights":"17,16,16"},{"name":"Single Arm Standing Tricep Press","reps":"12,12,12","weights":"8,9,10,10"},{"name":"Tricep Kickbacks Ups","reps":"12,12,12","weights":"6,7,7"},{"name":"","reps":"","weights":""},{"name":"","reps":"","weights":""},{"name":"","reps":"","weights":""}]}
@@ -49,7 +49,6 @@
 
 
 
-        
+
     ]
   }
-  

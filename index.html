@@ -22,7 +22,7 @@
         }
         audio::-webkit-media-controls-panel {
             width: calc(100% + 33px);
-        }  
+        }
 
         body {
             background-color: black;
@@ -39,13 +39,17 @@
 
     <script>
         // Global we can reset at any point
-        let timerInterval = ""; 
+        let timerInterval = "";
         let currentTimer = 0;
+
+        const exerciseNames = [
+            'Back twist knee', 'Single Arm Rows', 'Seated Shoulder Press', 'Finger Faster', 'cable rows', 'Single Arm Standing Lateral Arm Raises', 'Push up', 'Single Arm Front Raise', 'Single Arm Fribt Raise', 'Oblique Side Crunch', 'Seated one leg toe touch left, right', 'back hyperextensions', 'standing quad foot to butt left/right', 'Tricep Kickbacks Ups', 'Standing quad stretch', 'Butterfly', 'Leg Raises', 'Oblique Side Crush', 'Cable Bicep Curl', 'Cobra', 'Sitting knee twist back', 'Push Ups', 'standing quad foot to butt', 'lat pull downs', 'Seated one leg toe touch', 'Single Arm Cable Bicep Curl', 'Crunches', 'Toe touch', 'Iron Chest Master Pushups', 'Single Arm Standing Tricep Press', 'Seated Tricep Press', 'Bent Over Cable Back Flys', 'Trcip Kickbacks Ups', 'Finger master'
+        ]
 
         const url = new URL(location.href);
 
         function playSound() {
-        
+
             const audio = document.getElementById("beep")
 
             if (audio) {
@@ -53,7 +57,7 @@
                 // overrides the empty sound already played on the object
                 // this is so ios will asynchronously play the sounds
                 audio.src = "sounds/a-tone-multiplied.mp3"
-                
+
                 audio.play()
                 audio.play()
                 audio.play()
@@ -61,10 +65,11 @@
             }
         }
 
-        // python3 -m http.server
-        const baseUrl = 'https://www.clickthisnick.com/workout-tracker'
+
+        // const baseUrl = 'https://www.clickthisnick.com/workout-tracker'
         // When running locally just go to this url and then everything works since its on the same server/port
-        // const baseUrl = 'http://localhost:8000'
+        // python3 -m http.server
+        const baseUrl = 'http://localhost:8000'
 
         const loadWorkoutOptions = async () => {
             const response = await fetch(`${baseUrl}/src/workouts/active.json`);
@@ -113,7 +118,7 @@
             url.searchParams.set('currentWorkout', JSON.stringify(currentWorkout));
             // We start off showing the first exercise
             url.searchParams.set('currentExerciseId', 0);
-            
+
             reloadPage(url)
         }
 
@@ -195,7 +200,7 @@
         function prevExercise() {
             const currentExercideId = parseInt(url.searchParams.get("currentExerciseId"))
 
-            // Dont allow negative indexs
+            // Dont allow negative indices
             if (currentExercideId == 0) {
                 return
             }
@@ -330,7 +335,7 @@
 
             currentWorkout['endMilliseconds'] = getTimeMillisecondsDate()
 
-            // Filter out any exercies without a name like if you press next a bunch of times
+            // Filter out any exercises without a name like if you press next a bunch of times
             // or you want to delete anything just delete the name
             currentWorkout['exercises'] = currentWorkout['exercises'].filter(exercise => {
                 if (exercise['name']) {
@@ -405,7 +410,7 @@
         <span id="workoutLastCompleted"></span><br>
         <span id="workoutLastDuration"></span><br>
         <span id="workoutCurrentDuration"></span><br>
-        <input type="text" id="currentExerciseName" name="currentExerciseName">
+        <input style="width: 100%;" id="currentExerciseName" name="currentExerciseName">
         <br>
         <button onclick="prevExercise()">Prev</button>
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
@@ -450,7 +455,7 @@
 
         <button onclick="saveWorkout()">Save Workout</button>
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-        <button onclick="resetTimer()">Timer</button>&nbsp;&nbsp;&nbsp;<span id="timer"></span>    
+        <button onclick="resetTimer()">Timer</button>&nbsp;&nbsp;&nbsp;<span id="timer"></span>
 
     </div>
 </div>
