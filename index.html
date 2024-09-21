@@ -42,6 +42,8 @@
         let timerInterval = "";
         let currentTimer = 0;
 
+        // Currently unused but you could make this an auto complete dropdown in index.html 
+        // And allow folks to select a common exercise
         const exerciseNames = [
             'Back twist knee', 'Single Arm Rows', 'Seated Shoulder Press', 'Finger Faster', 'cable rows', 'Single Arm Standing Lateral Arm Raises', 'Push up', 'Single Arm Front Raise', 'Single Arm Fribt Raise', 'Oblique Side Crunch', 'Seated one leg toe touch left, right', 'back hyperextensions', 'standing quad foot to butt left/right', 'Tricep Kickbacks Ups', 'Standing quad stretch', 'Butterfly', 'Leg Raises', 'Oblique Side Crush', 'Cable Bicep Curl', 'Cobra', 'Sitting knee twist back', 'Push Ups', 'standing quad foot to butt', 'lat pull downs', 'Seated one leg toe touch', 'Single Arm Cable Bicep Curl', 'Crunches', 'Toe touch', 'Iron Chest Master Pushups', 'Single Arm Standing Tricep Press', 'Seated Tricep Press', 'Bent Over Cable Back Flys', 'Trcip Kickbacks Ups', 'Finger master'
         ]
@@ -94,7 +96,6 @@
             const response = await fetch(`${baseUrl}/src/workouts/${routine}`);
             const resp = await response.json(); //extract JSON from the http response
 
-            console.log(resp['workouts'].length)
             const workout = resp['workouts']
             const workoutIndex = workout.length - 1
 
@@ -108,11 +109,18 @@
             currentWorkout['startMilliseconds'] = getTimeMillisecondsDate()
             currentWorkout['endMilliseconds'] = 0
 
+
             // Zeroing out the reps/weights/times for the current workout
             for (let i = 0; i < currentWorkout['exercises'].length; i++) {
                 currentWorkout['exercises'][i]['reps'] = ""
                 currentWorkout['exercises'][i]['weights'] = ""
                 currentWorkout['exercises'][i]['times'] = ""
+
+                if (!Object.keys(currentWorkout['exercises'][i]).includes("timer_duration")) {
+                    // By default make all timer durations 90 seconds
+                    // Potentially every exercise will be able to change this
+                    currentWorkout['exercises'][i]['timer_duration'] = 90
+                }
             }
 
             url.searchParams.set('currentWorkout', JSON.stringify(currentWorkout));
@@ -185,7 +193,7 @@
                         "name": "",
                         "reps": "",
                         "weights": "",
-                        "times": ""
+                        "times": "",
                     }
                 )
 
@@ -357,9 +365,12 @@
             document.getElementById('beep').play()
             document.getElementById('beep').pause()
             const timeSpan = document.getElementById('timer');
-            const mins = 1.5;
+
+            const currentExercideId = (url.searchParams.get("currentExerciseId"))
+            const currentWorkout = loadJSONQueryParameter(url.searchParams.get('currentWorkout'));
+            const seconds = currentWorkout["exercises"][currentExercideId]['timer_duration']
             const now = new Date().getTime();
-            const deadline = mins * 60 * 1000 + now;
+            const deadline = seconds * 1000 + now;
 
             try {
                 clearInterval(timerInterval);

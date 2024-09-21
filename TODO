@@ -1,2 +1,2 @@
-Maker timer adjustable and savingable per exercise
-Keep the input from the exercise but also allow for a dropdown - in future you could show an image based on the fixed key
+Make timer adjustable and savingable per exercise
+Keep the input from the exercise but also allow for a dropdown - in future you could show an image based on the fixed key - use a vanilla js autocomplete library
