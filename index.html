@@ -68,10 +68,10 @@
         }
 
 
-        // const baseUrl = 'https://www.clickthisnick.com/workout-tracker'
+        const baseUrl = 'https://www.clickthisnick.com/workout-tracker'
         // When running locally just go to this url and then everything works since its on the same server/port
         // python3 -m http.server
-        const baseUrl = 'http://localhost:8000'
+        // const baseUrl = 'http://localhost:8000'
 
         const loadWorkoutOptions = async () => {
             const response = await fetch(`${baseUrl}/src/workouts/active.json`);
