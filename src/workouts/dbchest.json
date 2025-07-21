@@ -1,0 +1,41 @@
+{
+    "name": "Chest/Arms",
+    "workouts": [
+      {
+        "startMilliseconds": 0,
+        "endMilliseconds": 0,
+        "exercises": [
+            {
+              "name": "Db Chest Press",
+              "reps": "",
+              "weights": ""
+            },
+            {
+              "name": "Db Hammer Curls",
+              "reps": "",
+              "weights": ""
+            },
+            {
+              "name": "Include Db Chest Press",
+              "reps": "",
+              "weights": ""
+            },
+            {
+              "name": "Cable Tricep Extensions",
+              "reps": "",
+              "weights": ""
+            },
+            {
+              "name": "Db Chest Fly",
+              "reps": "",
+              "weights": ""
+            },
+            {
+              "name": "Machine Curl Superset Machine Tricep Extension",
+              "reps": "",
+              "weights": ""
+            }
+        ]
+      }
+    ]
+  }
