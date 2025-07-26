@@ -38,5 +38,9 @@
         ]
       }
 ,{"startMilliseconds":1753124900524,"endMilliseconds":1753126601129,"exercises":[{"name":"Db Chest Press","reps":"16,16,8","weights":"50,50,50","times":"","timer_duration":90},{"name":"Db Hammer Curls","reps":"12,12,7","weights":"35,35,35","times":"","timer_duration":90},{"name":"Incline Db Chest Press","reps":"16,12,9","weights":"35,35,35","times":"","timer_duration":90},{"name":"Cable Tricep Extensions","reps":"16,12,6","weights":"110,130,130","times":"","timer_duration":90},{"name":"Db Chest Fly","reps":"","weights":"","times":"","timer_duration":90},{"name":"Machine Curl Superset Machine Tricep Extension","reps":"","weights":"","times":"","timer_duration":90}]}
+
+,{"startMilliseconds":1753530000583,"endMilliseconds":1753531423424,"exercises":[{"name":"Db Chest Press","reps":"16,16,9","weights":"50,50,50","times":"","timer_duration":90},{"name":"Db Hammer Curls","reps":"13,11,3","weights":"35,35,35","times":"","timer_duration":90},{"name":"Incline Db Chest Press","reps":"16,9,8","weights":"35,35,35","times":"","timer_duration":90},{"name":"Cable Tricep Extensions","reps":"14,8,6","weights":"110,110,110","times":"","timer_duration":90},{"name":"Db Chest Fly","reps":"","weights":"","times":"","timer_duration":90},{"name":"Machine Curl Superset Machine Tricep Extension","reps":"","weights":"","times":"","timer_duration":90}]}
+    
+    
     ]
   }
