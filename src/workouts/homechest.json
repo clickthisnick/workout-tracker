@@ -20,7 +20,7 @@
               "reps": "",
               "weights": ""
               "times": "",
-                "timer_duration": 60,
+              "timer_duration": 60
             },
             {
               "name": "Diamond Push Ups",
@@ -31,11 +31,11 @@
               "name": "Plank",
               "reps": "",
               "weights": "",
-            "times": "",
-                "timer_duration": 60,
-            },
+              "times": "",
+              "timer_duration": 60
+            }
         ]
-      },
+      }
 
 
 
