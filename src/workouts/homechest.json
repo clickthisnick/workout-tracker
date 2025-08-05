@@ -6,26 +6,38 @@
         "endMilliseconds": 0,
         "exercises": [
             {
-              "name": "Iron Chest Master Pushups",
+              "name": "Iron Chest Master",
               "reps": "",
               "weights": ""
             },
             {
-              "name": "Push Ups",
+              "name": "Push Up Position, Knee To Elbow",
               "reps": "",
               "weights": ""
             },
             {
-              "name": "Iron Chest Master Pushups",
+              "name": "Ab Leg Hold/Sofa Incline Push Ups",
+              "reps": "",
+              "weights": ""
+              "times": "",
+                "timer_duration": 60,
+            },
+            {
+              "name": "Diamond Push Ups",
               "reps": "",
               "weights": ""
             },
             {
-              "name": "Push Ups",
+              "name": "Plank",
               "reps": "",
-              "weights": ""
-            }
+              "weights": "",
+            "times": "",
+                "timer_duration": 60,
+            },
         ]
-      }
+      },
+
+
+
     ]
   }
