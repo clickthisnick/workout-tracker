@@ -46,6 +46,7 @@
 ,{"startMilliseconds":1756639965182,"endMilliseconds":1756641635503,"exercises":[{"name":"Db Chest Press","reps":"16,20,20,20","weights":"30,50,50,50","times":"","timer_duration":90},{"name":"Db Hammer Curls","reps":"16,9,4","weights":"35,35,35","times":"","timer_duration":90},{"name":"Incline Db Chest Press","reps":"16,16,9","weights":"35,45,45,","times":"","timer_duration":90},{"name":"Tricep Pull Down","reps":"12,12,9","weights":"110,120,120","times":"","timer_duration":90},{"name":"Db Chest Fly","reps":"","weights":"","times":"","timer_duration":90},{"name":"Machine Curl Superset Machine Tricep Extension","reps":"","weights":"","times":"","timer_duration":90}]}
 
 
+,{"startMilliseconds":1757160088370,"endMilliseconds":1757161768218,"exercises":[{"name":"Db Chest Press Normal Reps Then \\/ Lower Chest Reps","reps":"16,20/5,16/5,10/4","weights":"30,50,50,50","times":"","timer_duration":90},{"name":"Db Hammer Curls","reps":"14,7,5","weights":"35,35,35","times":"","timer_duration":90},{"name":"Incline Db Chest Press","reps":"16,11,10","weights":"45,45,45","times":"","timer_duration":90},{"name":"Tricep Pull Down","reps":"12,12,10","weights":"110,110,110","times":"","timer_duration":90},{"name":"Db Chest Fly","reps":"","weights":"","times":"","timer_duration":90},{"name":"Machine Curl Superset Machine Tricep Extension","reps":"","weights":"","times":"","timer_duration":90}]}
         
     ]
   }
