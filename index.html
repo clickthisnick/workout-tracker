@@ -2,7 +2,7 @@
 <html lang="en-US">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
 <title>Workout Tracker</title>
 <style>
   :root {
@@ -19,20 +19,27 @@
     background: var(--bg);
     color: var(--text);
     margin: 0;
+    height: 100%;
   }
   body {
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-    padding: 16px;
+    font-size: 14px;
+    padding: 8px 12px;
+    padding-bottom: max(8px, env(safe-area-inset-bottom));
     max-width: 480px;
     margin-inline: auto;
+    min-height: 100dvh;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
   }
   select, input, button {
     background: var(--surface);
     color: var(--text);
     border: 1px solid var(--border);
     border-radius: 6px;
-    padding: 10px 12px;
-    font-size: 16px;
+    padding: 8px 10px;
+    font-size: 14px;
     font-family: inherit;
   }
   button {
@@ -45,29 +52,63 @@
     outline: 2px solid var(--accent-light);
     outline-offset: 2px;
   }
-  #selectWorkout { width: 100%; margin-bottom: 16px; }
-  #header { display: flex; flex-direction: column; gap: 6px; }
-  #header > span { color: var(--text-dim); font-size: 14px; }
-  #workoutName { font-size: 22px; font-weight: 700; color: var(--text); margin-bottom: 4px; }
-  #currentExerciseName { width: 100%; font-size: 18px; font-weight: 600; margin: 10px 0; }
-  .nav-row { display: flex; gap: 12px; margin: 10px 0; }
-  .nav-row button { flex: 1; padding: 14px; font-size: 16px; }
+  #selectWorkout { width: 100%; }
+  #topStatus:empty { display: none; }
+  #workout {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    flex: 1;
+  }
+  #header { display: flex; flex-direction: column; gap: 2px; }
+  .header-top { display: flex; justify-content: space-between; align-items: center; gap: 8px; }
+  #workoutName { font-size: 18px; font-weight: 700; color: var(--text); }
+  .icon-btn {
+    padding: 4px 8px;
+    font-size: 14px;
+    line-height: 1.4;
+    background: var(--surface);
+    flex-shrink: 0;
+  }
+  #editPanel { display: flex; flex-direction: column; gap: 6px; padding: 8px 0; }
+  #editPanel label {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    color: var(--text-dim);
+  }
+  #editPanel label input { width: 80px; text-align: right; }
+  .meta-row { display: flex; flex-wrap: wrap; gap: 0 6px; color: var(--text-dim); font-size: 11px; }
+  .meta-row span:not(:empty):not(:last-child)::after { content: " · "; }
+  #currentExerciseName { width: 100%; font-size: 16px; font-weight: 600; }
+  .nav-row { display: flex; gap: 8px; }
+  .nav-row button { flex: 1; padding: 8px; font-size: 14px; }
+  .nav-row button:disabled {
+    opacity: 0.4;
+    cursor: default;
+    background: var(--surface);
+  }
   .prev-block {
     color: var(--text-dim);
-    font-size: 14px;
-    line-height: 1.6;
+    font-size: 12px;
+    line-height: 1.4;
     border-left: 3px solid var(--border);
-    padding-left: 10px;
-    margin: 14px 0;
+    padding-left: 8px;
   }
   .prev-block b { color: var(--text); }
-  table { width: 100%; border-collapse: collapse; margin-top: 8px; }
-  td { padding: 6px 4px; vertical-align: middle; }
+  .prev-row { display: flex; flex-wrap: wrap; gap: 0 8px; }
+  .prev-row span:not(:empty):not(:last-child)::after { content: " · "; }
+  table { width: 100%; border-collapse: collapse; }
+  td { padding: 2px 4px; vertical-align: middle; }
   td input { width: 100%; }
-  .quick-row { display: flex; gap: 6px; flex-wrap: wrap; margin: 4px 0 10px; }
+  .quick-row { display: flex; gap: 4px; flex-wrap: wrap; margin: 2px 0; }
   .quick-row button {
-    padding: 6px 10px;
-    font-size: 14px;
+    width: 3.2em;
+    padding: 4px 0;
+    text-align: center;
+    font-size: 12px;
     font-weight: 400;
     background: var(--surface);
   }
@@ -76,10 +117,10 @@
     font-weight: 700;
   }
   .save-time-cell { text-align: right; }
-  .action-row { display: flex; gap: 12px; margin-top: 18px; flex-wrap: wrap; }
-  .action-row button { flex: 1; min-width: 130px; padding: 14px; }
-  #timer { font-size: 26px; font-weight: 700; font-variant-numeric: tabular-nums; margin-left: 8px; }
-  #status { margin-top: 12px; font-size: 14px; color: var(--text-dim); min-height: 20px; }
+  .action-row { display: flex; gap: 8px; margin-top: 4px; }
+  .action-row button { flex: 1; padding: 10px; font-size: 14px; }
+  #timer { font-size: 18px; font-weight: 700; font-variant-numeric: tabular-nums; margin-left: 6px; }
+  #status { margin-top: 2px; font-size: 12px; color: var(--text-dim); }
 </style>
 </head>
 <body>
@@ -92,59 +133,84 @@
 
 <div id="workout" style="visibility:hidden">
   <div id="header">
-    <span id="workoutName"></span>
-    <span id="workoutLastCompleted"></span>
-    <span id="workoutLastDuration"></span>
-    <span id="workoutCurrentDuration"></span>
+    <div class="header-top">
+      <span id="workoutName"></span>
+      <button id="editToggle" class="icon-btn" onclick="toggleEditMode()" aria-label="Settings">⚙</button>
+    </div>
+    <div class="meta-row">
+      <span id="workoutLastCompleted"></span>
+      <span id="workoutLastDuration"></span>
+      <span id="workoutCurrentDuration"></span>
+    </div>
   </div>
 
-  <input id="currentExerciseName" name="currentExerciseName">
-
-  <div class="nav-row">
-    <button onclick="prevExercise()">◀ Prev</button>
-    <button onclick="nextExercise()">Next ▶</button>
+  <div id="editPanel" style="display:none">
+    <label>Weight quick-button increment
+      <input type="number" id="cfgWeightInc" inputmode="decimal" step="any">
+    </label>
+    <label>Reps quick-button increment
+      <input type="number" id="cfgRepsInc" inputmode="decimal" step="any">
+    </label>
+    <label>Default rest timer (seconds)
+      <input type="number" id="cfgTimerDefault" inputmode="numeric" step="1">
+    </label>
+    <div class="action-row">
+      <button onclick="applyEditPanel()">Apply</button>
+      <button onclick="toggleEditMode()">Done</button>
+    </div>
   </div>
 
-  <div class="prev-block">
-    <b>Previous:</b><br>
-    <span id="previousWorkoutExerciseReps"></span><br>
-    <span id="previousWorkoutExerciseWeights"></span><br>
-    <span id="previousWorkoutExerciseTimes"></span>
+  <div id="mainContent">
+    <input id="currentExerciseName" name="currentExerciseName">
+
+    <div class="nav-row">
+      <button id="prevExerciseBtn" onclick="prevExercise()">◀ Prev</button>
+      <button onclick="nextExercise()">Next ▶</button>
+    </div>
+
+    <div class="prev-block">
+      <b>Previous:</b>
+      <div class="prev-row">
+        <span id="previousWorkoutExerciseReps"></span>
+        <span id="previousWorkoutExerciseWeights"></span>
+        <span id="previousWorkoutExerciseTimes"></span>
+      </div>
+    </div>
+
+    <b>Current:</b>
+    <table>
+      <tbody>
+        <tr>
+          <td><label for="reps">Reps:</label></td>
+          <td><input type="text" id="reps" name="reps" inputmode="decimal"></td>
+        </tr>
+        <tr>
+          <td></td>
+          <td colspan="2"><div id="repsQuick" class="quick-row"></div></td>
+        </tr>
+        <tr>
+          <td><label for="weights">Weight:</label></td>
+          <td><input type="text" id="weights" name="weights" inputmode="decimal"></td>
+        </tr>
+        <tr>
+          <td></td>
+          <td colspan="2"><div id="weightsQuick" class="quick-row"></div></td>
+        </tr>
+        <tr>
+          <td><label for="times">Time:</label></td>
+          <td><input type="text" id="times" name="times"></td>
+          <td class="save-time-cell"><button onclick="saveTime()">Save Time</button></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="action-row">
+      <button onclick="saveWorkout()">Save Workout</button>
+      <button onclick="resetTimer()">Timer <span id="timer"></span></button>
+    </div>
+
+    <div id="status"></div>
   </div>
-
-  <b>Current:</b>
-  <table>
-    <tbody>
-      <tr>
-        <td><label for="reps">Reps:</label></td>
-        <td><input type="text" id="reps" name="reps" inputmode="decimal"></td>
-      </tr>
-      <tr>
-        <td></td>
-        <td colspan="2"><div id="repsQuick" class="quick-row"></div></td>
-      </tr>
-      <tr>
-        <td><label for="weights">Weight:</label></td>
-        <td><input type="text" id="weights" name="weights" inputmode="decimal"></td>
-      </tr>
-      <tr>
-        <td></td>
-        <td colspan="2"><div id="weightsQuick" class="quick-row"></div></td>
-      </tr>
-      <tr>
-        <td><label for="times">Time:</label></td>
-        <td><input type="text" id="times" name="times"></td>
-        <td class="save-time-cell"><button onclick="saveTime()">Save Time</button></td>
-      </tr>
-    </tbody>
-  </table>
-
-  <div class="action-row">
-    <button onclick="saveWorkout()">Save Workout</button>
-    <button onclick="resetTimer()">Timer <span id="timer"></span></button>
-  </div>
-
-  <div id="status"></div>
 </div>
 
 <script>
@@ -160,10 +226,41 @@
   // Quick-increment buttons shown under Reps/Weight, based on the previous
   // session's last value for that exercise. Each offset is multiplied by
   // the increment and added to the previous value; 0 = previous value as-is.
-  const QUICK_BUTTON_CONFIG = {
-    weights: { increment: 5, offsets: [-1, 0, 1, 2] },
-    reps: { increment: 1, offsets: [-1, 0, 1, 2] }
+  // Increments (and the default rest timer) are editable via the ⚙ button,
+  // which stores the chosen values in the URL so they survive a reload.
+  const SETTINGS_DEFAULTS = {
+    weightInc: 5,
+    repsInc: 1,
+    timerDefault: 90
   };
+
+  const QUICK_BUTTON_OFFSETS = [-3, -2, -1, 0, 1, 2, 3];
+
+  const QUICK_BUTTON_CONFIG = {
+    weights: { increment: SETTINGS_DEFAULTS.weightInc, offsets: QUICK_BUTTON_OFFSETS },
+    reps: { increment: SETTINGS_DEFAULTS.repsInc, offsets: QUICK_BUTTON_OFFSETS }
+  };
+
+  let DEFAULT_TIMER_DURATION = SETTINGS_DEFAULTS.timerDefault;
+
+  function getSettings() {
+    return {
+      weightInc: parseFloat(url.searchParams.get('weightInc')) || SETTINGS_DEFAULTS.weightInc,
+      repsInc: parseFloat(url.searchParams.get('repsInc')) || SETTINGS_DEFAULTS.repsInc,
+      timerDefault: parseInt(url.searchParams.get('timerDefault'), 10) || SETTINGS_DEFAULTS.timerDefault
+    };
+  }
+
+  // Applies the current settings (from the URL, or defaults) to the
+  // live config objects used elsewhere in the app.
+  function applySettings() {
+    const s = getSettings();
+    QUICK_BUTTON_CONFIG.weights.increment = s.weightInc;
+    QUICK_BUTTON_CONFIG.reps.increment = s.repsInc;
+    DEFAULT_TIMER_DURATION = s.timerDefault;
+  }
+
+  applySettings();
 
   // GitHub repo info, used to build the "edit this file" link in the email
   const GH_OWNER = 'clickthisnick';
@@ -331,7 +428,7 @@
         resp = JSON.parse(cached);
       } else {
         setTopStatus(`📴 Couldn't load "${routine}" and no offline copy is saved yet. Connect to the internet once to download it.`);
-        document.getElementById("selectWorkout").style.visibility = "visible";
+        document.getElementById("selectWorkout").style.display = "";
         return;
       }
     }
@@ -352,10 +449,6 @@
       currentWorkout['exercises'][i]['reps'] = "";
       currentWorkout['exercises'][i]['weights'] = "";
       currentWorkout['exercises'][i]['times'] = "";
-
-      if (!Object.keys(currentWorkout['exercises'][i]).includes("timer_duration")) {
-        currentWorkout['exercises'][i]['timer_duration'] = 90;
-      }
     }
 
     url.searchParams.set('currentWorkout', JSON.stringify(currentWorkout));
@@ -400,17 +493,29 @@
     const minutes = Math.floor((elapsed % (1000 * 60 * 60)) / (1000 * 60));
     const seconds = Math.floor((elapsed % (1000 * 60)) / 1000);
     document.getElementById('workoutCurrentDuration').innerHTML =
-      `Current Duration: ${minutes} minutes. ${seconds} seconds.`;
+      `Current time: ${minutes}m ${seconds}s`;
   }
 
-  // Given a comma-separated list like "12,12,12", return the last numeric
-  // value (the most recent set), or null if there isn't one.
-  function lastNumber(value) {
+  // Given a comma-separated list like "12,6,4,5", return the numeric value
+  // at `index` (clamped to the last entry if index is past the end), or
+  // null if there isn't one. Used so quick-buttons can match up with the
+  // specific set you're currently entering (set 1, set 2, ...).
+  function numberAtIndex(value, index) {
     if (!value) return null;
     const parts = String(value).split(',').map(p => p.trim()).filter(p => p !== '');
     if (parts.length === 0) return null;
-    const n = parseFloat(parts[parts.length - 1]);
+    const i = Math.min(Math.max(index, 0), parts.length - 1);
+    const n = parseFloat(parts[i]);
     return isNaN(n) ? null : n;
+  }
+
+  // How many sets have already been entered in a field, i.e. which set
+  // (0-indexed) the next quick-button tap would be filling in.
+  function enteredSetCount(inputId) {
+    const el = document.getElementById(inputId);
+    const value = el.value.trim();
+    if (!value) return 0;
+    return value.split(',').filter(p => p.trim() !== '').length;
   }
 
   // Appends a value to a comma-separated input field (same pattern as
@@ -420,25 +525,45 @@
     const el = document.getElementById(inputId);
     const current = el.value.trim().replace(/,+$/, '');
     el.value = current ? `${current},${value}` : `${value}`;
+    refreshQuickButtons();
   }
 
-  // Renders a row of buttons around `baseValue` (previous session's last
-  // value), e.g. for weights with increment 5 and offsets [-1,0,1,2] and a
-  // previous value of 15: buttons for 10, 15, 20, 25.
+  // Renders a row of buttons around `baseValue` (previous session's value
+  // for this set). Offsets are e.g. [-3,-2,-1,0,1,2,3]: 0 is `baseValue`
+  // itself (highlighted). If a low-side offset would produce a value <= 0
+  // (not a useful weight/reps suggestion), it's dropped and an extra slot
+  // is added on the high side instead, so the total count stays the same
+  // -- e.g. baseValue=5, increment=5 gives 5,10,15,20,25,30,35 with 5
+  // (the previous value) highlighted but no longer centered.
   function renderQuickButtons(containerId, inputId, baseValue, config) {
     const container = document.getElementById(containerId);
     if (!container) return;
     container.innerHTML = '';
     if (baseValue === null) return;
 
-    config.offsets.forEach(offset => {
-      const value = baseValue + offset * config.increment;
-      if (value < 0) return;
+    const targetCount = config.offsets.length;
+    const queue = [...config.offsets];
+    let nextOffset = Math.max(...config.offsets) + 1;
+    const results = [];
 
+    while (results.length < targetCount && queue.length > 0) {
+      const offset = queue.shift();
+      const value = baseValue + offset * config.increment;
+
+      if (value <= 0) {
+        queue.push(nextOffset);
+        nextOffset += 1;
+        continue;
+      }
+
+      results.push({ value, isCurrent: offset === 0 });
+    }
+
+    results.forEach(({ value, isCurrent }) => {
       const btn = document.createElement('button');
       btn.type = 'button';
       btn.textContent = value;
-      if (offset === 0) btn.classList.add('quick-current');
+      if (isCurrent) btn.classList.add('quick-current');
       btn.onclick = () => appendQuickValue(inputId, value);
       container.appendChild(btn);
     });
@@ -458,7 +583,7 @@
   // Workflow: select / start / navigate
   // ---------------------------------------------------------------
   function startWorkout(workoutName) {
-    document.getElementById("selectWorkout").style.visibility = "hidden";
+    document.getElementById("selectWorkout").style.display = "none";
 
     if (!url.searchParams.get("name")) {
       getData(workoutName);
@@ -559,9 +684,9 @@
     const currentExerciseName = currentExercise['name'];
 
     document.getElementById('workoutName').innerHTML = name;
-    document.getElementById('workoutLastCompleted').innerHTML = `Last Completed: ${daysAgo} days ago.`;
+    document.getElementById('workoutLastCompleted').innerHTML = `Last workout: ${daysAgo}d ago`;
     document.getElementById('workoutLastDuration').innerHTML =
-      `Last Duration: ${previousWorkoutDurationMinutes} minutes. ${previousWorkoutDurationSeconds} seconds.`;
+      `Last duration: ${previousWorkoutDurationMinutes}m ${previousWorkoutDurationSeconds}s`;
     setCurrentWorkoutDuration(currentWorkout);
 
     setInterval(() => {
@@ -569,27 +694,88 @@
     }, 500);
 
     document.getElementById('workout').style.visibility = 'visible';
+    document.getElementById('prevExerciseBtn').disabled = (currentExerciseId === 0);
 
     const previousWorkoutExerciseReps = previousExercise['reps'] || "";
     const previousWorkoutExerciseWeights = previousExercise['weights'] || "";
     const previousWorkoutExerciseTimes = previousExercise['times'] || "";
 
     document.getElementById('currentExerciseName').value = currentExerciseName;
-    document.getElementById('previousWorkoutExerciseReps').innerHTML = `Reps: ${previousWorkoutExerciseReps}`;
-    document.getElementById('previousWorkoutExerciseWeights').innerHTML = `Weight: ${previousWorkoutExerciseWeights}`;
-    document.getElementById('previousWorkoutExerciseTimes').innerHTML = `Times: ${previousWorkoutExerciseTimes}`;
+    document.getElementById('previousWorkoutExerciseReps').innerHTML = `Reps: ${previousWorkoutExerciseReps || '-'}`;
+    document.getElementById('previousWorkoutExerciseWeights').innerHTML = `Weight: ${previousWorkoutExerciseWeights || '-'}`;
+    document.getElementById('previousWorkoutExerciseTimes').innerHTML = previousWorkoutExerciseTimes ? `Time: ${previousWorkoutExerciseTimes}` : '';
 
     document.getElementById('reps').value = currentExercise['reps'];
     document.getElementById('weights').value = currentExercise['weights'];
     document.getElementById('times').value = currentExercise['times'];
 
-    renderQuickButtons('repsQuick', 'reps', lastNumber(previousExercise['reps']), QUICK_BUTTON_CONFIG.reps);
-    renderQuickButtons('weightsQuick', 'weights', lastNumber(previousExercise['weights']), QUICK_BUTTON_CONFIG.weights);
+    refreshQuickButtons();
   }
 
   function selectWorkout() {
     const selectedWorkoutRoutineName = document.getElementById("selectWorkout").value;
     startWorkout(selectedWorkoutRoutineName);
+  }
+
+  // Re-renders just the quick-increment buttons for the current exercise,
+  // using whatever increments are currently in QUICK_BUTTON_CONFIG. Used
+  // after changing settings, without re-running all of renderPage (which
+  // would stack up duplicate setInterval timers).
+  // Re-renders the quick-increment buttons for the current exercise, based
+  // on how many sets have already been entered: set 1 in progress -> use
+  // previous session's set 1 value, set 2 -> set 2 value, etc. (clamped to
+  // the previous session's last set if you go further than it did).
+  function refreshQuickButtons() {
+    const previousWorkout = loadJSONQueryParameter(url.searchParams.get('previousWorkout'));
+    const currentExerciseId = parseInt(url.searchParams.get('currentExerciseId'));
+    const previousExercises = previousWorkout['exercises'];
+    const previousExercise = currentExerciseId <= previousExercises.length - 1
+      ? previousExercises[currentExerciseId]
+      : {};
+
+    const repsIndex = enteredSetCount('reps');
+    const weightsIndex = enteredSetCount('weights');
+
+    renderQuickButtons('repsQuick', 'reps', numberAtIndex(previousExercise['reps'], repsIndex), QUICK_BUTTON_CONFIG.reps);
+    renderQuickButtons('weightsQuick', 'weights', numberAtIndex(previousExercise['weights'], weightsIndex), QUICK_BUTTON_CONFIG.weights);
+  }
+
+  // ---------------------------------------------------------------
+  // Edit mode: lets you change defaults (quick-button increments, rest
+  // timer length) on the fly. Saved into the URL's query parameters so
+  // they survive a page reload/bookmark.
+  // ---------------------------------------------------------------
+  function toggleEditMode() {
+    const panel = document.getElementById('editPanel');
+    const main = document.getElementById('mainContent');
+    const isOpen = panel.style.display !== 'none';
+
+    if (isOpen) {
+      panel.style.display = 'none';
+      main.style.display = '';
+    } else {
+      const s = getSettings();
+      document.getElementById('cfgWeightInc').value = s.weightInc;
+      document.getElementById('cfgRepsInc').value = s.repsInc;
+      document.getElementById('cfgTimerDefault').value = s.timerDefault;
+      panel.style.display = '';
+      main.style.display = 'none';
+    }
+  }
+
+  function applyEditPanel() {
+    const weightInc = parseFloat(document.getElementById('cfgWeightInc').value) || SETTINGS_DEFAULTS.weightInc;
+    const repsInc = parseFloat(document.getElementById('cfgRepsInc').value) || SETTINGS_DEFAULTS.repsInc;
+    const timerDefault = parseInt(document.getElementById('cfgTimerDefault').value, 10) || SETTINGS_DEFAULTS.timerDefault;
+
+    url.searchParams.set('weightInc', weightInc);
+    url.searchParams.set('repsInc', repsInc);
+    url.searchParams.set('timerDefault', timerDefault);
+    history.replaceState(null, '', url);
+
+    applySettings();
+    refreshQuickButtons();
+    toggleEditMode();
   }
 
   // ---------------------------------------------------------------
@@ -620,7 +806,7 @@
 
     const currentExerciseId = url.searchParams.get("currentExerciseId");
     const currentWorkout = loadJSONQueryParameter(url.searchParams.get('currentWorkout'));
-    const seconds = currentWorkout["exercises"][currentExerciseId]['timer_duration'];
+    const seconds = currentWorkout["exercises"][currentExerciseId]['timer_duration'] || DEFAULT_TIMER_DURATION;
     const now = new Date().getTime();
     const deadline = seconds * 1000 + now;
 
@@ -691,6 +877,9 @@
   // ---------------------------------------------------------------
   // Boot
   // ---------------------------------------------------------------
+  document.getElementById('reps').addEventListener('input', refreshQuickButtons);
+  document.getElementById('weights').addEventListener('input', refreshQuickButtons);
+
   if (url.searchParams.get('name')) {
     setTimeout(function () {
       startWorkout(url.searchParams.get('name'));
