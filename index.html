@@ -588,7 +588,10 @@
     }
 
     if (recentValue !== null && recentValue !== undefined && recentValue > 0) {
-      if (!results.some(r => r.value === recentValue)) {
+      const existing = results.find(r => r.value === recentValue);
+      if (existing) {
+        existing.isRecent = true;
+      } else {
         results.push({ value: recentValue, isCurrent: false, isRecent: true });
       }
     }
