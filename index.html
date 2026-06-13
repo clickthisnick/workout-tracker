@@ -533,8 +533,76 @@
   // re-render keeps everything working with no connectivity.
   function reloadPage(targetUrl) {
     history.replaceState(null, '', targetUrl.toString());
+    saveInProgressState();
     renderPage();
   }
+
+  // ---------------------------------------------------------------
+  // In-progress workout backup (localStorage)
+  //
+  // The URL's query string is the primary source of truth (so links can be
+  // shared/bookmarked mid-workout), but a plain page *reload* is a real
+  // network request for that exact URL+querystring. If offline, the browser
+  // may fail to refetch it and fall back to whatever shorter/older URL it
+  // does have cached -- which would otherwise silently lose all progress.
+  // As a safety net, the same state is mirrored into localStorage and
+  // restored on boot if the URL doesn't already have it.
+  // ---------------------------------------------------------------
+  const IN_PROGRESS_KEY = 'wt_in_progress';
+  const IN_PROGRESS_FIELDS = ['name', 'file', 'currentWorkout', 'previousWorkout', 'currentExerciseId'];
+
+  function saveInProgressState() {
+    const state = {};
+    for (const field of IN_PROGRESS_FIELDS) {
+      state[field] = url.searchParams.get(field);
+    }
+    try {
+      localStorage.setItem(IN_PROGRESS_KEY, JSON.stringify(state));
+    } catch (e) {
+      console.warn('Could not save in-progress state', e);
+    }
+  }
+
+  function loadInProgressState() {
+    try {
+      const raw = localStorage.getItem(IN_PROGRESS_KEY);
+      if (!raw) return null;
+      const state = JSON.parse(raw);
+      if (!state.name || !state.currentWorkout || !state.previousWorkout) return null;
+      return state;
+    } catch (e) {
+      return null;
+    }
+  }
+
+  function clearInProgressState() {
+    try {
+      localStorage.removeItem(IN_PROGRESS_KEY);
+    } catch (e) {
+      // ignore
+    }
+  }
+
+  // Captures whatever's currently typed/tapped into the reps/weights/times/
+  // name fields into `currentWorkout` and re-saves the localStorage backup.
+  // Without this, only Next/Prev/Save (which already call saveExerciseData)
+  // would update the backup -- so e.g. tapping quick-buttons for several
+  // sets and then losing connectivity before pressing Next could lose that
+  // data on reload. No-ops if no workout is in progress.
+  function persistCurrentState() {
+    if (!url.searchParams.get('currentWorkout')) return;
+    saveExerciseData(url);
+    saveInProgressState();
+  }
+
+  // Runs after a button's own click handler (bubble phase, vs. the capture-
+  // phase audio-unlock listener above), so it captures any DOM updates that
+  // handler just made (e.g. a quick-button appending a value).
+  document.addEventListener('click', (e) => {
+    if (e.target.closest && e.target.closest('button')) {
+      persistCurrentState();
+    }
+  });
 
   function loadJSONQueryParameter(data) {
     return JSON.parse(decodeQueryParam(data));
@@ -935,6 +1003,7 @@
     // Update the URL without a full navigation (see reloadPage) so this
     // works even with no connectivity.
     history.pushState(null, '', url.toString());
+    clearInProgressState();
     resetToPickerView();
   }
 
@@ -1053,12 +1122,36 @@
   // ---------------------------------------------------------------
   // Boot
   // ---------------------------------------------------------------
-  document.getElementById('reps').addEventListener('input', refreshQuickButtons);
-  document.getElementById('weights').addEventListener('input', refreshQuickButtons);
+  document.getElementById('reps').addEventListener('input', () => { refreshQuickButtons(); persistCurrentState(); });
+  document.getElementById('weights').addEventListener('input', () => { refreshQuickButtons(); persistCurrentState(); });
+  document.getElementById('times').addEventListener('input', persistCurrentState);
+  document.getElementById('currentExerciseName').addEventListener('input', persistCurrentState);
 
-  if (url.searchParams.get('name')) {
+  const savedState = loadInProgressState();
+  const urlName = url.searchParams.get('name');
+  const urlFile = url.searchParams.get('file');
+
+  if (savedState && (!urlName || savedState.file === urlFile)) {
+    // Prefer the localStorage backup: it's always at least as recent as
+    // whatever URL the browser actually loaded. A reload is a real network
+    // request for the current URL+querystring; if offline, the browser may
+    // fall back to an older cached URL from earlier in this same session
+    // (same routine), which would otherwise show stale progress.
+    for (const field of IN_PROGRESS_FIELDS) {
+      if (savedState[field] !== null && savedState[field] !== undefined) {
+        url.searchParams.set(field, savedState[field]);
+      }
+    }
+    history.replaceState(null, '', url.toString());
+
     setTimeout(function () {
-      startWorkout(url.searchParams.get('name'));
+      startWorkout(savedState.name);
+    }, 0);
+  } else if (urlName) {
+    // A different in-progress workout was provided directly via the URL
+    // (e.g. a shared link for another routine) -- start fresh with it.
+    setTimeout(function () {
+      startWorkout(urlName);
     }, 0);
   } else {
     loadWorkoutOptions();
