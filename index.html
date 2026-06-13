@@ -21,6 +21,7 @@
     margin: 0;
     height: 100%;
     touch-action: manipulation;
+    overscroll-behavior: none;
   }
   body {
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
@@ -122,11 +123,32 @@
   }
   .quick-row button.quick-current {
     border-color: var(--accent-light);
+    border-width: 2px;
+    border-style: solid;
     font-weight: 700;
+  }
+  .quick-row button.quick-current::after {
+    content: " \25CF"; /* ● solid circle: "previous value" */
+    font-size: 0.65em;
+    vertical-align: middle;
   }
   .quick-row button.quick-recent {
     border-color: #4a90d9;
+    border-width: 2px;
+    border-style: dashed;
     font-weight: 700;
+  }
+  .quick-row button.quick-recent::after {
+    content: " \25B2"; /* ▲ triangle: "just did" */
+    font-size: 0.65em;
+    vertical-align: middle;
+  }
+  .quick-row button.quick-current.quick-recent {
+    border-style: double;
+    border-width: 4px;
+  }
+  .quick-row button.quick-current.quick-recent::after {
+    content: " \25CF\25B2";
   }
   .save-time-cell { text-align: right; }
   .action-row { display: flex; gap: 8px; margin-top: 4px; }
