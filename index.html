@@ -588,33 +588,28 @@
 
   // Appends a value to a comma-separated input field (same pattern as
   // "Save Time"), so quick-buttons build up "12,12,12" as you go.
+
+  // Tracks which set indices have already (re)started the rest timer this
+  // exercise. Reset to empty automatically on each page load, which happens
+  // on every Prev/Next navigation (full reload).
+  const timerTriggeredIndices = new Set();
+
   function appendQuickValue(inputId, value) {
     unlockAudio();
+    const index = enteredSetCount(inputId); // index this tap is filling in
     const el = document.getElementById(inputId);
     const current = el.value.trim().replace(/,+$/, '');
     el.value = current ? `${current},${value}` : `${value}`;
     refreshQuickButtons();
 
-    if (pairComplete()) {
+    // Reps and weight at the same index are a "pair" (one set). The first
+    // quick-button tap for a given index (reps[i] or weight[i], whichever
+    // comes first) (re)starts the rest timer; the matching tap on the other
+    // field at the same index does nothing.
+    if (!timerTriggeredIndices.has(index)) {
+      timerTriggeredIndices.add(index);
       resetTimer();
     }
-  }
-
-  // Reps and weight at the same index are a "pair" (one set). If both
-  // fields are in use for this exercise, only count the pair complete once
-  // both have the same number of entries (so tapping reps then weight
-  // doesn't restart the timer twice). If only one of the two fields is ever
-  // used for this exercise (e.g. a bodyweight move with no weight logged),
-  // any entry in that field counts as a completed set.
-  function pairComplete() {
-    const repsUsed = document.getElementById('reps').value.trim() !== '';
-    const weightsUsed = document.getElementById('weights').value.trim() !== '';
-
-    if (repsUsed && weightsUsed) {
-      return enteredSetCount('reps') === enteredSetCount('weights');
-    }
-
-    return repsUsed || weightsUsed;
   }
 
   // Renders a row of buttons around `baseValue` (previous session's value
