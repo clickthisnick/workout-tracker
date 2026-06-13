@@ -71,7 +71,22 @@
   #header { display: flex; flex-direction: column; gap: 2px; }
   .header-top { display: flex; justify-content: space-between; align-items: center; gap: 8px; }
   .header-buttons { display: flex; gap: 6px; flex-shrink: 0; }
-  #workoutName { font-size: 18px; font-weight: 700; color: var(--text); }
+  #workoutName {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--text);
+    flex: 1;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .exercise-count {
+    font-size: 12px;
+    color: var(--text-dim);
+    flex-shrink: 0;
+    white-space: nowrap;
+  }
   .icon-btn {
     padding: 4px 8px;
     font-size: 14px;
@@ -170,6 +185,7 @@
   <div id="header">
     <div class="header-top">
       <span id="workoutName"></span>
+      <span id="exerciseCount" class="exercise-count"></span>
       <div class="header-buttons">
         <button id="homeBtn" class="icon-btn" onclick="goHome()" aria-label="Home">🏠</button>
         <button id="editToggle" class="icon-btn" onclick="toggleEditMode()" aria-label="Settings">⚙</button>
@@ -213,7 +229,7 @@
         <span id="previousWorkoutExerciseWeights"></span>
         <span id="previousWorkoutExerciseTimes"></span>
       </div>
-      <div class="quick-legend">● = same as last time &nbsp; ▲ = what you just entered</div>
+      <div class="quick-legend">● = same as prev workout &nbsp; ▲ = what you just entered</div>
     </div>
 
     <b>Current:</b>
@@ -578,6 +594,27 @@
     const current = el.value.trim().replace(/,+$/, '');
     el.value = current ? `${current},${value}` : `${value}`;
     refreshQuickButtons();
+
+    if (pairComplete()) {
+      resetTimer();
+    }
+  }
+
+  // Reps and weight at the same index are a "pair" (one set). If both
+  // fields are in use for this exercise, only count the pair complete once
+  // both have the same number of entries (so tapping reps then weight
+  // doesn't restart the timer twice). If only one of the two fields is ever
+  // used for this exercise (e.g. a bodyweight move with no weight logged),
+  // any entry in that field counts as a completed set.
+  function pairComplete() {
+    const repsUsed = document.getElementById('reps').value.trim() !== '';
+    const weightsUsed = document.getElementById('weights').value.trim() !== '';
+
+    if (repsUsed && weightsUsed) {
+      return enteredSetCount('reps') === enteredSetCount('weights');
+    }
+
+    return repsUsed || weightsUsed;
   }
 
   // Renders a row of buttons around `baseValue` (previous session's value
@@ -753,6 +790,7 @@
     const currentExerciseName = currentExercise['name'];
 
     document.getElementById('workoutName').innerHTML = name;
+    document.getElementById('exerciseCount').textContent = `${currentExerciseId + 1} / ${currentExercises.length}`;
     document.getElementById('workoutLastCompleted').innerHTML = `Last Date: ${daysAgo}d ago`;
     document.getElementById('workoutLastDuration').innerHTML =
       `Last Time: ${previousWorkoutDurationMinutes}m ${previousWorkoutDurationSeconds}s`;
