@@ -33,6 +33,34 @@ Designed to fit on one iPhone screen without scrolling during normal use.
     display, clears `timerTriggeredIndices` (which set-indices have already
     auto-started the timer), and clears/recreates the live
     duration-update interval (`durationInterval`).
+- **In-progress workout backup (localStorage)**: a plain browser *reload* is
+  still a real network request for the current URL+querystring. If offline,
+  the browser may fail to refetch that exact URL and fall back to an older
+  cached version of the page (e.g. from earlier in the same session, with a
+  shorter/stale querystring) — which would otherwise silently lose progress.
+  - On every navigation (`reloadPage`) and on every button press / field edit
+    (`persistCurrentState`), the key state — `name`, `file`, `currentWorkout`,
+    `previousWorkout`, `currentExerciseId` — is mirrored into
+    `localStorage['wt_in_progress']`.
+  - **Persisted on any button press**: a bubble-phase `click` listener on
+    `document` (separate from the capture-phase audio-unlock listener) calls
+    `persistCurrentState()` after any `<button>`'s own handler runs — this
+    captures the current reps/weights/times/exercise-name field values into
+    `currentWorkout` even for actions that don't normally navigate (quick-
+    button taps, Save Time, Timer, etc.).
+  - **Persisted on typing**: `input` listeners on the reps, weights, times,
+    and exercise-name fields also call `persistCurrentState()` on every
+    keystroke, so manually-typed values aren't lost either.
+  - `persistCurrentState()` no-ops if no workout is in progress (e.g. on the
+    picker screen).
+  - On boot, if `localStorage` has a saved session and either the URL has no
+    workout in progress, or its `file` matches the saved session's `file`,
+    the saved state is restored (overwriting the URL's params) before
+    rendering — i.e. the backup wins over whatever stale URL the browser
+    actually served. If the URL points at a *different* routine (e.g. a
+    freshly shared link), the URL's state is used instead.
+  - The Home button (🏠) clears this backup (`clearInProgressState()`), since
+    it's an explicit "discard this workout" action.
 
 ## Layout
 - Single-screen design targeting iPhone-sized viewports (`100dvh`, compact
@@ -169,9 +197,10 @@ Designed to fit on one iPhone screen without scrolling during normal use.
   screen? This will discard the workout in progress.").
 - If confirmed: stops any running rest/duration timers, drops all query
   params except `?email=` (if present), updates the URL via
-  `history.pushState` (no reload), and resets the UI to the routine-picker
-  view (`resetToPickerView()` — hides the workout view, re-shows the
-  `<select>`, resets it to the placeholder option, and re-populates it from
+  `history.pushState` (no reload), clears the localStorage in-progress
+  backup, and resets the UI to the routine-picker view
+  (`resetToPickerView()` — hides the workout view, re-shows the `<select>`,
+  resets it to the placeholder option, and re-populates it from
   cache/network if it was never populated, e.g. when arriving via a direct
   "in progress workout" link).
 
@@ -200,6 +229,9 @@ Designed to fit on one iPhone screen without scrolling during normal use.
 - Replaced `location.href`-based navigation between exercises/Home with
   `history.replaceState`/`pushState` + in-place re-render, fixing offline use
   (see "SPA-style navigation" above).
+- Added a localStorage-backed in-progress workout backup, restored on boot
+  when it's at least as fresh as the URL's state, to survive offline reloads
+  (see "In-progress workout backup" above).
 
 ## Deferred / not implemented
 - **Latest + history file split** per routine (to keep reads small as history
