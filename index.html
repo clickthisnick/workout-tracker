@@ -62,6 +62,7 @@
   }
   #header { display: flex; flex-direction: column; gap: 2px; }
   .header-top { display: flex; justify-content: space-between; align-items: center; gap: 8px; }
+  .header-buttons { display: flex; gap: 6px; flex-shrink: 0; }
   #workoutName { font-size: 18px; font-weight: 700; color: var(--text); }
   .icon-btn {
     padding: 4px 8px;
@@ -135,7 +136,10 @@
   <div id="header">
     <div class="header-top">
       <span id="workoutName"></span>
-      <button id="editToggle" class="icon-btn" onclick="toggleEditMode()" aria-label="Settings">⚙</button>
+      <div class="header-buttons">
+        <button id="homeBtn" class="icon-btn" onclick="goHome()" aria-label="Home">🏠</button>
+        <button id="editToggle" class="icon-btn" onclick="toggleEditMode()" aria-label="Settings">⚙</button>
+      </div>
     </div>
     <div class="meta-row">
       <span id="workoutLastCompleted"></span>
@@ -776,6 +780,20 @@
     applySettings();
     refreshQuickButtons();
     toggleEditMode();
+  }
+
+  // Returns to the workout-picker screen, dropping all query params except
+  // ?email=, so today's in-progress workout is abandoned. Confirms first
+  // so an accidental tap doesn't lose progress.
+  function goHome() {
+    const confirmed = confirm('Go back to the home screen? This will discard the workout in progress.');
+    if (!confirmed) return;
+
+    const email = url.searchParams.get('email');
+    const homeUrl = new URL(url.origin + url.pathname);
+    if (email) homeUrl.searchParams.set('email', email);
+
+    location.href = homeUrl.toString();
   }
 
   // ---------------------------------------------------------------
