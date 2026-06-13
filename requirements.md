@@ -22,9 +22,10 @@ Designed to fit on one iPhone screen without scrolling during normal use.
   font sizes/padding) so the whole workout view fits without a scrollbar
   during normal use.
 - The header's stats (days since last workout, last session's duration,
-  current session's running duration) and the "Previous" values (reps,
-  weight, time) are each shown on one line, separated by `·`, wrapping only
-  if needed.
+  current session's running duration) are shown on one line ("Last Date: Xd
+  ago · Last Time: Xm Ys · Cur Time: Xm Ys", 11px), and the "Previous" values
+  (reps, weight, time) are on one line, separated by `·`, wrapping only if
+  needed.
 - The workout-picker `<select>` is hidden via `display: none` (not
   `visibility`) once a routine is chosen, so it doesn't reserve space.
 - **Zoom prevention**:
@@ -98,6 +99,8 @@ Designed to fit on one iPhone screen without scrolling during normal use.
       symbols ("●▲"). Color, border style, and symbol are all redundant
       indicators so the distinction holds even with color removed (e.g.
       grayscale display mode).
+  - **Legend**: a small dim caption under the "Previous" row reads "● = same
+    as last time   ▲ = what you just entered", explaining the symbols inline.
   - Manually typing into Reps/Weight also refreshes the quick buttons (via an
     `input` listener), so they stay aligned with whichever set you're on.
 - **Rest timer**: countdown per exercise (`timer_duration` if set on that
@@ -109,8 +112,8 @@ Designed to fit on one iPhone screen without scrolling during normal use.
     satisfy mobile browsers' "audio needs a user gesture" requirement before
     the timer's real sound is needed. Tracked via an in-memory boolean
     (`audioUnlocked`), not persisted.
-- **Session duration**: header shows "Last workout: Xd ago", "Last duration:
-  Xm Ys", and "Current time: Xm Ys" (live-updating).
+- **Session duration**: header shows "Last Date: Xd ago", "Last Time: Xm Ys",
+  and "Cur Time: Xm Ys" (live-updating).
 
 ## Settings (⚙ button)
 - A ⚙ button in the top-right of the header toggles an edit panel (replacing
@@ -166,3 +169,6 @@ Designed to fit on one iPhone screen without scrolling during normal use.
   itself loads with zero connectivity on a cold start) — not implemented;
   current offline support covers data caching only, after at least one
   successful page load.
+- Other feature ideas discussed but not built: exercise count indicator
+  (e.g. "3 / 7"), per-exercise "has data been entered" indicator, auto-start
+  rest timer on quick-button tap, skip/reorder exercises within a session.
