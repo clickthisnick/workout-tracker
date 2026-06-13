@@ -117,6 +117,10 @@
     border-color: var(--accent-light);
     font-weight: 700;
   }
+  .quick-row button.quick-recent {
+    border-color: #4a90d9;
+    font-weight: 700;
+  }
   .save-time-cell { text-align: right; }
   .action-row { display: flex; gap: 8px; margin-top: 4px; }
   .action-row button { flex: 1; padding: 10px; font-size: 14px; }
@@ -522,6 +526,19 @@
     return value.split(',').filter(p => p.trim() !== '').length;
   }
 
+  // The most recently entered value in a field (the last comma-separated
+  // entry), or null if empty. Used so "what I just did" can be offered as a
+  // quick-button option for the next set too.
+  function mostRecentValue(inputId) {
+    const el = document.getElementById(inputId);
+    const value = el.value.trim();
+    if (!value) return null;
+    const parts = value.split(',').map(p => p.trim()).filter(p => p !== '');
+    if (parts.length === 0) return null;
+    const n = parseFloat(parts[parts.length - 1]);
+    return isNaN(n) ? null : n;
+  }
+
   // Appends a value to a comma-separated input field (same pattern as
   // "Save Time"), so quick-buttons build up "12,12,12" as you go.
   function appendQuickValue(inputId, value) {
@@ -539,35 +556,49 @@
   // is added on the high side instead, so the total count stays the same
   // -- e.g. baseValue=5, increment=5 gives 5,10,15,20,25,30,35 with 5
   // (the previous value) highlighted but no longer centered.
-  function renderQuickButtons(containerId, inputId, baseValue, config) {
+  //
+  // `recentValue`, if given and not already among the buttons, is appended
+  // as an extra option (highlighted differently) -- e.g. if you just did 12
+  // reps for the previous set (vs. 6 last time), 12 becomes an option for
+  // this set too.
+  function renderQuickButtons(containerId, inputId, baseValue, config, recentValue) {
     const container = document.getElementById(containerId);
     if (!container) return;
     container.innerHTML = '';
-    if (baseValue === null) return;
 
-    const targetCount = config.offsets.length;
-    const queue = [...config.offsets];
-    let nextOffset = Math.max(...config.offsets) + 1;
     const results = [];
 
-    while (results.length < targetCount && queue.length > 0) {
-      const offset = queue.shift();
-      const value = baseValue + offset * config.increment;
+    if (baseValue !== null) {
+      const targetCount = config.offsets.length;
+      const queue = [...config.offsets];
+      let nextOffset = Math.max(...config.offsets) + 1;
 
-      if (value <= 0) {
-        queue.push(nextOffset);
-        nextOffset += 1;
-        continue;
+      while (results.length < targetCount && queue.length > 0) {
+        const offset = queue.shift();
+        const value = baseValue + offset * config.increment;
+
+        if (value <= 0) {
+          queue.push(nextOffset);
+          nextOffset += 1;
+          continue;
+        }
+
+        results.push({ value, isCurrent: offset === 0, isRecent: false });
       }
-
-      results.push({ value, isCurrent: offset === 0 });
     }
 
-    results.forEach(({ value, isCurrent }) => {
+    if (recentValue !== null && recentValue !== undefined && recentValue > 0) {
+      if (!results.some(r => r.value === recentValue)) {
+        results.push({ value: recentValue, isCurrent: false, isRecent: true });
+      }
+    }
+
+    results.forEach(({ value, isCurrent, isRecent }) => {
       const btn = document.createElement('button');
       btn.type = 'button';
       btn.textContent = value;
       if (isCurrent) btn.classList.add('quick-current');
+      if (isRecent) btn.classList.add('quick-recent');
       btn.onclick = () => appendQuickValue(inputId, value);
       container.appendChild(btn);
     });
@@ -740,8 +771,8 @@
     const repsIndex = enteredSetCount('reps');
     const weightsIndex = enteredSetCount('weights');
 
-    renderQuickButtons('repsQuick', 'reps', numberAtIndex(previousExercise['reps'], repsIndex), QUICK_BUTTON_CONFIG.reps);
-    renderQuickButtons('weightsQuick', 'weights', numberAtIndex(previousExercise['weights'], weightsIndex), QUICK_BUTTON_CONFIG.weights);
+    renderQuickButtons('repsQuick', 'reps', numberAtIndex(previousExercise['reps'], repsIndex), QUICK_BUTTON_CONFIG.reps, mostRecentValue('reps'));
+    renderQuickButtons('weightsQuick', 'weights', numberAtIndex(previousExercise['weights'], weightsIndex), QUICK_BUTTON_CONFIG.weights, mostRecentValue('weights'));
   }
 
   // ---------------------------------------------------------------
