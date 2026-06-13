@@ -45,6 +45,11 @@
 ,{"startMilliseconds":1723309597833,"endMilliseconds":1723312738500,"exercises":[{"name":"Cable Bicep Curl","reps":"6,6,6","weights":"24,24,24"},{"name":"Single Arm Cable Bicep Curl","reps":"12,12,12","weights":"19,19,19"},{"name":"Single Arm Standing Tricep Press","reps":"12,12,12","weights":"11,11,11"},{"name":"Tricep Kickbacks Ups","reps":"12,8","weights":"8,12"},{"name":"","reps":"","weights":""},{"name":"","reps":"","weights":""},{"name":"","reps":"","weights":""}]}
 ,{"startMilliseconds":1724106312547,"endMilliseconds":1724108718352,"exercises":[{"name":"Cable Bicep Curl","reps":"12,6,4,5","weights":"15,25,25,24","times":""},{"name":"Single Arm Cable Bicep Curl","reps":"6,6,6","weights":"20,20,20","times":""},{"name":"Single Arm Standing Tricep Press","reps":"12,12,12","weights":"12,12,12","times":""},{"name":"Tricep Kickbacks Ups","reps":"12,12,12","weights":"8,8,7","times":""},{"name":"","reps":"","weights":"","times":""},{"name":"","reps":"","weights":"","times":""},{"name":"","reps":"","weights":"","times":""}]}
 
+// Home Cable Arms - 6/13/2026
+// Open: https://github.com/clickthisnick/workout-tracker/edit/main/src/workouts/home_cable_arm.json
+// Scroll to the end of the "workouts" array (just before its closing ]) and paste this entire block right before that ]
+,{"startMilliseconds":1781367364458,"endMilliseconds":1781369814290,"exercises":[{"name":"Cable Bicep Curl","reps":"10,8,8","weights":"15,15,15","times":""},{"name":"Single Arm Cable Bicep Curl","reps":"10,10,10","weights":"10,10,10","times":""},{"name":"Single Arm Standing Tricep Press","reps":"6,12,12","weights":"6,6,6","times":""},{"name":"Tricep Kickbacks Ups","reps":"3,4,4","weights":"8,10,10","times":""}]}
+
 
 
 
