@@ -64,6 +64,17 @@
   table { width: 100%; border-collapse: collapse; margin-top: 8px; }
   td { padding: 6px 4px; vertical-align: middle; }
   td input { width: 100%; }
+  .quick-row { display: flex; gap: 6px; flex-wrap: wrap; margin: 4px 0 10px; }
+  .quick-row button {
+    padding: 6px 10px;
+    font-size: 14px;
+    font-weight: 400;
+    background: var(--surface);
+  }
+  .quick-row button.quick-current {
+    border-color: var(--accent-light);
+    font-weight: 700;
+  }
   .save-time-cell { text-align: right; }
   .action-row { display: flex; gap: 12px; margin-top: 18px; flex-wrap: wrap; }
   .action-row button { flex: 1; min-width: 130px; padding: 14px; }
@@ -108,8 +119,16 @@
         <td><input type="text" id="reps" name="reps" inputmode="decimal"></td>
       </tr>
       <tr>
+        <td></td>
+        <td colspan="2"><div id="repsQuick" class="quick-row"></div></td>
+      </tr>
+      <tr>
         <td><label for="weights">Weight:</label></td>
         <td><input type="text" id="weights" name="weights" inputmode="decimal"></td>
+      </tr>
+      <tr>
+        <td></td>
+        <td colspan="2"><div id="weightsQuick" class="quick-row"></div></td>
       </tr>
       <tr>
         <td><label for="times">Time:</label></td>
@@ -137,6 +156,14 @@
 
   const url = new URL(location.href);
 
+  // Quick-increment buttons shown under Reps/Weight, based on the previous
+  // session's last value for that exercise. Each offset is multiplied by
+  // the increment and added to the previous value; 0 = previous value as-is.
+  const QUICK_BUTTON_CONFIG = {
+    weights: { increment: 5, offsets: [-1, 0, 1, 2] },
+    reps: { increment: 1, offsets: [-1, 0, 1, 2] }
+  };
+
   // GitHub repo info, used to build the "edit this file" link in the email
   const GH_OWNER = 'clickthisnick';
   const GH_REPO = 'workout-tracker';
@@ -149,6 +176,12 @@
   let timerInterval = "";
   let currentTimer = 0;
 
+  // Tracks whether we've already played a sound during this page load.
+  // Mobile browsers only allow audio after a user gesture has played
+  // something, so the first click anywhere "unlocks" audio with a
+  // silent blip before any real beep is needed.
+  let audioUnlocked = false;
+
   function ensureAudioCtx() {
     if (!audioCtx) {
       audioCtx = new (window.AudioContext || window.webkitAudioContext)();
@@ -158,6 +191,30 @@
     }
     return audioCtx;
   }
+
+  function unlockAudio() {
+    if (audioUnlocked) return;
+    try {
+      const ctx = ensureAudioCtx();
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      gain.gain.value = 0; // silent
+      osc.connect(gain).connect(ctx.destination);
+      osc.start();
+      osc.stop(ctx.currentTime + 0.01);
+      audioUnlocked = true;
+    } catch (e) {
+      console.error('audio unlock failed', e);
+    }
+  }
+
+  // Any button press anywhere on the page counts as the user gesture
+  // that unlocks audio playback.
+  document.addEventListener('click', (e) => {
+    if (e.target.closest && e.target.closest('button')) {
+      unlockAudio();
+    }
+  }, true);
 
   function beep() {
     try {
@@ -306,6 +363,47 @@
       `Current Duration: ${minutes} minutes. ${seconds} seconds.`;
   }
 
+  // Given a comma-separated list like "12,12,12", return the last numeric
+  // value (the most recent set), or null if there isn't one.
+  function lastNumber(value) {
+    if (!value) return null;
+    const parts = String(value).split(',').map(p => p.trim()).filter(p => p !== '');
+    if (parts.length === 0) return null;
+    const n = parseFloat(parts[parts.length - 1]);
+    return isNaN(n) ? null : n;
+  }
+
+  // Appends a value to a comma-separated input field (same pattern as
+  // "Save Time"), so quick-buttons build up "12,12,12" as you go.
+  function appendQuickValue(inputId, value) {
+    unlockAudio();
+    const el = document.getElementById(inputId);
+    const current = el.value.trim();
+    el.value = current ? `${current},${value}` : `${value}`;
+  }
+
+  // Renders a row of buttons around `baseValue` (previous session's last
+  // value), e.g. for weights with increment 5 and offsets [-1,0,1,2] and a
+  // previous value of 15: buttons for 10, 15, 20, 25.
+  function renderQuickButtons(containerId, inputId, baseValue, config) {
+    const container = document.getElementById(containerId);
+    if (!container) return;
+    container.innerHTML = '';
+    if (baseValue === null) return;
+
+    config.offsets.forEach(offset => {
+      const value = baseValue + offset * config.increment;
+      if (value < 0) return;
+
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.textContent = value;
+      if (offset === 0) btn.classList.add('quick-current');
+      btn.onclick = () => appendQuickValue(inputId, value);
+      container.appendChild(btn);
+    });
+  }
+
   function setStatus(message) {
     const el = document.getElementById('status');
     if (el) el.textContent = message;
@@ -444,6 +542,9 @@
     document.getElementById('reps').value = currentExercise['reps'];
     document.getElementById('weights').value = currentExercise['weights'];
     document.getElementById('times').value = currentExercise['times'];
+
+    renderQuickButtons('repsQuick', 'reps', lastNumber(previousExercise['reps']), QUICK_BUTTON_CONFIG.reps);
+    renderQuickButtons('weightsQuick', 'weights', lastNumber(previousExercise['weights']), QUICK_BUTTON_CONFIG.weights);
   }
 
   function selectWorkout() {
