@@ -70,10 +70,13 @@ Designed to fit on one iPhone screen without scrolling during normal use.
     of 5 with increment 5 produces 5,10,15,20,25,30,35 with 5 highlighted but
     not centered.
   - **"Just did" option**: the most recently entered value in the field is
-    also offered as an extra button (blue outline) for the next set, if it
-    isn't already one of the 7 — e.g. if you did 12 reps for set 1 (vs. 6
-    last time), 12 becomes a quick option for set 2 as well, in case you want
-    to repeat it.
+    also highlighted (blue outline) as an option for the next set, in case
+    you want to repeat it — e.g. if you did 12 reps for set 1 (vs. 6 last
+    time), 12 is highlighted blue for set 2 as well. If 12 isn't already one
+    of the 7 generated buttons, it's added as an extra option; if it *is*
+    already one of them (e.g. it coincides with the previous-session value),
+    that same button gets the blue highlight too (in addition to the red
+    "previous value" highlight if both apply).
   - Manually typing into Reps/Weight also refreshes the quick buttons (via an
     `input` listener), so they stay aligned with whichever set you're on.
 - **Rest timer**: countdown per exercise (`timer_duration` if set on that
