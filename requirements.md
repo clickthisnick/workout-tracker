@@ -15,7 +15,24 @@ Designed to fit on one iPhone screen without scrolling during normal use.
 - Must work with **low data and intermittent/no connectivity** after the first load:
   - Routine data, once fetched, is cached in `localStorage` and reused if a later
     fetch fails (e.g. no signal at the gym).
-  - Logging a workout (reps/weights/times, navigation, timer) requires no network.
+  - Logging a workout (reps/weights/times, navigation, timer, saving, going
+    home) requires no network at all once the page itself has loaded once.
+- **SPA-style navigation (critical for offline use)**: Prev/Next/start
+  workout/Home no longer perform a real page navigation
+  (`location.href = ...`). Each of those produced a unique URL+querystring
+  (since `currentWorkout` is embedded as JSON in the query string) that the
+  browser had never fetched before — with no connectivity, that navigation
+  would simply fail. Instead, `reloadPage()` calls
+  `history.replaceState()`/`pushState()` to update the URL bar (so reload/
+  bookmark/share still capture the right state) and then calls `renderPage()`
+  directly to update the DOM in place, with zero network requests.
+  - Side effect: since the JS context now persists across exercises instead
+    of getting a fresh start on every reload, `renderPage()` explicitly
+    resets per-exercise state at the top of each render: clears any running
+    rest timer (`timerInterval`), resets `currentTimer` and the `#timer`
+    display, clears `timerTriggeredIndices` (which set-indices have already
+    auto-started the timer), and clears/recreates the live
+    duration-update interval (`durationInterval`).
 
 ## Layout
 - Single-screen design targeting iPhone-sized viewports (`100dvh`, compact
@@ -63,6 +80,10 @@ Designed to fit on one iPhone screen without scrolling during normal use.
 - Routine JSON files may contain lines starting with `//` — these are treated
   as comments and stripped before parsing. (This lets emailed entries be
   pasted in as-is, including their instructional comment lines.)
+- `active.json` and each fetched routine file are cached in `localStorage`
+  (`wt_cache_active`, `wt_cache_routine_<file>`). If a later fetch fails
+  (offline), the cached copy is used instead, with a "📴 Offline" status
+  message.
 
 ## Core features
 - **Routine selection**: dropdown populated from `active.json`.
@@ -112,9 +133,8 @@ Designed to fit on one iPhone screen without scrolling during normal use.
     once (on the reps[0] tap); tapping reps[0], reps[1], weight[0], weight[1]
     resets it twice (on reps[0] and reps[1] — indices 0 and 1 are already
     "used" by the time the weight taps happen, so those do nothing). This is
-    tracked in an in-memory `Set` of triggered indices that resets
-    automatically each time the page reloads (i.e. on every Prev/Next
-    navigation).
+    tracked in `timerTriggeredIndices`, a `Set` reset at the top of every
+    `renderPage()` call (i.e. each time you navigate to a different exercise).
 - **Rest timer**: countdown per exercise (`timer_duration` if set on that
   exercise, else the configurable default — see Settings), with an audible
   sound when it hits zero. "Save Time" appends the elapsed seconds to the
@@ -127,7 +147,7 @@ Designed to fit on one iPhone screen without scrolling during normal use.
     the timer's real sound is needed. Tracked via an in-memory boolean
     (`audioUnlocked`), not persisted.
 - **Session duration**: header shows "Last Date: Xd ago", "Last Time: Xm Ys",
-  and "Cur Time: Xm Ys" (live-updating).
+  and "Cur Time: Xm Ys" (live-updating, via `durationInterval`).
 
 ## Settings (⚙ button)
 - A ⚙ button in the top-right of the header toggles an edit panel (replacing
@@ -147,10 +167,13 @@ Designed to fit on one iPhone screen without scrolling during normal use.
 ## Home button (🏠)
 - Next to ⚙, in the header. Shows a `confirm()` dialog ("Go back to the home
   screen? This will discard the workout in progress.").
-- If confirmed, navigates to the bare URL (origin + path) with only `?email=`
-  preserved (if present) — dropping `name`, `file`, `currentWorkout`,
-  `previousWorkout`, `currentExerciseId`, and any `weightInc`/`repsInc`/
-  `timerDefault` overrides. Lands back on the routine picker.
+- If confirmed: stops any running rest/duration timers, drops all query
+  params except `?email=` (if present), updates the URL via
+  `history.pushState` (no reload), and resets the UI to the routine-picker
+  view (`resetToPickerView()` — hides the workout view, re-shows the
+  `<select>`, resets it to the placeholder option, and re-populates it from
+  cache/network if it was never populated, e.g. when arriving via a direct
+  "in progress workout" link).
 
 ## Saving a completed workout
 - No GitHub API calls and no stored credentials/tokens.
@@ -174,15 +197,18 @@ Designed to fit on one iPhone screen without scrolling during normal use.
 - Fixed `currentWorkout` being a shared object reference to `previousWorkout`
   (now a deep copy).
 - Added cache-busting (`?t=Date.now()`, `cache: 'no-store'`) to routine fetches.
+- Replaced `location.href`-based navigation between exercises/Home with
+  `history.replaceState`/`pushState` + in-place re-render, fixing offline use
+  (see "SPA-style navigation" above).
 
 ## Deferred / not implemented
 - **Latest + history file split** per routine (to keep reads small as history
   grows) — considered, but not implemented; current files keep full history
   in one JSON file.
 - **Full offline app-shell caching** via service worker/manifest (so the page
-  itself loads with zero connectivity on a cold start) — not implemented;
-  current offline support covers data caching only, after at least one
-  successful page load.
+  itself loads with zero connectivity on a true cold start, before it's ever
+  been visited) — not implemented; current offline support covers data and
+  in-app navigation only, after at least one successful page load.
 - Other feature ideas discussed but not built: "Set X of Y" indicator per
   exercise (alongside the now-implemented "current / total" exercise
   counter), vibration on timer completion, visual pulse on the Timer button
