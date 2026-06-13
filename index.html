@@ -330,6 +330,7 @@
   let audioCtx = null;
   let timerInterval = "";
   let currentTimer = 0;
+  let durationInterval = null;
 
   // Tracks whether we've already unlocked audio during this page load.
   // Mobile browsers only allow audio after a user gesture has played
@@ -509,6 +510,7 @@
     url.searchParams.set('currentWorkout', JSON.stringify(currentWorkout));
     url.searchParams.set('currentExerciseId', 0);
 
+    setTopStatus('');
     reloadPage(url);
   };
 
@@ -523,8 +525,15 @@
     return new Date().getTime();
   }
 
+  // Updates the URL's query string (so it stays bookmarkable/reloadable
+  // with the same state) WITHOUT a full page navigation. A real navigation
+  // (location.href = ...) would make the browser fetch this exact
+  // URL+querystring from the network, which fails when offline since that
+  // specific combination was never cached. history.replaceState + a manual
+  // re-render keeps everything working with no connectivity.
   function reloadPage(targetUrl) {
-    location.href = targetUrl;
+    history.replaceState(null, '', targetUrl.toString());
+    renderPage();
   }
 
   function loadJSONQueryParameter(data) {
@@ -755,6 +764,25 @@
   // Rendering
   // ---------------------------------------------------------------
   function renderPage() {
+    // Since navigation between exercises no longer reloads the page (see
+    // reloadPage), reset per-exercise state that previously got a clean
+    // slate "for free" from a full reload: any running rest timer, the
+    // set of indices that have already triggered it, and the previous
+    // exercise's duration-update interval.
+    if (timerInterval) {
+      clearInterval(timerInterval);
+      timerInterval = "";
+    }
+    currentTimer = 0;
+    const timerEl = document.getElementById('timer');
+    if (timerEl) timerEl.innerHTML = '';
+    timerTriggeredIndices.clear();
+
+    if (durationInterval) {
+      clearInterval(durationInterval);
+      durationInterval = null;
+    }
+
     const name = url.searchParams.get('name');
     const previousWorkout = loadJSONQueryParameter(url.searchParams.get('previousWorkout'));
     const currentWorkout = loadJSONQueryParameter(url.searchParams.get('currentWorkout'));
@@ -791,7 +819,7 @@
       `Last Time: ${previousWorkoutDurationMinutes}m ${previousWorkoutDurationSeconds}s`;
     setCurrentWorkoutDuration(currentWorkout);
 
-    setInterval(() => {
+    durationInterval = setInterval(() => {
       setCurrentWorkoutDuration(currentWorkout);
     }, 500);
 
@@ -887,11 +915,43 @@
     const confirmed = confirm('Go back to the home screen? This will discard the workout in progress.');
     if (!confirmed) return;
 
-    const email = url.searchParams.get('email');
-    const homeUrl = new URL(url.origin + url.pathname);
-    if (email) homeUrl.searchParams.set('email', email);
+    // Stop any running timers/intervals from the in-progress workout.
+    if (timerInterval) {
+      clearInterval(timerInterval);
+      timerInterval = "";
+    }
+    if (durationInterval) {
+      clearInterval(durationInterval);
+      durationInterval = null;
+    }
+    currentTimer = 0;
 
-    location.href = homeUrl.toString();
+    const email = url.searchParams.get('email');
+    for (const key of [...url.searchParams.keys()]) {
+      url.searchParams.delete(key);
+    }
+    if (email) url.searchParams.set('email', email);
+
+    // Update the URL without a full navigation (see reloadPage) so this
+    // works even with no connectivity.
+    history.pushState(null, '', url.toString());
+    resetToPickerView();
+  }
+
+  // Returns the UI to the routine-picker state without reloading the page.
+  function resetToPickerView() {
+    document.getElementById('workout').style.visibility = 'hidden';
+    setTopStatus('');
+
+    const select = document.getElementById('selectWorkout');
+    select.style.display = '';
+    select.selectedIndex = 0;
+
+    // If we landed here via a direct "in progress workout" link, the
+    // picker may never have been populated.
+    if (select.options.length <= 1) {
+      loadWorkoutOptions();
+    }
   }
 
   // ---------------------------------------------------------------
