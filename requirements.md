@@ -21,11 +21,11 @@ Designed to fit on one iPhone screen without scrolling during normal use.
 - Single-screen design targeting iPhone-sized viewports (`100dvh`, compact
   font sizes/padding) so the whole workout view fits without a scrollbar
   during normal use.
-- The header's stats (days since last workout, last session's duration,
-  current session's running duration) are shown on one line ("Last Date: Xd
-  ago · Last Time: Xm Ys · Cur Time: Xm Ys", 11px), and the "Previous" values
-  (reps, weight, time) are on one line, separated by `·`, wrapping only if
-  needed.
+- The header's top row shows the routine name (truncated with an ellipsis if
+  too long), an exercise-position indicator (e.g. "3 / 7"), and the 🏠/⚙
+  buttons. The stats row below shows "Last Date: Xd ago · Last Time: Xm Ys ·
+  Cur Time: Xm Ys" (11px), and the "Previous" values (reps, weight, time) are
+  on one line, separated by `·`, wrapping only if needed.
 - The workout-picker `<select>` is hidden via `display: none` (not
   `visibility`) once a routine is chosen, so it doesn't reserve space.
 - **Zoom prevention**:
@@ -69,7 +69,8 @@ Designed to fit on one iPhone screen without scrolling during normal use.
 - **Exercise navigation**: Prev/Next buttons step through the current
   routine's exercise list; stepping past the last exercise appends a new
   blank exercise slot. The Prev button is disabled (greyed out, non-clickable)
-  on the first exercise.
+  on the first exercise. The header shows "current / total" (e.g. "3 / 7"),
+  updating as you navigate (and reflecting newly appended slots, e.g. "8 / 8").
 - **Per-exercise fields**: editable name, reps, weights, and time(s), each
   shown alongside the previous session's values for comparison.
 - **Quick-increment buttons**: under both Reps and Weight, 7 tappable buttons
@@ -100,13 +101,26 @@ Designed to fit on one iPhone screen without scrolling during normal use.
       indicators so the distinction holds even with color removed (e.g.
       grayscale display mode).
   - **Legend**: a small dim caption under the "Previous" row reads "● = same
-    as last time   ▲ = what you just entered", explaining the symbols inline.
+    as prev workout   ▲ = what you just entered", explaining the symbols
+    inline.
   - Manually typing into Reps/Weight also refreshes the quick buttons (via an
     `input` listener), so they stay aligned with whichever set you're on.
+  - **Auto-starts the rest timer**: tapping a quick button (re)starts the
+    rest timer, but only once per *set index*, regardless of whether reps or
+    weight triggers it first — reps and weight at the same index are treated
+    as one pair. E.g. tapping reps[0] then weight[0] only resets the timer
+    once (on the reps[0] tap); tapping reps[0], reps[1], weight[0], weight[1]
+    resets it twice (on reps[0] and reps[1] — indices 0 and 1 are already
+    "used" by the time the weight taps happen, so those do nothing). This is
+    tracked in an in-memory `Set` of triggered indices that resets
+    automatically each time the page reloads (i.e. on every Prev/Next
+    navigation).
 - **Rest timer**: countdown per exercise (`timer_duration` if set on that
   exercise, else the configurable default — see Settings), with an audible
   sound when it hits zero. "Save Time" appends the elapsed seconds to the
-  times field.
+  times field. Can also be started/restarted manually via the "Timer" button
+  at any time (e.g. if a set was logged by typing instead of tapping a quick
+  button).
   - Audio unlock: the first tap on *any* button on the page plays a silent
     blip (Web Audio) and does a muted play/pause of the `<audio>` element, to
     satisfy mobile browsers' "audio needs a user gesture" requirement before
@@ -169,6 +183,7 @@ Designed to fit on one iPhone screen without scrolling during normal use.
   itself loads with zero connectivity on a cold start) — not implemented;
   current offline support covers data caching only, after at least one
   successful page load.
-- Other feature ideas discussed but not built: exercise count indicator
-  (e.g. "3 / 7"), per-exercise "has data been entered" indicator, auto-start
-  rest timer on quick-button tap, skip/reorder exercises within a session.
+- Other feature ideas discussed but not built: "Set X of Y" indicator per
+  exercise (alongside the now-implemented "current / total" exercise
+  counter), vibration on timer completion, visual pulse on the Timer button
+  while running, skip/reorder exercises within a session.
