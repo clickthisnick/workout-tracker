@@ -35,6 +35,9 @@
 // Scroll to the end of the "workouts" array (just before its closing ]) and paste this entire block right before that ]
 ,{"startMilliseconds":1781525531879,"endMilliseconds":1781528141703,"exercises":[{"name":"Standing Shoulder Press","reps":"12,12,12","weights":"10,10,10","times":""},{"name":"Single Arm Front Raise","reps":"12,12,12","weights":"4,4,4","times":""},{"name":"Single Arm Rows","reps":"12,12,12","weights":"12,12,12","times":""},{"name":"Single Arm Standing Lateral Arm Raises","reps":"12,12,12","weights":"4,4,4","times":""}]}
 
-
+// Shoulders - 6/20/2026
+// Open: https://github.com/clickthisnick/workout-tracker/edit/main/src/workouts/home_cable_shoulders.json
+// Scroll to the end of the "workouts" array (just before its closing ]) and paste this entire block right before that ]
+,{"startMilliseconds":1781965618662,"endMilliseconds":1781968354545,"exercises":[{"name":"Standing Shoulder Press","reps":"12,12,10","weights":"10,11,11","times":""},{"name":"Single Arm Front Raise","reps":"12,12,12","weights":"4,4,4","times":""},{"name":"Single Arm Rows","reps":"12,12,12","weights":"12,12,12","times":""},{"name":"Single Arm Standing Lateral Arm Raises","reps":"12,12","weights":"4,4","times":""}]}
     ]
   }
