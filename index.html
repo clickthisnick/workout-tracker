@@ -330,6 +330,7 @@
   let audioCtx = null;
   let timerInterval = "";
   let currentTimer = 0;
+  let currentTimerStart = null;
   let durationInterval = null;
 
   // Tracks whether we've already unlocked audio during this page load.
@@ -842,6 +843,7 @@
       timerInterval = "";
     }
     currentTimer = 0;
+    currentTimerStart = null;
     const timerEl = document.getElementById('timer');
     if (timerEl) timerEl.innerHTML = '';
     timerTriggeredIndices.clear();
@@ -993,6 +995,7 @@
       durationInterval = null;
     }
     currentTimer = 0;
+    currentTimerStart = null;
 
     const email = url.searchParams.get('email');
     for (const key of [...url.searchParams.keys()]) {
@@ -1028,7 +1031,9 @@
   // ---------------------------------------------------------------
   function saveTime() {
     let times = document.getElementById('times').value;
-    let timeValue = `${Math.floor(currentTimer)}`;
+    let timeValue = currentTimerStart
+      ? `${Math.floor((Date.now() - currentTimerStart) / 1000)}`
+      : `${Math.floor(currentTimer)}`;
 
     if (timeValue == "0") {
       return;
@@ -1046,13 +1051,15 @@
     // gesture, so the later beep() call from setInterval is allowed to play.
     ensureAudioCtx();
 
-    currentTimer = 0;
-    const timeSpan = document.getElementById('timer');
-
     const currentExerciseId = url.searchParams.get("currentExerciseId");
     const currentWorkout = loadJSONQueryParameter(url.searchParams.get('currentWorkout'));
     const seconds = currentWorkout["exercises"][currentExerciseId]['timer_duration'] || DEFAULT_TIMER_DURATION;
     const now = new Date().getTime();
+
+    currentTimer = 0;
+    currentTimerStart = now;
+    const timeSpan = document.getElementById('timer');
+
     const deadline = seconds * 1000 + now;
 
     if (timerInterval) {
