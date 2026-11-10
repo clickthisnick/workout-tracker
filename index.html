@@ -656,7 +656,11 @@
   // data on reload. No-ops if no workout is in progress.
   function persistCurrentState() {
     if (!url.searchParams.get('currentWorkout')) return;
-    saveExerciseData(url);
+    if (isCircuitWorkout()) {
+      saveCircuitState(url);
+    } else {
+      saveExerciseData(url);
+    }
     saveInProgressState();
   }
 
@@ -1077,9 +1081,13 @@
       }, 500);
 
       document.getElementById('workoutName').innerHTML = name;
-      document.getElementById('workoutLastCompleted').innerHTML = `Last Date: ${daysAgo}d ago`;
+      document.getElementById('workoutLastCompleted').innerHTML =
+        `Last Date: ${calulateDaysAgo(previousWorkout['endMilliseconds'])}d ago`;
+      const previousWorkoutDuration = calculateLastWorkoutDuration(
+        previousWorkout['endMilliseconds'] - previousWorkout['startMilliseconds']
+      );
       document.getElementById('workoutLastDuration').innerHTML =
-        `Last Time: ${previousWorkoutDurationMinutes}m ${previousWorkoutDurationSeconds}s`;
+        `Last Time: ${previousWorkoutDuration[0]}m ${previousWorkoutDuration[1]}s`;
       setTopStatus('');
       return;
     }

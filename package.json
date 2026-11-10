@@ -18,6 +18,7 @@
   },
   "scripts": {
     "build": "node scripts/check.js",
+    "test": "node scripts/test.js",
     "start": "npm run build && node scripts/serve.js"
   },
   "version": "1.0.0"
