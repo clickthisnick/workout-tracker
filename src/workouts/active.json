@@ -1,14 +1,12 @@
 {
     "workouts": [
         "back.json",
-        "dbarms.json",
         "dbchest.json",
-        "legs.json",
-        "shoulders.json",
         "stretch.json",
         "homechest.json",
         "home_cable_abs.json",
         "home_cable_arm.json",
-        "home_cable_shoulders.json"
+        "home_cable_shoulders.json",
+        "innodigym_circuit.json"
     ]
 }

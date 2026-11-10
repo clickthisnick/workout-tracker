@@ -17,7 +17,8 @@
     "url": "git+https://github.com/clickthisnick/workout-tracker.git"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "node scripts/check.js",
+    "start": "npm run build && node scripts/serve.js"
   },
   "version": "1.0.0"
 }

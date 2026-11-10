@@ -1,0 +1,43 @@
+{
+    "name": "Workout",
+    "circuit": true,
+    "sets": 3,
+    "workouts": [
+      {
+        "startMilliseconds": 0,
+        "endMilliseconds": 0,
+        "exercises": [
+            {
+              "name": "Cable Squats",
+              "reps": "10,10,10",
+              "weights": "12,12,12"
+            },
+            {
+              "name": "Push-Ups",
+              "reps": "12,12,12",
+              "weights": "12,12,12"
+            },
+            {
+              "name": "Cable Rows",
+              "reps": "10,10,10",
+              "weights": "12,12,12"
+            },
+            {
+              "name": "Overhead Presses",
+              "reps": "10,10,10",
+              "weights": "12,12,12"
+            },
+            {
+              "name": "Triceps Pushdowns",
+              "reps": "10,10,10",
+              "weights": "12,12,12"
+            },
+            {
+              "name": "Curls",
+              "reps": "10,10,10",
+              "weights": "12,12,12"
+            }
+        ]
+      }
+    ]
+  }

@@ -124,6 +124,45 @@
   .prev-block b { color: var(--text); }
   .prev-row { display: flex; flex-wrap: wrap; gap: 0 8px; }
   .prev-row span:not(:empty):not(:last-child)::after { content: " · "; }
+  .circuit-panel { display: flex; flex-direction: column; gap: 6px; }
+  .circuit-row {
+    display: grid;
+    grid-template-columns: minmax(0, 2fr) minmax(0, 1fr) minmax(0, 1fr);
+    gap: 6px;
+    align-items: center;
+  }
+  .circuit-row .circuit-name {
+    font-weight: 600;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    min-width: 0;
+  }
+  .circuit-row input {
+    width: 100%;
+    min-width: 0;
+  }
+  .circuit-legend { font-size: 10px; color: var(--text-dim); }
+  .circuit-water-banner {
+    display: none;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 10px;
+    background: var(--surface);
+    border: 1px solid #2e6bd6;
+    border-radius: 6px;
+    color: var(--text);
+    font-size: 14px;
+  }
+  .circuit-water-banner.visible {
+    display: flex;
+  }
+  .circuit-water-banner .dismiss {
+    background: var(--surface);
+    border-color: var(--border);
+    padding: 4px 10px;
+    font-size: 13px;
+  }
   .quick-legend { font-size: 10px; color: var(--text-dim); margin-top: 2px; }
   table { width: 100%; border-collapse: collapse; }
   td { padding: 2px 4px; vertical-align: middle; }
@@ -215,49 +254,51 @@
   </div>
 
   <div id="mainContent">
-    <input type="text" id="currentExerciseName" name="currentExerciseName">
+    <div id="linearView">
+      <input type="text" id="currentExerciseName" name="currentExerciseName">
 
-    <div class="nav-row">
-      <button id="prevExerciseBtn" onclick="prevExercise()">◀ Prev</button>
-      <button onclick="nextExercise()">Next ▶</button>
-    </div>
-
-    <div class="prev-block">
-      <b>Previous:</b>
-      <div class="prev-row">
-        <span id="previousWorkoutExerciseReps"></span>
-        <span id="previousWorkoutExerciseWeights"></span>
-        <span id="previousWorkoutExerciseTimes"></span>
+      <div class="nav-row">
+        <button id="prevExerciseBtn" onclick="prevExercise()">◀ Prev</button>
+        <button onclick="nextExercise()">Next ▶</button>
       </div>
-      <div class="quick-legend">● = same as prev workout &nbsp; ▲ = what you just entered</div>
-    </div>
 
-    <b>Current:</b>
-    <table>
-      <tbody>
-        <tr>
-          <td><label for="reps">Reps:</label></td>
-          <td><input type="text" id="reps" name="reps" inputmode="decimal"></td>
-        </tr>
-        <tr>
-          <td></td>
-          <td colspan="2"><div id="repsQuick" class="quick-row"></div></td>
-        </tr>
-        <tr>
-          <td><label for="weights">Weight:</label></td>
-          <td><input type="text" id="weights" name="weights" inputmode="decimal"></td>
-        </tr>
-        <tr>
-          <td></td>
-          <td colspan="2"><div id="weightsQuick" class="quick-row"></div></td>
-        </tr>
-        <tr>
-          <td><label for="times">Time:</label></td>
-          <td><input type="text" id="times" name="times"></td>
-          <td class="save-time-cell"><button onclick="saveTime()">Save Time</button></td>
-        </tr>
-      </tbody>
-    </table>
+      <div class="prev-block">
+        <b>Previous:</b>
+        <div class="prev-row">
+          <span id="previousWorkoutExerciseReps"></span>
+          <span id="previousWorkoutExerciseWeights"></span>
+          <span id="previousWorkoutExerciseTimes"></span>
+        </div>
+        <div class="quick-legend">● = same as prev workout &nbsp; ▲ = what you just entered</div>
+      </div>
+
+      <b>Current:</b>
+      <table>
+        <tbody>
+          <tr>
+            <td><label for="reps">Reps:</label></td>
+            <td><input type="text" id="reps" name="reps" inputmode="decimal"></td>
+          </tr>
+          <tr>
+            <td></td>
+            <td colspan="2"><div id="repsQuick" class="quick-row"></div></td>
+          </tr>
+          <tr>
+            <td><label for="weights">Weight:</label></td>
+            <td><input type="text" id="weights" name="weights" inputmode="decimal"></td>
+          </tr>
+          <tr>
+            <td></td>
+            <td colspan="2"><div id="weightsQuick" class="quick-row"></div></td>
+          </tr>
+          <tr>
+            <td><label for="times">Time:</label></td>
+            <td><input type="text" id="times" name="times"></td>
+            <td class="save-time-cell"><button onclick="saveTime()">Save Time</button></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
 
     <div class="action-row">
       <button onclick="saveWorkout()">Save Workout</button>
@@ -266,15 +307,35 @@
 
     <div id="status"></div>
   </div>
+  <div id="circuitView" style="display:none">
+    <div id="circuitRounds" class="circuit-panel"></div>
+    <div class="circuit-legend">Round timer starts when you finish the round. Comma-separated values are per round.</div>
+    <div id="circuitWaterBanner" class="circuit-water-banner" role="status">
+      <span>Water break — grab a drink before the next round.</span>
+      <button type="button" class="dismiss" onclick="dismissWaterBanner()">Done</button>
+    </div>
+    <div class="nav-row">
+      <button id="circuitPrevBtn" onclick="circuitPrevRound()">◀ Prev Round</button>
+      <button id="circuitNextBtn" onclick="circuitNextRound()">Next Round ▶</button>
+    </div>
+    <div class="action-row">
+      <button onclick="saveWorkout()">Save Workout</button>
+      <button onclick="resetTimer()">Timer <span id="timer"></span></button>
+    </div>
+    <div id="status"></div>
+  </div>
 </div>
 
 <script>
   // ---------------------------------------------------------------
   // Config
   // ---------------------------------------------------------------
-  const baseUrl = 'https://www.clickthisnick.com/workout-tracker';
-  // When running locally: python3 -m http.server, then use:
-  // const baseUrl = 'http://localhost:8000'
+  // Workout files live relative to index.html. Resolve them against the
+  // page origin + directory so the same build works hosted at a sub-path
+  // (https://www.clickthisnick.com/workout-tracker/) and served locally.
+  const baseUrl = location.protocol === 'file:'
+    ? location.href.replace(/index\.html$/, '').replace(/\/$/, '')
+    : new URL('./', location.href).href.replace(/\/$/, '');
 
   const url = new URL(location.href);
 
@@ -497,6 +558,8 @@
     url.searchParams.set('name', resp['name']);
     url.searchParams.set('file', routine);
     url.searchParams.set('previousWorkout', JSON.stringify(previousWorkout));
+    url.searchParams.set('circuit', resp['circuit'] ? '1' : '0');
+    url.searchParams.set('sets', resp['sets'] || String(previousWorkout['exercises'][0]['reps'] ? previousWorkout['exercises'][0]['reps'].split(',').length : 1));
 
     const currentWorkout = JSON.parse(JSON.stringify(previousWorkout));
     currentWorkout['startMilliseconds'] = getTimeMillisecondsDate();
@@ -510,6 +573,7 @@
 
     url.searchParams.set('currentWorkout', JSON.stringify(currentWorkout));
     url.searchParams.set('currentExerciseId', 0);
+    url.searchParams.set('currentRound', 0);
 
     setTopStatus('');
     reloadPage(url);
@@ -550,7 +614,7 @@
   // restored on boot if the URL doesn't already have it.
   // ---------------------------------------------------------------
   const IN_PROGRESS_KEY = 'wt_in_progress';
-  const IN_PROGRESS_FIELDS = ['name', 'file', 'currentWorkout', 'previousWorkout', 'currentExerciseId'];
+  const IN_PROGRESS_FIELDS = ['name', 'file', 'currentWorkout', 'previousWorkout', 'currentExerciseId', 'currentRound'];
 
   function saveInProgressState() {
     const state = {};
@@ -772,6 +836,147 @@
     renderPage();
   }
 
+  function isCircuitWorkout() {
+    return url.searchParams.get('circuit') === '1';
+  }
+
+  function currentRoundIndex() {
+    return parseInt(url.searchParams.get('currentRound') || '0', 10);
+  }
+
+  function circuitTotalRounds() {
+    return parseInt(url.searchParams.get('sets') || '3', 10);
+  }
+
+  // Complete/finalized rounds aren't numbered by their gaps: if a round
+  // was skipped, the next non-skipped round uses its own index. Rounds are
+  // always 1-based in the UI, but gaps in the exercises' value arrays
+  // still leave the skipped round blank so nothing is lost on save.
+  function completedRoundCount() {
+    const currentWorkout = loadJSONQueryParameter(url.searchParams.get('currentWorkout'));
+    if (!currentWorkout || !currentWorkout['exercises']) return 0;
+    let count = 0;
+    for (const exercise of currentWorkout['exercises']) {
+      const reps = String(exercise['reps'] || '').split(',').filter(p => p.trim() !== '');
+      const weights = String(exercise['weights'] || '').split(',').filter(p => p.trim() !== '');
+      const values = reps.concat(weights);
+      values.forEach((value, i) => {
+        if (value.trim() !== '' && i >= count) {
+          count = i + 1;
+        }
+      });
+    }
+    return count;
+  }
+
+  function saveCircuitState(targetUrl) {
+    const currentWorkout = loadJSONQueryParameter(targetUrl.searchParams.get('currentWorkout'));
+    const round = currentRoundIndex();
+    const rows = document.querySelectorAll('.circuit-row');
+    rows.forEach((row) => {
+      const name = row.querySelector('input.circuit-name-input');
+      const repsInput = row.querySelector('input.circuit-reps');
+      const weightsInput = row.querySelector('input.circuit-weights');
+      if (!name || !repsInput || !weightsInput) return;
+      const index = parseInt(row.dataset.index, 10);
+      const exercise = currentWorkout['exercises'][index];
+      if (!exercise) return;
+
+      const reps = String(repsInput.value || '').trim();
+      const weights = String(weightsInput.value || '').trim();
+      const nameValue = name.value.trim();
+      if (nameValue) exercise['name'] = nameValue;
+
+      const setReps = exercise['reps'] ? String(exercise['reps']).split(',') : [];
+      const setWeights = exercise['weights'] ? String(exercise['weights']).split(',') : [];
+      while (setReps.length <= round) setReps.push('');
+      while (setWeights.length <= round) setWeights.push('');
+      setReps[round] = reps;
+      setWeights[round] = weights;
+      exercise['reps'] = setReps.join(',');
+      exercise['weights'] = setWeights.join(',');
+    });
+
+    targetUrl.searchParams.set('currentWorkout', JSON.stringify(currentWorkout));
+    return currentWorkout;
+  }
+
+  function valueAtRound(exercise, field, round) {
+    const values = exercise && exercise[field] ? String(exercise[field]).split(',') : [];
+    return values[round] !== undefined ? String(values[round]).trim() : '';
+  }
+
+  function renderCircuitPanel() {
+    const currentWorkout = loadJSONQueryParameter(url.searchParams.get('currentWorkout'));
+    const previousWorkout = loadJSONQueryParameter(url.searchParams.get('previousWorkout'));
+    const round = currentRoundIndex();
+    const exercises = currentWorkout['exercises'] || [];
+    const previousExercises = previousWorkout['exercises'] || [];
+    const container = document.getElementById('circuitRounds');
+    container.innerHTML = '';
+
+    exercises.forEach((exercise, index) => {
+      const previous = previousExercises[index] || {};
+      const row = document.createElement('div');
+      row.className = 'circuit-row';
+      row.dataset.index = index;
+
+      const name = document.createElement('input');
+      name.type = 'text';
+      name.className = 'circuit-name-input';
+      name.value = exercise['name'] || '';
+      name.placeholder = 'Exercise';
+      row.appendChild(name);
+
+      const reps = document.createElement('input');
+      reps.type = 'text';
+      reps.className = 'circuit-reps';
+      reps.inputMode = 'decimal';
+      reps.placeholder = previous['reps'] ? `Prev ${valueAtRound(previous, 'reps', round) || previous['reps'].split(',')[0]}` : 'Reps';
+      reps.value = valueAtRound(exercise, 'reps', round);
+      row.appendChild(reps);
+
+      const weights = document.createElement('input');
+      weights.type = 'text';
+      weights.className = 'circuit-weights';
+      weights.inputMode = 'decimal';
+      weights.placeholder = previous['weights'] ? `Prev ${valueAtRound(previous, 'weights', round) || previous['weights'].split(',')[0]}` : 'Level';
+      weights.value = valueAtRound(exercise, 'weights', round);
+      row.appendChild(weights);
+
+      container.appendChild(row);
+    });
+
+    const total = circuitTotalRounds();
+    document.getElementById('exerciseCount').textContent = `Round ${round + 1} / ${total}`;
+    document.getElementById('circuitPrevBtn').disabled = (round <= 0);
+    document.getElementById('circuitNextBtn').disabled = (round >= total - 1);
+  }
+
+  function circuitNextRound() {
+    saveCircuitState(url);
+    const round = currentRoundIndex();
+    const max = circuitTotalRounds() - 1;
+    if (round < max) {
+      url.searchParams.set('currentRound', round + 1);
+    }
+    reloadPage(url);
+  }
+
+  function circuitPrevRound() {
+    saveCircuitState(url);
+    const round = currentRoundIndex();
+    if (round > 0) {
+      url.searchParams.set('currentRound', round - 1);
+    }
+    reloadPage(url);
+  }
+
+  function dismissWaterBanner() {
+    const banner = document.getElementById('circuitWaterBanner');
+    if (banner) banner.classList.remove('visible');
+  }
+
   function saveExerciseData(targetUrl, reload = false) {
     const currentWorkout = loadJSONQueryParameter(targetUrl.searchParams.get('currentWorkout'));
     const currentExerciseId = parseInt(targetUrl.searchParams.get("currentExerciseId"));
@@ -857,6 +1062,28 @@
     const previousWorkout = loadJSONQueryParameter(url.searchParams.get('previousWorkout'));
     const currentWorkout = loadJSONQueryParameter(url.searchParams.get('currentWorkout'));
     const currentExerciseId = parseInt(url.searchParams.get('currentExerciseId'));
+
+    const circuit = isCircuitWorkout();
+    document.getElementById('linearView').style.display = circuit ? 'none' : '';
+    document.getElementById('circuitView').style.display = circuit ? '' : 'none';
+
+    if (circuit) {
+      document.getElementById('workout').style.visibility = 'visible';
+      renderCircuitPanel();
+      setCurrentWorkoutDuration(currentWorkout);
+
+      durationInterval = setInterval(() => {
+        setCurrentWorkoutDuration(currentWorkout);
+      }, 500);
+
+      document.getElementById('workoutName').innerHTML = name;
+      document.getElementById('workoutLastCompleted').innerHTML = `Last Date: ${daysAgo}d ago`;
+      document.getElementById('workoutLastDuration').innerHTML =
+        `Last Time: ${previousWorkoutDurationMinutes}m ${previousWorkoutDurationSeconds}s`;
+      setTopStatus('');
+      return;
+    }
+
     const daysAgo = calulateDaysAgo(previousWorkout['endMilliseconds']);
     const previousWorkoutDuration = calculateLastWorkoutDuration(
       previousWorkout['endMilliseconds'] - previousWorkout['startMilliseconds']
@@ -928,6 +1155,9 @@
   function refreshQuickButtons() {
     const previousWorkout = loadJSONQueryParameter(url.searchParams.get('previousWorkout'));
     const currentExerciseId = parseInt(url.searchParams.get('currentExerciseId'));
+    if (isCircuitWorkout()) {
+      return;
+    }
     const previousExercises = previousWorkout['exercises'];
     const previousExercise = currentExerciseId <= previousExercises.length - 1
       ? previousExercises[currentExerciseId]
@@ -1051,9 +1281,15 @@
     // gesture, so the later beep() call from setInterval is allowed to play.
     ensureAudioCtx();
 
-    const currentExerciseId = url.searchParams.get("currentExerciseId");
-    const currentWorkout = loadJSONQueryParameter(url.searchParams.get('currentWorkout'));
-    const seconds = currentWorkout["exercises"][currentExerciseId]['timer_duration'] || DEFAULT_TIMER_DURATION;
+    const waterBanner = document.getElementById('circuitWaterBanner');
+    if (waterBanner) waterBanner.classList.remove('visible');
+
+    let seconds = DEFAULT_TIMER_DURATION;
+    if (!isCircuitWorkout()) {
+      const currentExerciseId = url.searchParams.get("currentExerciseId");
+      const currentWorkout = loadJSONQueryParameter(url.searchParams.get('currentWorkout'));
+      seconds = currentWorkout["exercises"][currentExerciseId]['timer_duration'] || DEFAULT_TIMER_DURATION;
+    }
     const now = new Date().getTime();
 
     currentTimer = 0;
@@ -1078,6 +1314,10 @@
 
       if (minutes == 0 && seconds <= 0 && seconds > -2) {
         beep();
+        if (isCircuitWorkout()) {
+          const banner = document.getElementById('circuitWaterBanner');
+          if (banner) banner.classList.add('visible');
+        }
       }
 
       let timeToShow = minutes + 'm ' + seconds + 's';
@@ -1099,7 +1339,7 @@
   // link) so your address isn't stored anywhere in this file.
   // ---------------------------------------------------------------
   function saveWorkout() {
-    const currentWorkout = saveExerciseData(url, false);
+    const currentWorkout = isCircuitWorkout() ? saveCircuitState(url) : saveExerciseData(url, false);
     currentWorkout['endMilliseconds'] = getTimeMillisecondsDate();
     currentWorkout['exercises'] = currentWorkout['exercises'].filter(exercise => exercise['name']);
 
@@ -1113,8 +1353,24 @@
     const editUrl = `https://github.com/${GH_OWNER}/${GH_REPO}/edit/${GH_BRANCH}/src/workouts/${file}`;
 
     const subject = `Workout - ${name}`;
+    const formatEasternTime = (ms) => new Intl.DateTimeFormat('en-US', {
+      timeZone: 'America/New_York',
+      month: '2-digit',
+      day: '2-digit',
+      year: 'numeric',
+      hour: 'numeric',
+      minute: '2-digit',
+      second: '2-digit',
+      hour12: true,
+      timeZoneName: 'short'
+    }).format(new Date(ms));
+    const startTime = formatEasternTime(currentWorkout.startMilliseconds);
+    const endTime = formatEasternTime(currentWorkout.endMilliseconds);
+    const whoopLine =
+      `Add to activities, start time: ${startTime}, end time: ${endTime}, activity: weightlifting`;
     const body =
-      `// ${name} - ${new Date(currentWorkout.startMilliseconds).toLocaleDateString()}\n` +
+      `${whoopLine}\n\n` +
+      `// ${name} - ${formatEasternTime(currentWorkout.startMilliseconds)}\n` +
       `// Open: ${editUrl}\n` +
       `// Scroll to the end of the "workouts" array (just before its closing ]) and paste this entire block right before that ]\n` +
       `,${JSON.stringify(currentWorkout)}`;
@@ -1133,6 +1389,12 @@
   document.getElementById('weights').addEventListener('input', () => { refreshQuickButtons(); persistCurrentState(); });
   document.getElementById('times').addEventListener('input', persistCurrentState);
   document.getElementById('currentExerciseName').addEventListener('input', persistCurrentState);
+  document.addEventListener('input', (e) => {
+    if (e.target && e.target.closest && e.target.closest('#circuitView')) {
+      saveCircuitState(url);
+      persistCurrentState();
+    }
+  });
 
   const savedState = loadInProgressState();
   const urlName = url.searchParams.get('name');
