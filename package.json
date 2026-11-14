@@ -3,10 +3,10 @@
   "bugs": {
     "url": "https://github.com/clickthisnick/workout-tracker/issues"
   },
-  "description": "Workout Tracking written in Angular JS",
+  "description": "Static phone-friendly workout logger",
   "devDependencies": {
-    "eslint": "^8.30.0",
-    "eslint-config-google": "^0.14.0"
+    "@eslint/js": "^10.0.1",
+    "eslint": "^10.15.0"
   },
   "homepage": "https://github.com/clickthisnick/workout-tracker#readme",
   "license": "ISC",
@@ -17,7 +17,8 @@
     "url": "git+https://github.com/clickthisnick/workout-tracker.git"
   },
   "scripts": {
-    "build": "node scripts/check.js",
+    "build": "npm run lint && node scripts/check.js",
+    "lint": "eslint scripts tests",
     "test": "node scripts/test.js",
     "start": "npm run build && node scripts/serve.js"
   },

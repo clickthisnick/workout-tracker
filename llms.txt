@@ -1,0 +1,34 @@
+# Workout Tracker
+
+Static, dependency-free workout logger. The page is `index.html`. It is hosted at https://www.clickthisnick.com/workout-tracker/ and can be served locally with `npm start` (after `npm run build`).
+
+Routines live in `src/workouts/*.json`. `src/workouts/active.json` lists the filenames shown in the picker. A routine has a display `name`, optional `circuit` (boolean) and `sets` (round count), and a `workouts` array of sessions. Each session has `startMilliseconds`, `endMilliseconds`, and `exercises` (`name`, `reps`, `weights`, `times` as comma-separated strings). Lines that start with `//` are comments and are stripped before parsing. Do not change that shape.
+
+## Operating the page
+
+Every control is a button or a labeled field. Nothing is hover-only or gesture-only.
+
+1. Open the site. Bookmark it with `?email=you@example.com` so Save can draft an email.
+2. Choose a routine from the Routine picker (`#selectWorkout`, `data-testid="routine-picker"`). The placeholder "Choose a workout" is disabled.
+3. Linear routines: edit Exercise, Reps, Weight, and Time (`#currentExerciseName`, `#reps`, `#weights`, `#times`). Prev / Next move between exercises (`data-testid="prev-exercise"` and `data-testid="next-exercise"`). Quick buttons under Reps and Weight append the next set and start the rest timer once per set.
+4. Circuit routines (`circuit=1`): each round lists every exercise. Fill reps and level, then Next Round (`data-testid="next-round"`). The rest timer starts when the round advances. Prev Round goes back without starting the timer.
+5. Timer (`data-testid="timer"`) starts or restarts the rest countdown. It beeps once at zero and then stops. In a circuit, a water-break banner appears.
+6. Settings (`data-testid="settings"`, or `?settings=1`) edits `weightInc`, `repsInc`, and `timerDefault`. Apply writes them to the URL. Home keeps those settings and `email`, and discards the in-progress session.
+7. Save Workout (`data-testid="save-workout"`) drops exercises with an empty name, stamps `endMilliseconds`, copies the paste block to the clipboard, and shows it under "Workout entry to paste" (`#savePayload`). When `email` is set it also opens a `mailto:` draft. When `email` is missing, the status line says so and the entry is still copied and shown. A saved session is removed from `localStorage` key `wt_in_progress` and is not resumed on reload.
+
+Status text is written to `#status` and `#topStatus` (`role="status"`, `aria-live="polite"`). The document title and the `h1` follow the current routine, exercise, round, or Settings.
+
+## URL parameters
+
+- `email` — address for the save draft
+- `name` — routine display name; together with `file` this is an in-progress session
+- `file` — filename under `src/workouts/`
+- `circuit` — `1` for circuit mode, `0` for linear
+- `sets` — number of circuit rounds
+- `currentRound` — 0-based circuit round
+- `currentExerciseId` — 0-based linear exercise
+- `currentWorkout`, `previousWorkout` — JSON session objects
+- `weightInc`, `repsInc`, `timerDefault` — settings, kept by Home
+- `settings` — `1` opens the settings panel
+
+In-progress sessions (including circuit, sets, and settings) are mirrored to `localStorage` `wt_in_progress` and restored on reload until Save or Home. A session whose `currentWorkout.endMilliseconds` is greater than 0 is treated as already saved and is not resumed. Malformed JSON falls back to the routine picker with a status message.

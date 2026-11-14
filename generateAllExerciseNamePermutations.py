@@ -1,5 +1,6 @@
-import os
 import json
+import os
+import re
 
 """
 Description:
@@ -18,6 +19,14 @@ Prints a set of all exercise names contained in the json files
 """
 
 
+def load_json_with_comments(path):
+    """Workout files may contain // comment lines left by the email paste flow."""
+    with open(path, encoding="utf-8") as handle:
+        text = handle.read()
+    stripped = re.sub(r"^[ \t]*//.*$", "", text, flags=re.MULTILINE)
+    return json.loads(stripped)
+
+
 exercise_names = set()
 exercise_json_folder = "src/workouts"
 for item in os.listdir(exercise_json_folder):
@@ -25,18 +34,20 @@ for item in os.listdir(exercise_json_folder):
         continue
 
     exercise_json_path = os.path.join(exercise_json_folder, item)
-    with open(exercise_json_path) as f:
-        contents = f.read()
+    exercise_json = load_json_with_comments(exercise_json_path)
+    workouts = exercise_json.get("workouts", [])
+    if not isinstance(workouts, list):
+        continue
 
-    exercise_json = json.loads(contents)
-
-    for workout in exercise_json["workouts"]:
-        if "exercises" not in workout:
+    for workout in workouts:
+        if not isinstance(workout, dict):
             continue
 
-        for exercise in workout["exercises"]:
-            exercise_name = exercise["name"]
+        for exercise in workout.get("exercises") or []:
+            if not isinstance(exercise, dict):
+                continue
+            exercise_name = exercise.get("name")
             if exercise_name:
-                exercise_names.add()
-        
+                exercise_names.add(exercise_name)
+
 print(exercise_names)
