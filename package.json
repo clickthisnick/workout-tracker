@@ -10,7 +10,6 @@
   },
   "homepage": "https://github.com/clickthisnick/workout-tracker#readme",
   "license": "ISC",
-  "main": "index.js",
   "name": "workout-tracker",
   "repository": {
     "type": "git",
@@ -19,6 +18,7 @@
   "scripts": {
     "build": "npm run lint && node scripts/check.js",
     "lint": "eslint scripts tests",
+    "names": "node scripts/list-exercise-names.js",
     "test": "node scripts/test.js",
     "start": "npm run build && node scripts/serve.js"
   },

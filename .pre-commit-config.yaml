@@ -31,10 +31,6 @@ repos:
     #-   id: pretty-format-json
     -   id: sort-simple-yaml
     -   id: trailing-whitespace
--   repo: https://github.com/psf/black
-    rev: 24.8.0
-    hooks:
-    -   id: black
 -   repo: https://github.com/codespell-project/codespell
     rev: v2.3.0
     hooks:
