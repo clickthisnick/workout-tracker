@@ -26,7 +26,8 @@ module.exports = [
         setImmediate: 'readonly',
         clearImmediate: 'readonly',
         URL: 'readonly',
-        URLSearchParams: 'readonly'
+        URLSearchParams: 'readonly',
+        AbortController: 'readonly'
       }
     },
     rules: {

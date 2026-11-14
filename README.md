@@ -54,3 +54,5 @@ Set `"circuit": true` and `"sets": 3` for a circuit. `//` comment lines are allo
 ## Rest-timer sound
 
 The beep is embedded in `index.html`, so the page does not request a separate audio file. It is "A Tone" from http://soundbible.com/1815-A-Tone.html, recorded by His Self. The old `sounds/README.md` described that recording as public domain and also linked https://creativecommons.org/licenses/by/3.0/.
+
+Browsers that support WebMCP can drive the same actions through page tools. Other browsers keep the buttons and fields as they are.
