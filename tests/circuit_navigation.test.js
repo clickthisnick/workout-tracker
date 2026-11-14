@@ -1,7 +1,7 @@
 const fs = require('fs');
 const vm = require('vm');
 const path = require('path');
-const root = '/home/mypi/Documents/workout-tracker';
+const root = path.join(__dirname, '..');
 
 function makeEl(childrenList) {
   return {

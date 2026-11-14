@@ -7,7 +7,7 @@ Designed to fit on one iPhone screen without scrolling during normal use.
 
 ## Hosting & architecture constraints
 - Hosted as a static site on GitHub Pages — **no backend, no server-side code**.
-- The entire app is **one self-contained `.html` file** (`workout-tracker.html`):
+- The entire app is **one self-contained `.html` file** (`index.html`):
   - No external CSS files (theme is inlined in a `<style>` block).
   - No external audio files — the rest-timer sound is an mp3 embedded
     directly as a base64 `data:` URI in a hidden `<audio>` element, with a
@@ -40,7 +40,8 @@ Designed to fit on one iPhone screen without scrolling during normal use.
   shorter/stale querystring) — which would otherwise silently lose progress.
   - On every navigation (`reloadPage`) and on every button press / field edit
     (`persistCurrentState`), the key state — `name`, `file`, `currentWorkout`,
-    `previousWorkout`, `currentExerciseId` — is mirrored into
+    `previousWorkout`, `currentExerciseId`, `currentRound`, `circuit`, `sets`,
+    and the settings params `weightInc`, `repsInc`, `timerDefault` — is mirrored into
     `localStorage['wt_in_progress']`.
   - **Persisted on any button press**: a bubble-phase `click` listener on
     `document` (separate from the capture-phase audio-unlock listener) calls
@@ -68,15 +69,14 @@ Designed to fit on one iPhone screen without scrolling during normal use.
   during normal use.
 - The header's top row shows the routine name (truncated with an ellipsis if
   too long), an exercise-position indicator (e.g. "3 / 7"), and the 🏠/⚙
-  buttons. The stats row below shows "Last Date: Xd ago · Last Time: Xm Ys ·
-  Cur Time: Xm Ys" (11px), and the "Previous" values (reps, weight, time) are
+  buttons. The stats row below shows "Last Date: Xd ago" (or "never" when `endMilliseconds` is 0), "Last Time: Xm Ys", and
+  "Cur Time: Xm Ys" (11px), and the "Previous" values (reps, weight, time) are
   on one line, separated by `·`, wrapping only if needed.
 - The workout-picker `<select>` is hidden via `display: none` (not
   `visibility`) once a routine is chosen, so it doesn't reserve space.
-- **Zoom prevention**:
-  - Viewport meta tag sets `maximum-scale=1, user-scalable=no` to discourage
-    pinch-zoom (newer iOS Safari versions may partially ignore this for
-    accessibility reasons).
+- **Zoom**:
+  - Pinch-zoom stays available. The viewport meta tag does not set
+    `user-scalable=no` or `maximum-scale=1`.
   - `touch-action: manipulation` on `html, body` suppresses double-tap-to-zoom.
   - All text inputs and the routine `<select>` are kept at `font-size: 16px`
     (the threshold below which iOS Safari auto-zooms the whole page on
@@ -174,7 +174,7 @@ Designed to fit on one iPhone screen without scrolling during normal use.
     satisfy mobile browsers' "audio needs a user gesture" requirement before
     the timer's real sound is needed. Tracked via an in-memory boolean
     (`audioUnlocked`), not persisted.
-- **Session duration**: header shows "Last Date: Xd ago", "Last Time: Xm Ys",
+- **Session duration**: header shows "Last Date: Xd ago" ("never" when the previous session's `endMilliseconds` is 0), "Last Time: Xm Ys",
   and "Cur Time: Xm Ys" (live-updating, via `durationInterval`).
 
 ## Settings (⚙ button)
@@ -195,8 +195,9 @@ Designed to fit on one iPhone screen without scrolling during normal use.
 ## Home button (🏠)
 - Next to ⚙, in the header. Shows a `confirm()` dialog ("Go back to the home
   screen? This will discard the workout in progress.").
-- If confirmed: stops any running rest/duration timers, drops all query
-  params except `?email=` (if present), updates the URL via
+- If confirmed: stops any running rest/duration timers, drops the in-progress
+  workout params, and keeps `email`, `weightInc`, `repsInc`, and `timerDefault`
+  when they are present. Updates the URL via
   `history.pushState` (no reload), clears the localStorage in-progress
   backup, and resets the UI to the routine-picker view
   (`resetToPickerView()` — hides the workout view, re-shows the `<select>`,
@@ -208,7 +209,11 @@ Designed to fit on one iPhone screen without scrolling during normal use.
 - No GitHub API calls and no stored credentials/tokens.
 - "Save Workout" drafts an email (`mailto:`) addressed to the address passed
   via the `email` query parameter (e.g. `?email=you@example.com`, saved as a
-  bookmark — never hardcoded in the file).
+  bookmark — never hardcoded in the file). If `email` is missing, the page
+  says so and does not open an empty draft. Either way the entry is copied
+  to the clipboard when the browser allows it, and shown in "Workout entry
+  to paste". Saving clears the `wt_in_progress` backup so a reload does not
+  resume the finished session.
 - The email body is a single paste-able block:
   - `//` comment lines with the routine name, date, a link to edit the
     routine file on GitHub, and instructions to paste at the end of the
