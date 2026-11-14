@@ -32,3 +32,7 @@ Status text is written to `#status` and `#topStatus` (`role="status"`, `aria-liv
 - `settings` — `1` opens the settings panel
 
 In-progress sessions (including circuit, sets, and settings) are mirrored to `localStorage` `wt_in_progress` and restored on reload until Save or Home. A session whose `currentWorkout.endMilliseconds` is greater than 0 is treated as already saved and is not resumed. Malformed JSON falls back to the routine picker with a status message.
+
+## WebMCP
+
+Browsers that implement `document.modelContext.registerTool` get tools for the open view. Other browsers skip registration. Read with `read-workout-state`. On the picker, `choose-routine` takes a filename. During a linear workout, `log-current-exercise`, `go-to-next-exercise`, and `go-to-previous-exercise` are available. During a circuit, `log-circuit-round`, `go-to-next-round`, and `go-to-previous-round` are available. `start-rest-timer`, `save-workout`, `discard-workout` (`confirmed: true`), and `update-settings` are available once a workout is open.

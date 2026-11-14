@@ -220,6 +220,7 @@ function boot(search, options) {
     webkitAudioContext: AudioContext,
     addEventListener() {},
     confirm: opts.confirm == null ? () => true : opts.confirm,
+    AbortController,
     setTimeout(fn) { timeouts.push(fn); return timeouts.length; },
     clearTimeout() {},
     setInterval(fn) {
@@ -233,6 +234,7 @@ function boot(search, options) {
     }
   };
   sandbox.copied = [];
+  if (opts.modelContext) sandbox.document.modelContext = opts.modelContext;
   sandbox.window = sandbox;
   sandbox.self = sandbox;
   sandbox.globalThis = sandbox;
@@ -477,4 +479,45 @@ function boot(search, options) {
   assert(app.storage.getItem('wt_in_progress') == null, 'Home clears the backup');
   assert(app.el('workout').hidden === true, 'Home shows the picker');
   console.log('PASS: Home keeps email and settings');
+})();
+
+(function webMcpTools() {
+  const registered = [];
+  const modelContext = {
+    registerTool(tool, options) {
+      registered.push({ name: tool.name, annotations: tool.annotations, tool, options });
+      return Promise.resolve();
+    }
+  };
+  boot('', { modelContext });
+  const pickerNames = registered.map((entry) => entry.name);
+  assert(pickerNames.indexOf('choose-routine') !== -1, 'picker exposes choose-routine');
+  assert(pickerNames.indexOf('log-current-exercise') === -1, 'picker does not expose exercise logging');
+  const choose = registered.find((entry) => entry.name === 'choose-routine');
+  const missing = choose.tool.execute({ file: 'nope.json' }, { signal: { aborted: false } });
+  assert(missing && missing.error && missing.error.indexOf('No routine file') !== -1, `choose-routine error, got ${JSON.stringify(missing)}`);
+
+  registered.length = 0;
+  const linear = boot(session(
+    [{ name: 'Curl', reps: '10', weights: '20', times: '' }],
+    [{ name: 'Curl', reps: '', weights: '', times: '' }]
+  ), { modelContext });
+  linear.flush();
+  const names = registered.map((entry) => entry.name);
+  assert(names.indexOf('read-workout-state') !== -1, 'linear mode exposes read-workout-state');
+  assert(names.indexOf('go-to-next-round') === -1, 'linear mode does not expose circuit rounds');
+  const readTool = registered.filter((entry) => entry.name === 'read-workout-state').pop();
+  assert(readTool.annotations.readOnlyHint === true, 'read-workout-state is marked read-only');
+  const state = readTool.tool.execute({}, { signal: { aborted: false } });
+  assert(state.view === 'linear', `read view, got ${state.view}`);
+  const logTool = registered.filter((entry) => entry.name === 'log-current-exercise').pop();
+  const empty = logTool.tool.execute({}, { signal: { aborted: false } });
+  assert(empty.error && empty.error.indexOf('Pass name') !== -1, `log validation, got ${JSON.stringify(empty)}`);
+  const wrote = logTool.tool.execute({ reps: '12,10' }, { signal: { aborted: false } });
+  assert(wrote.exercise && wrote.exercise.reps === '12,10', `logged reps, got ${JSON.stringify(wrote)}`);
+  const discard = registered.filter((entry) => entry.name === 'discard-workout').pop();
+  assert(discard.annotations.consequentialHint === true, 'discard is marked consequential');
+  const unconfirmed = discard.tool.execute({ confirmed: false }, { signal: { aborted: false } });
+  assert(unconfirmed.error && unconfirmed.error.indexOf('confirmed: true') !== -1, 'discard requires confirmation');
+  console.log('PASS: WebMCP tools register for the open view and validate input');
 })();

@@ -10,7 +10,7 @@ for (const file of fs.readdirSync(testsDir)) {
     console, URL, URLSearchParams, Date, Math, JSON, Object, Array, String,
     Number, parseInt, parseFloat, isNaN, require, process, Intl, Promise,
     setTimeout, clearTimeout, setInterval, clearInterval, Map, Set, RegExp,
-    Error, decodeURIComponent, encodeURIComponent,
+    Error, decodeURIComponent, encodeURIComponent, AbortController,
     __dirname: testsDir,
     __filename: path.join(testsDir, file)
   };
