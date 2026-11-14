@@ -224,8 +224,8 @@ Designed to fit on one iPhone screen without scrolling during normal use.
 
 ## Known fixes applied (vs. original implementation)
 - Removed dependency on `assets/ceruleanBootswatch.min.css` and
-  `sounds/a-tone-multiplied.mp3` as external files (the latter is now
-  embedded as a data URI).
+  `sounds/a-tone-multiplied.mp3` as external files (the beep is embedded
+  as a data URI). Those unused copies are not in the repo.
 - Fixed invalid `pass;` statement (Python syntax) in the timer reset logic.
 - Fixed an undefined `name` reference in the boot/auto-start logic.
 - Fixed `currentWorkout` being a shared object reference to `previousWorkout`

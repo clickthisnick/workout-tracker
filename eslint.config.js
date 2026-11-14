@@ -2,7 +2,7 @@ const js = require('@eslint/js');
 
 module.exports = [
   {
-    ignores: ['archive/**', 'assets/**', 'node_modules/**']
+    ignores: ['node_modules/**']
   },
   js.configs.recommended,
   {

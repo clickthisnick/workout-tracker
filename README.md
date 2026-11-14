@@ -16,6 +16,9 @@ npm start
 - `npm run build` — ESLint plus `scripts/check.js` (workout JSON shape, including exercise name and `endMilliseconds` for active routines)
 - `npm test` — behavior tests for navigation, the rest timer, save, and restore
 - `npm run lint` — ESLint on `scripts/` and `tests/`
+- `npm run names` — print unique exercise names from `src/workouts/*.json`
+
+The site itself is static. `npm start` only checks files and serves them. Nothing is generated into `index.html`, and Python is not used.
 
 ## Saving a workout
 
@@ -46,4 +49,8 @@ Each active file looks like this:
 
 Set `"circuit": true` and `"sets": 3` for a circuit. `//` comment lines are allowed and are stripped before parsing. `endMilliseconds: 0` means that session was never completed; the logger shows "Last Date: never".
 
-`python3 generateAllExerciseNamePermutations.py` prints the unique exercise names in `src/workouts`.
+`npm run names` prints the unique exercise names in the top-level routine files.
+
+## Rest-timer sound
+
+The beep is embedded in `index.html`, so the page does not request a separate audio file. It is "A Tone" from http://soundbible.com/1815-A-Tone.html, recorded by His Self. The old `sounds/README.md` described that recording as public domain and also linked https://creativecommons.org/licenses/by/3.0/.
