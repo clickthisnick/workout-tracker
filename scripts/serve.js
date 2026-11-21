@@ -24,7 +24,9 @@ const MIME = {
 };
 
 const server = http.createServer((req, res) => {
-  const pathname = decodeURIComponent(new URL(req.url, `http://${req.headers.host || host}`).pathname);
+  const pathname = decodeURIComponent(
+    new URL(req.url, `http://${req.headers.host || host}`).pathname
+  );
   let file = path.normalize(path.join(root, pathname));
   if (!file.startsWith(root)) {
     res.writeHead(403);
@@ -41,14 +43,20 @@ const server = http.createServer((req, res) => {
       return;
     }
     res.setHeader('Cache-Control', 'no-cache');
-    res.setHeader('Content-Type', MIME[path.extname(file).toLowerCase()] || 'application/octet-stream');
+    res.setHeader(
+      'Content-Type',
+      MIME[path.extname(file).toLowerCase()] || 'application/octet-stream'
+    );
     res.end(data);
   });
 });
 
 server.on('error', (err) => {
-  if (err.code === 'EADDRINUSE') {
-    console.error(`Port ${port} is already in use. Try PORT= another number, e.g. PORT=8081 npm start.`);
+  const code = /** @type {{ code?: string }} */ (err).code;
+  if (code === 'EADDRINUSE') {
+    console.error(
+      `Port ${port} is already in use. Try PORT= another number, e.g. PORT=8081 npm start.`
+    );
     process.exit(1);
   }
   throw err;

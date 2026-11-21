@@ -1,17 +1,20 @@
 # Workout Tracker — Requirements
 
 ## Overview
+
 A single-page workout logger for tracking reps, weights, and timed exercises
 across recurring routines, with a built-in rest timer and quick-entry buttons.
 Designed to fit on one iPhone screen without scrolling during normal use.
 
 ## Hosting & architecture constraints
+
 - Hosted as a static site on GitHub Pages — **no backend, no server-side code**.
-- The entire app is **one self-contained `.html` file** (`index.html`):
+- The page is static `index.html` plus `src/app.js` (a classic script, no build step):
   - No external CSS files (theme is inlined in a `<style>` block).
   - No external audio files — the rest-timer sound is an mp3 embedded
     directly as a base64 `data:` URI in a hidden `<audio>` element, with a
     synthesized Web Audio tone as a fallback if playback fails.
+  - `index.html` is still the URL. `src/app.js` is loaded from the same directory.
 - Must work with **low data and intermittent/no connectivity** after the first load:
   - Routine data, once fetched, is cached in `localStorage` and reused if a later
     fetch fails (e.g. no signal at the gym).
@@ -33,7 +36,7 @@ Designed to fit on one iPhone screen without scrolling during normal use.
     display, clears `timerTriggeredIndices` (which set-indices have already
     auto-started the timer), and clears/recreates the live
     duration-update interval (`durationInterval`).
-- **In-progress workout backup (localStorage)**: a plain browser *reload* is
+- **In-progress workout backup (localStorage)**: a plain browser _reload_ is
   still a real network request for the current URL+querystring. If offline,
   the browser may fail to refetch that exact URL and fall back to an older
   cached version of the page (e.g. from earlier in the same session, with a
@@ -58,12 +61,13 @@ Designed to fit on one iPhone screen without scrolling during normal use.
     workout in progress, or its `file` matches the saved session's `file`,
     the saved state is restored (overwriting the URL's params) before
     rendering — i.e. the backup wins over whatever stale URL the browser
-    actually served. If the URL points at a *different* routine (e.g. a
+    actually served. If the URL points at a _different_ routine (e.g. a
     freshly shared link), the URL's state is used instead.
   - The Home button (🏠) clears this backup (`clearInProgressState()`), since
     it's an explicit "discard this workout" action.
 
 ## Layout
+
 - Single-screen design targeting iPhone-sized viewports (`100dvh`, compact
   font sizes/padding) so the whole workout view fits without a scrollbar
   during normal use.
@@ -88,6 +92,7 @@ Designed to fit on one iPhone screen without scrolling during normal use.
   show some bounce.
 
 ## Data storage
+
 - Workout routines live in the same GitHub repo, under `src/workouts/`.
 - `src/workouts/active.json` lists the available routine filenames.
 - Each routine file is a JSON object:
@@ -114,6 +119,7 @@ Designed to fit on one iPhone screen without scrolling during normal use.
   message.
 
 ## Core features
+
 - **Routine selection**: dropdown populated from `active.json`.
 - **Exercise navigation**: Prev/Next buttons step through the current
   routine's exercise list; stepping past the last exercise appends a new
@@ -123,8 +129,8 @@ Designed to fit on one iPhone screen without scrolling during normal use.
 - **Per-exercise fields**: editable name, reps, weights, and time(s), each
   shown alongside the previous session's values for comparison.
 - **Quick-increment buttons**: under both Reps and Weight, 7 tappable buttons
-  let you log a set without typing. Values are based on the *previous
-  session's value for the matching set number* — e.g. if you're entering set 2
+  let you log a set without typing. Values are based on the _previous
+  session's value for the matching set number_ — e.g. if you're entering set 2
   and last time set 2 was reps=6/weight=25, the buttons center on 6 and 25.
   - Tapping a button appends its value to the field (comma-separated), and
     immediately refreshes the buttons for the next set.
@@ -137,7 +143,7 @@ Designed to fit on one iPhone screen without scrolling during normal use.
     also highlighted as an option for the next set, in case you want to
     repeat it — e.g. if you did 12 reps for set 1 (vs. 6 last time), 12 is
     highlighted for set 2 as well. If 12 isn't already one of the 7 generated
-    buttons, it's added as an extra option; if it *is* already one of them
+    buttons, it's added as an extra option; if it _is_ already one of them
     (e.g. it coincides with the previous-session value), that same button
     gets both highlights.
   - **Highlight styling (color + shape, for grayscale accessibility)**:
@@ -150,12 +156,12 @@ Designed to fit on one iPhone screen without scrolling during normal use.
       indicators so the distinction holds even with color removed (e.g.
       grayscale display mode).
   - **Legend**: a small dim caption under the "Previous" row reads "● = same
-    as prev workout   ▲ = what you just entered", explaining the symbols
+    as prev workout ▲ = what you just entered", explaining the symbols
     inline.
   - Manually typing into Reps/Weight also refreshes the quick buttons (via an
     `input` listener), so they stay aligned with whichever set you're on.
   - **Auto-starts the rest timer**: tapping a quick button (re)starts the
-    rest timer, but only once per *set index*, regardless of whether reps or
+    rest timer, but only once per _set index_, regardless of whether reps or
     weight triggers it first — reps and weight at the same index are treated
     as one pair. E.g. tapping reps[0] then weight[0] only resets the timer
     once (on the reps[0] tap); tapping reps[0], reps[1], weight[0], weight[1]
@@ -169,7 +175,7 @@ Designed to fit on one iPhone screen without scrolling during normal use.
   times field. Can also be started/restarted manually via the "Timer" button
   at any time (e.g. if a set was logged by typing instead of tapping a quick
   button).
-  - Audio unlock: the first tap on *any* button on the page plays a silent
+  - Audio unlock: the first tap on _any_ button on the page plays a silent
     blip (Web Audio) and does a muted play/pause of the `<audio>` element, to
     satisfy mobile browsers' "audio needs a user gesture" requirement before
     the timer's real sound is needed. Tracked via an in-memory boolean
@@ -178,6 +184,7 @@ Designed to fit on one iPhone screen without scrolling during normal use.
   and "Cur Time: Xm Ys" (live-updating, via `durationInterval`).
 
 ## Settings (⚙ button)
+
 - A ⚙ button in the top-right of the header toggles an edit panel (replacing
   the main workout view) with three fields:
   - Weight quick-button increment (default 5)
@@ -193,6 +200,7 @@ Designed to fit on one iPhone screen without scrolling during normal use.
   `?weightInc=2.5&repsInc=1&timerDefault=60&email=you@example.com`.
 
 ## Home button (🏠)
+
 - Next to ⚙, in the header. Shows a `confirm()` dialog ("Go back to the home
   screen? This will discard the workout in progress.").
 - If confirmed: stops any running rest/duration timers, drops the in-progress
@@ -206,6 +214,7 @@ Designed to fit on one iPhone screen without scrolling during normal use.
   "in progress workout" link).
 
 ## Saving a completed workout
+
 - No GitHub API calls and no stored credentials/tokens.
 - "Save Workout" drafts an email (`mailto:`) addressed to the address passed
   via the `email` query parameter (e.g. `?email=you@example.com`, saved as a
@@ -223,6 +232,7 @@ Designed to fit on one iPhone screen without scrolling during normal use.
   to the end of the `workouts` array, pastes the whole email body, and commits.
 
 ## Known fixes applied (vs. original implementation)
+
 - Removed dependency on `assets/ceruleanBootswatch.min.css` and
   `sounds/a-tone-multiplied.mp3` as external files (the beep is embedded
   as a data URI). Those unused copies are not in the repo.
@@ -239,6 +249,7 @@ Designed to fit on one iPhone screen without scrolling during normal use.
   (see "In-progress workout backup" above).
 
 ## Deferred / not implemented
+
 - **Latest + history file split** per routine (to keep reads small as history
   grows) — considered, but not implemented; current files keep full history
   in one JSON file.

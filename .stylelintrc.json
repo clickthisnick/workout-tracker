@@ -1,0 +1,11 @@
+{
+  "extends": ["stylelint-config-standard"],
+  "customSyntax": "postcss-html",
+  "rules": {
+    "no-descending-specificity": null,
+    "declaration-block-no-redundant-longhand-properties": null,
+    "selector-id-pattern": null,
+    "selector-not-notation": null,
+    "declaration-property-value-keyword-no-deprecated": null
+  }
+}

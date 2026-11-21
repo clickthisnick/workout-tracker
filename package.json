@@ -6,7 +6,17 @@
   "description": "Static phone-friendly workout logger",
   "devDependencies": {
     "@eslint/js": "^10.0.1",
-    "eslint": "^10.15.0"
+    "@types/node": "^24.10.1",
+    "eslint": "^10.15.0",
+    "globals": "^17.14.0",
+    "html-validate": "^11.21.1",
+    "husky": "^9.1.7",
+    "lint-staged": "^17.6.1",
+    "postcss-html": "^2.0.1",
+    "prettier": "^3.10.1",
+    "stylelint": "^18.1.0",
+    "stylelint-config-standard": "^41.1.0",
+    "typescript": "^7.0.2"
   },
   "homepage": "https://github.com/clickthisnick/workout-tracker#readme",
   "license": "ISC",
@@ -16,11 +26,35 @@
     "url": "git+https://github.com/clickthisnick/workout-tracker.git"
   },
   "scripts": {
-    "build": "npm run lint && node scripts/check.js",
-    "lint": "eslint scripts tests",
+    "start": "node scripts/serve.js",
     "names": "node scripts/list-exercise-names.js",
-    "test": "node scripts/test.js",
-    "start": "npm run build && node scripts/serve.js"
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "lint": "eslint .",
+    "typecheck": "tsc --noEmit",
+    "html": "html-validate index.html",
+    "css": "stylelint index.html",
+    "spell": "node scripts/spell.js",
+    "actions": "node scripts/actionlint.js",
+    "links": "node scripts/check-links.js",
+    "workouts": "node scripts/check-workouts.js",
+    "test": "node --experimental-test-coverage --test-coverage-include=src/app.js --test-coverage-lines=90 --test-coverage-branches=67 --test-coverage-functions=88 --test tests/*.test.js",
+    "size": "node scripts/size-budget.js",
+    "check": "npm run format:check && npm run lint && npm run typecheck && npm run html && npm run css && npm run spell && npm run actions && npm run links && npm run workouts && npm run test && npm run size",
+    "prepare": "husky"
+  },
+  "lint-staged": {
+    "*.js": [
+      "eslint --fix",
+      "prettier --write"
+    ],
+    "*.{html,md,yml,yaml,css,json}": [
+      "prettier --write"
+    ],
+    "index.html": [
+      "stylelint --fix",
+      "html-validate"
+    ]
   },
   "version": "1.0.0"
 }
