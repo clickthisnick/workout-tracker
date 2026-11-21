@@ -1,6 +1,6 @@
 # Workout Tracker
 
-Static, dependency-free workout logger. The page is `index.html`. It is hosted at https://www.clickthisnick.com/workout-tracker/ and can be served locally with `npm start` (after `npm run build`).
+Static, dependency-free workout logger. The page is `index.html`, which loads `src/app.js` as-is (no build). It is hosted at https://www.clickthisnick.com/workout-tracker/ and can be served locally with `npm start`. Run `npm run check` before finishing a change.
 
 Routines live in `src/workouts/*.json`. `src/workouts/active.json` lists the filenames shown in the picker. A routine has a display `name`, optional `circuit` (boolean) and `sets` (round count), and a `workouts` array of sessions. Each session has `startMilliseconds`, `endMilliseconds`, and `exercises` (`name`, `reps`, `weights`, `times` as comma-separated strings). Lines that start with `//` are comments and are stripped before parsing. Do not change that shape.
 

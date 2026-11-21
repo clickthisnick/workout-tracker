@@ -1,16 +1,12 @@
 const fs = require('fs');
 const path = require('path');
+const { parseWorkoutJson } = require('./workout-json');
 
 // Prints unique exercise names from the top-level routine files.
-// Mirrors the old generateAllExerciseNamePermutations.py helper.
-// Not part of the site build: GitHub Pages serves index.html as-is.
+// Not part of the site: GitHub Pages serves index.html and src/app.js as-is.
 
 const folder = path.join(__dirname, '..', 'src/workouts');
 const names = new Set();
-
-function parseWorkoutJson(text) {
-  return JSON.parse(text.replace(/^[ \t]*\/\/.*$/gm, ''));
-}
 
 for (const item of fs.readdirSync(folder)) {
   if (!item.endsWith('.json')) continue;
